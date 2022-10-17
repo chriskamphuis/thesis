@@ -196,8 +196,6 @@
 	
 	\par\smallcaps{Published by \thanklesspublisher}
 	
-	\par\smallcaps{tufte-latex.googlecode.com}
-	
 	\par Licensed under the Apache License, Version 2.0 (the ``License''); you may not use this file except in compliance with the License. You may obtain a copy of the License at \url{http://www.apache.org/licenses/LICENSE-2.0}. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \smallcaps{``AS IS'' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND}, either express or implied. See the License for the specific language governing permissions and limitations under the License.\index{license}
 	
 	\par\textit{First printing, \monthyear}
@@ -214,7 +212,7 @@
 \begin{doublespace}
 	\noindent\fontsize{18}{22}\selectfont\itshape
 	\nohyphenation
-	Dedicated to Maudy
+	Dedicated to ...
 \end{doublespace}
 \vfill
 \vfill
@@ -253,19 +251,47 @@
 \cleardoublepage
 \chapter{Introduction}
 
-I also propose to consider the question, ``Can machines think?'' Instead of approaching this question through a thought experiment like Turing\cite{Turing-Think} did, nowadays one can approach this question by prompting it to a search engine. 
+% In this chapter we first introduce the fields of Information Retrieval and Databases, IR focusses on the data management and processing for search engines, whereas Database Research investigates the processing of general structured data. Information Retrieval researchers often use their own data structures, which are specialized for IR applications. We compare this to what is often done at database research, and show examples where these fields overlap. 
 
-When prompting this question to popular web search engines we get different results: 
-%----------------------------------------------------------------------------------------
+I also propose to consider the question, ``Can machines think?'' Instead of approaching this through a thought experiment like Turing\cite{Turing-Think} did, nowadays one can approach this question by asking it to a search engine. When issuing this query to popular web search engines we get different results; the first result on Google is a passage generated from the article written by Turing, while the first result on Bing is a passage generated from a website that states machines can not think\footnote{However, if a machine can not think, can we trust the result presented by this algorithm?}.
+We use these systems that process queries every day in our lives to provide us information. Whereas Google and Bing are all purpose web engines that mainly focus on finding and retrieving web data, people also used specialized search systems in their day-to-day lives, examples are: Amazon / EBay for product search, NS for public transport in the Netherlands, Scholar / Zeta Alpha for scientific resources, Youtube / TikTok for Videos, or Facebook / LinkedIn for people.
+When searching for the query ``Can machines think?'', the approach of searching through text document only might be sufficient for the user. However in many cases when searching today, only considering text is not sufficient. When one wants to buy a product on Amazon, aspects other than text also need to be considered. Lets say for example you want to buy an IPhone; What is the price, which edition is the most recent, or which color does it have. When someone searches for people on LinkedIn, they are generally more interested in persons that have connections in common compared to complete strangers. If you are looking for someone to do a job, it is ideal that a shared connection can vouch for them. 
+
+\section{Information Retrieval}
+Everything that is needed to process a query like, ``Can machines think?'', is subject to research by the field of information retrieval. 
+
+\subsection{Inverted Indexes}
+
+\section{Relational Databases}
+Relational databases are usually used to store structure data. 
+
+\section{Graphs}
+Instead of using columnar data, it might be more attractive to model your data using graphs. 
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 1
 %----------------------------------------------------------------------------------------
 
 \chapter{Information Retrieval using Relational Databases}
-\label{ch:tufte-design}
+\section{Introduction}
+Where commonly information retrieval researchers use inverted indexes as data structures, there is also a rich history of researchers using relational databases for representing the data in information retrieval systems. 
 
-\newthought{The pages} of a book are usually divided into three major sections: the front matter (also called preliminary matter or prelim), the main matter (the core text of the book), and the back matter (or end matter). Which is about information retrieval \index{Information Retrieval}
+% Describe boolean retrieval systems
+% Describe other systems by for example Norbert 
+
+In a more recent work M\"{u}hleisen et al.~showed that the common used BM25 ranking function can also be easily expressed using relational tables. Their work specifically focused on the retrieval efficiency of several systems.   
+% End with OldDog system by Hannes
+
+\section{Reproducibility}
+
+
+\chapter{From Tables to Graphs}
+
+% This chapters should describe the GeeseDB paper
+
+\chapter{Data modeling using Graphs}
+
+\chapter{Applications}
 
 
 \newpage
@@ -277,10 +303,6 @@ When prompting this question to popular web search engines we get different resu
 \end{center}
 \vfill
 \hspace{0pt}
-
-%----------------------------------------------------------------------------------------
-%	CHAPTER 2
-%----------------------------------------------------------------------------------------
 
 
 \chapter[Conclusion]{Conclusion}
@@ -303,24 +325,24 @@ We finalize
 %----------------------------------------------------------------------------------------
 
 \chapter*{Summary}
-In thi
+In this chapter
 
 \chapter*{Samenvatting}
-In thi
+In dit hoofdstuk 
 
 \chapter*{Acknowledgements}
-In thi
+I would like to acknowledge ..
 
 \chapter*{Research Data Management}
-In thi
+For RDM
 
 \chapter*{Curriculum Vitæ}
-In thi
+Chris is 
 
 
 
 
-
-\printindex % Print the index at the very end of the document
+% keep or not
+% \printindex % Print the index at the very end of the document
 
 \end{document}

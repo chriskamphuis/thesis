@@ -1,0 +1,39 @@
+@InProceedings{Kamphuis2020BM25,
+	author="Kamphuis, Chris
+	and de Vries, Arjen P.
+	and Boytsov, Leonid
+	and Lin, Jimmy",
+	editor="Jose, Joemon M.
+	and Yilmaz, Emine
+	and Magalh{\~a}es, Jo{\~a}o
+	and Castells, Pablo
+	and Ferro, Nicola
+	and Silva, M{\'a}rio J.
+	and Martins, Fl{\'a}vio",
+	title={{Which BM25 Do You Mean? A Large-Scale Reproducibility Study of Scoring Variants}},
+	booktitle="Advances in Information Retrieval",
+	year="2020",
+	publisher="Springer International Publishing",
+	address="Cham",
+	pages="28--34",
+	abstract="When researchers speak of BM25, it is not entirely clear which variant they mean, since many tweaks to Robertson et al.'s original formulation have been proposed. When practitioners speak of BM25, they most likely refer to the implementation in the Lucene open-source search library. Does this ambiguity ``matter''? We attempt to answer this question with a large-scale reproducibility study of BM25, considering eight variants. Experiments on three newswire collections show that there are no significant effectiveness differences between them, including Lucene's often maligned approximation of document length. As an added benefit, our empirical approach takes advantage of databases for rapid IR prototyping, which validates both the feasibility and methodological advantages claimed in previous work.",
+	isbn="978-3-030-45442-5"
+}
+
+@inproceedings{OldDog,
+	author = {M\"{u}hleisen, Hannes and Samar, Thaer and Lin, Jimmy and de Vries, Arjen},
+	title = {{Old Dogs Are Great at New Tricks: Column Stores for IR Prototyping}},
+	year = {2014},
+	isbn = {9781450322577},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2600428.2609460},
+	doi = {10.1145/2600428.2609460},
+	abstract = {We make the suggestion that instead of implementing custom index structures and query evaluation algorithms, IR researchers should simply store document representations in a column-oriented relational database and implement ranking models using SQL. For rapid prototyping, this is particularly advantageous since researchers can explore new scoring functions and features by simply issuing SQL queries, without needing to write imperative code. We demonstrate the feasibility of this approach by an implementation of conjunctive BM25 using two modern column stores. Experiments on a web collection show that a retrieval engine built in this manner achieves effectiveness and efficiency on par with custom-built retrieval engines, but provides many additional advantages, including cleaner query semantics, a simpler architecture, built-in support for error analysis, and the ability to exploit advances in database technology "for free".},
+	booktitle = {Proceedings of the 37th International ACM SIGIR Conference on Research \& Development in Information Retrieval},
+	pages = {863–866},
+	numpages = {4},
+	keywords = {relational databases, bm25},
+	location = {Gold Coast, Queensland, Australia},
+	series = {SIGIR '14}
+}

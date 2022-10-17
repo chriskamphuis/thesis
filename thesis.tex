@@ -1,0 +1,45 @@
+\documentclass[twoside,12pt]{book}
+
+\def\mytitle{Graphs and Information Retrieval}
+\def\myauthor{Chris Kamphuis}
+\def\mydate{\formatdate{22}{03}{2023}}
+
+\input{./preamble}
+
+\usepackage{todonotes}
+\setuptodonotes{
+	backgroundcolor=white,
+	linecolor=black,
+	size=tiny,
+}
+
+\author{\myauthor}
+\title{\mytitle}
+\date{\mydate}
+
+\begin{document}
+
+\frontmatter
+
+\input{./titlepage}
+\tableofcontents
+
+\mainmatter
+\include{./introduction}
+\include{./information_retrieval_using_relational_databases}
+\include{./from_tables_to_graphs}
+\include{./data_modeling_using_graphs}
+\include{./applications}
+\include{./conclusion}
+\bibliographystyle{acm}
+\bibliography{./refs.bib}
+
+\backmatter
+% bibliography, glossary and index would go here.
+\include{./summary}
+\include{./samenvatting}
+\include{./acknowlegements}
+\include{./research_data_management}
+\include{./curriculum_vitae}
+
+\end{document}
