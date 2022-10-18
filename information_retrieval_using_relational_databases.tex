@@ -2,12 +2,133 @@
 \section{Introduction}
 Where commonly information retrieval researchers use inverted indexes as data structures, there is also a rich history of researchers using relational databases for representing the data in information retrieval systems. 
 
-% Describe boolean retrieval systems
-% Describe other systems by for example Norbert 
+% todo Describe boolean retrieval systems
+% todo Describe other systems by for example Norbert 
 
-In a more recent work \cite{OldDog} showed that the common used BM25 ranking function can also be easily expressed using relational tables. Their work specifically focused on the retrieval efficiency of several systems.   
-% End with OldDog system by Hannes
+In a more recent work by M\"{u}hleisen et al.~\cite{OldDog} showed that the common used BM25 ranking function can also be easily expressed using relational tables. Their work specifically focused on the retrieval efficiency of several systems.   
+% todo End with OldDog system by Hannes
+
+The systems evaluated in this paper all purported to implement BM25, there was however a substantial difference between the effectiveness scores produced by these systems, as shown in table~\ref{olddog_results}. 
+
+\begin{table}
+	\centering
+	\caption{Results presented by M\"{u}hleisen et al.~\cite{OldDog}; MAP and P@5 on the ClueWeb12 collection are reported for five different systems that run BM25. As shown in the table, only the two database systems achieve the same effectiveness score. Both these systems were however developed by the same research group.}
+	\label{olddog_results}
+	\begin{tabular}{c c c}
+		\toprule
+		System &  MAP & P@5 \\
+		\midrule
+		Indri & 0.246 & 0.304 \\
+		MonetDB \& VectorWise & 0.225 & 0.276 \\
+		Lucene & 0.216 & 0.265 \\
+		Terrier & 0.215 & 0.272 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+These results came out as quite a surprise as the authors took specific care to keep document pre-processing identical for all systems, but the observed difference in \texttt{MAP} of 3\% absolute was the largest deviation in score reported.
+
 
 \section{Reproducibility}
+Not only did we observe the differences in effectiveness scores for BM25 in the paper by M\"{u}hleisen et al.~\cite{OldDog}. In the SIGIR 2015 Workshop on Reproducibility, Inexplicability, and Generalizability of Results (RIGOR)~\cite{RIGOR} and the Open-Source IR Replicability Challenge (OSIRRC) workshop~\cite{OSIRRC} similar results are observed. See tables~\ref{rigor_results} and~\ref{osirrc_results} respectively.  
+
+\begin{table}
+	\centering
+	\caption{Results from the RIGOR workshop\cite{RIGOR}, MAP@1000 on the .GOV2 collection is reported for four different systems that run BM25. As shown in the table, all four implementations report a different effectiveness score.}
+	\label{rigor_results}
+	\begin{tabular}{c c}
+		\toprule
+		System &  MAP@1000 \\
+		\midrule
+		ATIRE & 0.2902 \\
+		Lucene & 0.3029 \\
+		MG4J & 0.2994 \\
+		Terrier & 0.2697 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+\begin{table}
+	\centering
+	\caption{Results from the OSIRRC workshop\cite{OSIRRC}, AP, P@30, and NDCG@20 on the robust04 collection are reported for seven different systems that run BM25. As shown in the table, all implementations report (again) a different effectiveness score.}
+	\label{osirrc_results}
+	\begin{tabular}{c c c c}
+		\toprule
+		System & AP & P@30 & NDCG@20 \\
+		\midrule
+		Anserini (Lucene) & 0.2531 & 0.3102 & 0.4240 \\
+		ATIRE & 0.2184 & 0.3199 & 0.4211 \\
+		ielab & 0.1826 & 0.2605 & 0.3477 \\
+		Indri & 0.2388 & 0.2995 & 0.4041 \\
+		OldDog & 0.2434 & 0.2985 & 0.4002 \\
+		Pisa & 0.2534 & 0.3120 & 0.4221 \\
+		Terrier & 0.2363 & 0.2977 & 0.4049 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+It is not clear 
+
+\section{Variants of BM25}
+Introduce what we did here
+
+We examined several BM25 variants which will be introduced, how the variant varies from the original formulation as proposed by Robertson et al.~is marked in red. 
+
+\subsubsection{Robertson et al.} 
+Equation~\ref{bm25-robertson} shows the original formulation of BM25: $N$ is the number of documents in the collection, $df_t$ is the number of documents containing term $t$, $tf_{td}$ is the term frequency of term $t$ in document $d$. Document lengths $L_d$ and $L_{avg}$ are the number of tokens in document $d$ and the average number of tokens in a document in the collection, respectively. Finally, $k_1$ and $b$ are free parameters that can be optimized per collection. 
+
+\begin{equation}
+	\label{bm25-robertson}
+	\sum_{t\in q} log\left(\frac{N-df_t+0.5}{df_t+0.5}\right)\cdot\frac{tf_{td}}{1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right) + tf_{td}}
+\end{equation}
+
+\subsubsection{Lucene (default)}
+
+\begin{equation}
+	\sum_{t\in q}\log\left(\mathbf{\begingroup\color{ruhuisstijlrood}1 +\endgroup} \frac{N-df_t+0.5}{df_t+0.5}\right)\cdot\frac{tf_{td}}{k_1\cdot\left(1-b+b\cdot\left(\frac{L_{d \mathbf{\begingroup\color{ruhuisstijlrood}lossy\endgroup}}}{L_{avg}}\right)\right)+tf_{td}}
+\end{equation}
+
+\subsubsection{Lucene (accurate)}
+
+\begin{equation}
+	\sum_{t\in q}\log\left(\mathbf{\begingroup\color{ruhuisstijlrood}1 +\endgroup} \frac{N-df_t+0.5}{df_t+0.5}\right)\cdot\frac{tf_{td}}{k_1\cdot \left(1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right)\right)+tf_{td}}
+\end{equation}
+
+\subsubsection{ATIRE}
+
+\begin{equation}
+	\sum_{t\in q}\log\left(\mathbf{\begingroup\color{ruhuisstijlrood}\frac{N}{df_t}\endgroup}\right)\cdot\frac{\mathbf{\begingroup\color{ruhuisstijlrood}\left(k_1 + 1\right)\endgroup}\cdot tf_{td}}{k_1\cdot\left(1-b+b\cdot\left(\frac{L_{d}}{L_{avg}}\right)\right)+tf_{td}}
+\end{equation}
+
+\subsubsection{BM25L}
+
+\begin{equation}
+	\sum_{t\in q} \log\left(\mathbf{\begingroup\color{ruhuisstijlrood}\frac{N+1}{df_t + 0.5}\endgroup}\right)\cdot\frac{\mathbf{\begingroup\color{ruhuisstijlrood}(k_1 + 1)\endgroup}\cdot(c_{td} \mathbf{\begingroup\color{ruhuisstijlrood}+ \delta\endgroup})}{k_1 + (c_{td} \mathbf{\begingroup\color{ruhuisstijlrood}+ \delta\endgroup})}
+\end{equation}
+
+\subsubsection{BM25+}
+
+\begin{equation}
+	\sum_{t\in q} \log\left(\mathbf{\begingroup\color{ruhuisstijlrood}\frac{N+1}{df_t}\endgroup}\right)\cdot\left(\frac{\mathbf{\begingroup\color{ruhuisstijlrood}\left(k_1 + 1\right)\endgroup}\cdot tf_{td}}{k_1\cdot\left(\left(1-b\right)+b\cdot\left(\frac{L_d}{L_{avg}}\right)\right)+tf_{td}}+\mathbf{\begingroup\color{ruhuisstijlrood}\delta\endgroup}\right)
+\end{equation}
+
+\subsubsection{BM25-adpt}
+
+\begin{equation}
+	\sum_{t\in q}\mathbf{\begingroup\color{ruhuisstijlrood}G_q^1\endgroup}\cdot\frac{\mathbf{\begingroup\color{ruhuisstijlrood}\left(k'_1+1\right)\endgroup}\cdot tf_{td}}{\mathbf{\begingroup\color{ruhuisstijlrood}k'_1\endgroup}\cdot\left(\left(1-b\right)+\cdot\left(\frac{L_d}{L_{avg}}\right)\right)+tf_{td}}
+\end{equation}
+
+\subsubsection{TF $l\circ\delta\circ p\times$IDF}
+
+\begin{equation}
+	\sum_{t\in q}\log\left(\mathbf{\begingroup\color{ruhuisstijlrood}\frac{N+1}{df_t}\endgroup}\right)\cdot\left(\mathbf{\begingroup\color{ruhuisstijlrood}1+\log\endgroup}\left(\mathbf{\begingroup\color{ruhuisstijlrood}1+\log\endgroup}\left(\frac{tf_{td}}{1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right)}\mathbf{\begingroup\color{ruhuisstijlrood}+\delta\endgroup}\right)\right)\right)
+\end{equation}
+
+\section{Results}
+We found that 
+
+\section{Conclusion}
+We can conclude that
 
 We \cite{Kamphuis2020BM25}
