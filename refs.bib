@@ -17,7 +17,8 @@
 	address="Cham",
 	pages="28--34",
 	abstract="When researchers speak of BM25, it is not entirely clear which variant they mean, since many tweaks to Robertson et al.'s original formulation have been proposed. When practitioners speak of BM25, they most likely refer to the implementation in the Lucene open-source search library. Does this ambiguity ``matter''? We attempt to answer this question with a large-scale reproducibility study of BM25, considering eight variants. Experiments on three newswire collections show that there are no significant effectiveness differences between them, including Lucene's often maligned approximation of document length. As an added benefit, our empirical approach takes advantage of databases for rapid IR prototyping, which validates both the feasibility and methodological advantages claimed in previous work.",
-	isbn="978-3-030-45442-5"
+	isbn="978-3-030-45442-5",
+	series="ECIR '20"
 }
 
 @inproceedings{OldDog,
@@ -58,7 +59,7 @@
 
 @article{RIGOR,
 	author = {Arguello, Jaime and Crane, Matt and Diaz, Fernando and Lin, Jimmy and Trotman, Andrew},
-	title = {Report on the SIGIR 2015 Workshop on Reproducibility, Inexplicability, and Generalizability of Results (RIGOR)},
+	title = {{Report on the SIGIR 2015 Workshop on Reproducibility, Inexplicability, and Generalizability of Results (RIGOR)}},
 	year = {2016},
 	issue_date = {December 2015},
 	publisher = {Association for Computing Machinery},
@@ -73,4 +74,619 @@
 	month = {jan},
 	pages = {107–116},
 	numpages = {10}
+}
+@inproceedings{ATIRE,
+	title={{Towards an Efficient and Effective Search Engine.}},
+	author={Trotman, Andrew and Jia, Xiangfei and Crane, Matt},
+	booktitle={OSIR@ SIGIR},
+	pages={40--47},
+	year={2012}
+}
+@inproceedings{trotman-bm25,
+	author = {Trotman, Andrew and Puurula, Antti and Burgess, Blake},
+	title = {{Improvements to BM25 and Language Models Examined}},
+	year = {2014},
+	isbn = {9781450330008},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2682862.2682863},
+	doi = {10.1145/2682862.2682863},
+	abstract = {Recent work on search engine ranking functions report improvements on BM25 and Language Models with Dirichlet Smoothing. In this investigation 9 recent ranking functions (BM25, BM25+, BM25T, BM25-adpt, BM25L, TF1°δ°p\texttimes{}ID, LM-DS, LM-PYP, and LM-PYP-TFIDF) are compared by training on the INEX 2009 Wikipedia collection and testing on INEX 2010 and 9 TREC collections. We find that once trained (using particle swarm optimization) there is very little difference in performance between these functions, that relevance feedback is effective, that stemming is effective, and that it remains unclear which function is best over-all.},
+	booktitle = {Proceedings of the 2014 Australasian Document Computing Symposium},
+	pages = {58–65},
+	numpages = {8},
+	keywords = {Relevance Ranking, Document Retrieval, Procrastination},
+	location = {Melbourne, VIC, Australia},
+	series = {ADCS '14}
+}
+@inproceedings{bm25-robertson,
+	title={{Okapi at TREC-3}},
+	author={Stephen E. Robertson and Steve Walker and Susan Jones and Micheline Hancock-Beaulieu and Mike Gatford},
+	booktitle={TREC},
+	year={1994}
+}
+@inproceedings{bm25l,
+	author = {Lv, Yuanhua and Zhai, ChengXiang},
+	title = {{When Documents Are Very Long, BM25 Fails!}},
+	year = {2011},
+	isbn = {9781450307574},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2009916.2010070},
+	doi = {10.1145/2009916.2010070},
+	abstract = {We reveal that the Okapi BM25 retrieval function tends to overly penalize very long documents. To address this problem, we present a simple yet effective extension of BM25, namely BM25L, which "shifts" the term frequency normalization formula to boost scores of very long documents. Our experiments show that BM25L, with the same computation cost, is more effective and robust than the standard BM25.},
+	booktitle = {Proceedings of the 34th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {1103–1104},
+	numpages = {2},
+	keywords = {term frequency, very long documents, bm25, bm25l},
+	location = {Beijing, China},
+	series = {SIGIR '11}
+}
+@inproceedings{bm25+,
+	author = {Lv, Yuanhua and Zhai, ChengXiang},
+	title = {{Lower-Bounding Term Frequency Normalization}},
+	year = {2011},
+	isbn = {9781450307178},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2063576.2063584},
+	doi = {10.1145/2063576.2063584},
+	abstract = {In this paper, we reveal a common deficiency of the current retrieval models: the component of term frequency (TF) normalization by document length is not lower-bounded properly; as a result, very long documents tend to be overly penalized. In order to analytically diagnose this problem, we propose two desirable formal constraints to capture the heuristic of lower-bounding TF, and use constraint analysis to examine several representative retrieval functions. Analysis results show that all these retrieval functions can only satisfy the constraints for a certain range of parameter values and/or for a particular set of query terms. Empirical results further show that the retrieval performance tends to be poor when the parameter is out of the range or the query term is not in the particular set. To solve this common problem, we propose a general and efficient method to introduce a sufficiently large lower bound for TF normalization which can be shown analytically to fix or alleviate the problem. Our experimental results demonstrate that the proposed method, incurring almost no additional computational cost, can be applied to state-of-the-art retrieval functions, such as Okapi BM25, language models, and the divergence from randomness approach, to significantly improve the average precision, especially for verbose queries.},
+	booktitle = {Proceedings of the 20th ACM International Conference on Information and Knowledge Management},
+	pages = {7–16},
+	numpages = {10},
+	keywords = {formal constraints, BM25+, Pl2+, term frequency, document length, data analysis, lower bound, DIR+},
+	location = {Glasgow, Scotland, UK},
+	series = {CIKM '11}
+}
+@inproceedings{bm25-adpt,
+	author = {Lv, Yuanhua and Zhai, ChengXiang},
+	title = {{Adaptive Term Frequency Normalization for BM25}},
+	year = {2011},
+	isbn = {9781450307178},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2063576.2063871},
+	doi = {10.1145/2063576.2063871},
+	abstract = {A key component of BM25 contributing to its success is its sub linear term frequency (TF) normalization formula. The scale and shape of this TF normalization component is controlled by a parameter k1, which is generally set to a term-independent constant. We hypothesize and show empirically that in order to optimize retrieval performance, this parameter should be set in a term-specific way. Following this intuition, we propose an information gain measure to directly estimate the contributions of repeated term occurrences, which is then exploited to fit the BM25 function to predict a term-specific k1. Our experiment results show that the proposed approach, without needing any training data, can efficiently and automatically estimate a term-specific k1, and is more effective and robust than the standard BM25.},
+	booktitle = {Proceedings of the 20th ACM International Conference on Information and Knowledge Management},
+	pages = {1985–1988},
+	numpages = {4},
+	keywords = {bm25, information gain, term frequency, adaptation},
+	location = {Glasgow, Scotland, UK},
+	series = {CIKM '11}
+}
+@inproceedings{tf-ldp-idf,
+	author = {Rousseau, Fran\c{c}ois and Vazirgiannis, Michalis},
+	title = {{Composition of TF Normalizations: New Insights on Scoring Functions for Ad Hoc IR}},
+	year = {2013},
+	isbn = {9781450320344},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2484028.2484121},
+	doi = {10.1145/2484028.2484121},
+	abstract = {Previous papers in ad hoc IR reported that scoring functions should satisfy a set of heuristic retrieval constraints, providing a mathematical justification for the normalizations historically applied to the term frequency (TF). In this paper, we propose a further level of abstraction, claiming that the successive normalizations are carried out through composition. Thus we introduce a principled framework that fully explains BM25 as a variant of TF-IDF with an inverse order of function composition. Our experiments over standard datasets indicate that the respective orders of composition chosen in the original papers for both TF-IDF and BM25 are the most effective ones. Moreover, since the order is different between the two models, they also demonstrated that the order is instrumental in the design of weighting models. In fact, while considering more complex scoring functions such as BM25+, we discovered a novel weighting model in terms of order of composition that consistently outperforms all the rest. Our contribution here is twofold: we provide a unifying mathematical framework for IR and a novel scoring function discovered using this framework.},
+	booktitle = {Proceedings of the 36th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {917–920},
+	numpages = {4},
+	keywords = {scoring functions, tf normalizations, function composition, ir theory, heuristic retrieval constraints},
+	location = {Dublin, Ireland},
+	series = {SIGIR '13}
+}
+@inproceedings{SchekPistor,
+	author = {Schek, Hans-J\"{o}rg and Pistor, Peter},
+	title = {{Data Structures for an Integrated Data Base Management and Information Retrieval System}},
+	year = {1982},
+	isbn = {0934613141},
+	publisher = {Morgan Kaufmann Publishers Inc.},
+	address = {San Francisco, CA, USA},
+	booktitle = {Proceedings of the 8th International Conference on Very Large Data Bases},
+	pages = {197–207},
+	numpages = {11},
+	series = {VLDB '82}
+}
+@article{macleod,
+	author = {Macleod, Ian A.},
+	title = {{Text Retrieval and the Relational Model}},
+	journal = {Journal of the American Society for Information Science},
+	volume = {42},
+	number = {3},
+	pages = {155-165},
+	doi = {https://doi.org/10.1002/(SICI)1097-4571(199104)42:3<155::AID-ASI1>3.0.CO;2-H},
+	url = {https://asistdl.onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291097-4571%28199104%2942%3A3%3C155%3A%3AAID-ASI1%3E3.0.CO%3B2-H},
+	eprint = {https://asistdl.onlinelibrary.wiley.com/doi/pdf/10.1002/%28SICI%291097-4571%28199104%2942%3A3%3C155%3A%3AAID-ASI1%3E3.0.CO%3B2-H},
+	abstract = {Abstract In this article, the suitability of the relational model as a basis for storing and retrieving documents is examined. The relational model is compared with the conventional retrieval systems and the strengths and weaknesses of both are compared. Finally some emerging trends in document processing are discussed and some proposals are made regarding the future directions of document management systems. © 1991 John Wiley \& Sons, Inc.},
+	year = {1991}
+}
+@article{fuhr1996probabilistic,
+	title={{Models for Integrated Information Retrieval and Database Systems}},
+	author={Fuhr, Norbert},
+	journal={IEEE Data Engineering Bulletin},
+	volume={19},
+	number={1},
+	pages={3--13},
+	year={1996}
+}
+@InProceedings{dense-retrieval-1,
+	author="Gao, Luyu
+	and Dai, Zhuyun
+	and Chen, Tongfei
+	and Fan, Zhen
+	and Van Durme, Benjamin
+	and Callan, Jamie",
+	title={{Complement Lexical Retrieval Model with Semantic Residual Embeddings}},
+	booktitle="Advances in  Information Retrieval",
+	year="2021",
+	publisher="Springer International Publishing",
+	address="Cham",
+	pages="146--160",
+	abstract="This paper presents clear, a retrieval model that seeks to complement classical lexical exact-match models such as BM25 with semantic matching signals from a neural embedding matching model.clear explicitly trains the neural embedding to encode language structures and semantics that lexical retrieval fails to capture with a novel residual-based embedding learning method. Empirical evaluations demonstrate the advantages of clear over state-of-the-art retrieval models, and that it can substantially improve the end-to-end accuracy and efficiency of reranking pipelines.",
+	isbn="978-3-030-72113-8",
+	series={ECIR '21}
+}
+
+@article{dense-retrieval-2,
+	title={{Sparse, Dense, and Attentional Representations for Text Retrieval}},
+	author={Luan, Yi and Eisenstein, Jacob and Toutanova, Kristina and Collins, Michael},
+	journal={Transactions of the Association for Computational Linguistics},
+	volume={9},
+	pages={329--345},
+	year={2021},
+	publisher={MIT Press}
+}
+
+@article{dense-retrieval-3,
+	author    = {Sheng{-}Chieh Lin and
+	Jheng{-}Hong Yang and
+	Jimmy Lin},
+	title     = {{Distilling Dense Representations for Ranking using Tightly-Coupled
+	Teachers}},
+	journal   = {CoRR},
+	volume    = {abs/2010.11386},
+	year      = {2020},
+	url       = {https://arxiv.org/abs/2010.11386},
+	archivePrefix = {arXiv},
+	eprint    = {2010.11386},
+	timestamp = {Mon, 26 Oct 2020 15:39:44 +0100},
+	biburl    = {https://dblp.org/rec/journals/corr/abs-2010-11386.bib},
+	bibsource = {dblp computer science bibliography, https://dblp.org},
+	numpages={7}
+}
+
+@inproceedings{entity-1,
+	author = {Hasibi, Faegheh and Balog, Krisztian and Bratsberg, Svein Erik},
+	title = {{Exploiting Entity Linking in Queries for Entity Retrieval}},
+	year = {2016},
+	isbn = {9781450344975},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2970398.2970406},
+	doi = {10.1145/2970398.2970406},
+	abstract = {The premise of entity retrieval is to better answer search queries by returning specific entities instead of documents. Many queries mention particular entities; recognizing and linking them to the corresponding entry in a knowledge base is known as the task of entity linking in queries. In this paper we make a first attempt at bringing together these two, i.e., leveraging entity annotations of queries in the entity retrieval model. We introduce a new probabilistic component and show how it can be applied on top of any term-based entity retrieval model that can be emulated in the Markov Random Field framework, including language models, sequential dependence models, as well as their fielded variations. Using a standard entity retrieval test collection, we show that our extension brings consistent improvements over all baseline methods, including the current state-of-the-art. We further show that our extension is robust against parameter settings.},
+	booktitle = {Proceedings of the 2016 ACM International Conference on the Theory of Information Retrieval},
+	pages = {209–218},
+	numpages = {10},
+	keywords = {semistructured retrieval, entity linking, entity retrieval},
+	location = {Newark, Delaware, USA},
+	series = {ICTIR '16}
+}
+@book{entity-2,
+	title={{Entity-oriented search}},
+	author={Balog, Krisztian},
+	year={2018},
+	publisher={Springer Nature},
+	address={Gewerbestrasse 11, 6330 Cham, Switzerland}
+}
+@inproceedings{entity-3,
+	author = {Dalton, Jeffrey and Dietz, Laura and Allan, James},
+	title = {{Entity Query Feature Expansion Using Knowledge Base Links}},
+	year = {2014},
+	isbn = {9781450322577},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2600428.2609628},
+	doi = {10.1145/2600428.2609628},
+	abstract = {Recent advances in automatic entity linking and knowledge base construction have resulted in entity annotations for document and query collections. For example, annotations of entities from large general purpose knowledge bases, such as Freebase and the Google Knowledge Graph. Understanding how to leverage these entity annotations of text to improve ad hoc document retrieval is an open research area. Query expansion is a commonly used technique to improve retrieval effectiveness. Most previous query expansion approaches focus on text, mainly using unigram concepts. In this paper, we propose a new technique, called entity query feature expansion (EQFE) which enriches the query with features from entities and their links to knowledge bases, including structured attributes and text. We experiment using both explicit query entity annotations and latent entities. We evaluate our technique on TREC text collections automatically annotated with knowledge base entity links, including the Google Freebase Annotations (FACC1) data. We find that entity-based feature expansion results in significant improvements in retrieval effectiveness over state-of-the-art text expansion approaches.},
+	booktitle = {Proceedings of the 37th International ACM SIGIR Conference on Research; Development in Information Retrieval},
+	pages = {365–374},
+	numpages = {10},
+	keywords = {entities, ontologies, information extraction, information retrieval},
+	location = {Gold Coast, Queensland, Australia},
+	series = {SIGIR '14}
+}
+
+@inproceedings{ltr-1,
+	author = {Deveaud, Romain and Albakour, M-Dyaa and Macdonald, Craig and Ounis, Iadh},
+	title = {{On the Importance of Venue-Dependent Features for Learning to Rank Contextual Suggestions}},
+	year = {2014},
+	isbn = {9781450325981},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2661829.2661956},
+	doi = {10.1145/2661829.2661956},
+	abstract = {Suggesting venues to a user in a given geographic context is an emerging task that is currently attracting a lot of attention. Existing studies in the literature consist of approaches that rank candidate venues based on different features of the venues and the user, which either focus on modeling the preferences of the user or the quality of the venue. However, while providing insightful results and conclusions, none of these studies have explored the relative effectiveness of these different features. In this paper, we explore a variety of user-dependent and venue-dependent features and apply state-of-the-art learning to rank approaches to the problem of contextual suggestion in order to find what makes a venue relevant for a given context. Using the test collection of the TREC 2013 Contextual Suggestion track, we perform a number of experiments to evaluate our approach. Our results suggest that a learning to rank technique can significantly outperform a Language Modelling baseline that models the positive and negative preferences of the user. Moreover, despite the fact that the contextual suggestion task is a personalisation task (i.e. providing the user with personalised suggestions of venues), we surprisingly find that user-dependent features are less effective than venue-dependent features for estimating the relevance of a suggestion.},
+	booktitle = {Proceedings of the 23rd ACM International Conference on Conference on Information and Knowledge Management},
+	pages = {1827–1830},
+	numpages = {4},
+	keywords = {venue recommendation, contextual suggestion, personalisation, learning to rank},
+	location = {Shanghai, China},
+	series = {CIKM '14}
+}
+
+@inproceedings{ltr-2,
+	author = {Macdonald, Craig and Santos, Rodrygo L.T. and Ounis, Iadh},
+	title = {{On the Usefulness of Query Features for Learning to Rank}},
+	year = {2012},
+	isbn = {9781450311564},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2396761.2398691},
+	doi = {10.1145/2396761.2398691},
+	abstract = {Learning to rank studies have mostly focused on query-dependent and query-independent document features, which enable the learning of ranking models of increased effectiveness. Modern learning to rank techniques based on regression trees can support query features, which are document-independent, and hence have the same values for all documents being ranked for a query. In doing so, such techniques are able to learn sub-trees that are specific to certain types of query. However, it is unclear which classes of features are useful for learning to rank, as previous studies leveraged anonymised features. In this work, we examine the usefulness of four classes of query features, based on topic classification, the history of the query in a query log, the predicted performance of the query, and the presence of concepts such as persons and organisations in the query. Through experiments on the ClueWeb09 collection, our results using a state-of-the-art learning to rank technique based on regression trees show that all four classes of query features can significantly improve upon an effective learned model that does not use any query feature.},
+	booktitle = {Proceedings of the 21st ACM International Conference on Information and Knowledge Management},
+	pages = {2559–2562},
+	numpages = {4},
+	keywords = {query features, learning to rank},
+	location = {Maui, Hawaii, USA},
+	series = {CIKM '12}
+}
+
+@inproceedings{angles2018property,
+	title={{The Property Graph Database Model.}},
+	author={Angles, Renzo},
+	booktitle={Proceedings of the 12th Alberto Mendelzon International Workshop on Foundations of Data Management},
+	year={2018},
+	series={AMW '18},
+	location={Cali, Colombia},
+	publisher={CEUR-WS.org},
+	address={Aachen},
+	numpages={10}
+}
+
+@inproceedings{duckdb,
+	author = {Raasveldt, Mark and M\"{u}hleisen, Hannes},
+	title = {{DuckDB: An Embeddable Analytical Database}},
+	year = {2019},
+	isbn = {9781450356435},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3299869.3320212},
+	doi = {10.1145/3299869.3320212},
+	abstract = {The immense popularity of SQLite shows that there is a need for unobtrusive in-process data management solutions. However, there is no such system yet geared towards analytical workloads. We demonstrate DuckDB, a novel data management system designed to execute analytical SQL queries while embedded in another process. In our demonstration, we pit DuckDB against other data management solutions to showcase its performance in the embedded analytics scenario. DuckDB is available as Open Source software under a permissive license.},
+	booktitle = {Proceedings of the 2019 International Conference on Management of Data},
+	pages = {1981–1984},
+	numpages = {4},
+	location = {Amsterdam, Netherlands},
+	series = {SIGMOD '19}
+}
+
+@inproceedings{olddog-docker,
+	author    = {Chris Kamphuis and
+	Arjen P. de Vries},
+	title     = {{The OldDog Docker Image for OSIRRC at SIGIR 2019}},
+	booktitle = {Proceedings of the Open-Source {IR} Replicability Challenge co-located
+	with 42nd International {ACM} {SIGIR} Conference on Research and Development
+	in Information Retrieval, {OSIRRC}@{SIGIR} 2019, Paris, France, July 25,
+	2019},
+	pages     = {47--49},
+	year      = {2019},
+	url       = {http://ceur-ws.org/Vol-2409/docker07.pdf},
+	timestamp = {Fri, 30 Aug 2019 13:15:06 +0200},
+	address={Aachen},
+	publisher={CEUR-WS.org}
+}
+
+@inproceedings{anserini,
+	author = {Yang, Peilin and Fang, Hui and Lin, Jimmy},
+	title = {{Anserini: Enabling the Use of Lucene for Information Retrieval Research}},
+	year = {2017},
+	isbn = {9781450350228},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3077136.3080721},
+	doi = {10.1145/3077136.3080721},
+	abstract = {Software toolkits play an essential role in information retrieval research. Most open-source toolkits developed by academics are designed to facilitate the evaluation of retrieval models over standard test collections. Efforts are generally directed toward better ranking and less attention is usually given to scalability and other operational considerations. On the other hand, Lucene has become the de facto platform in industry for building search applications (outside a small number of companies that deploy custom infrastructure). Compared to academic IR toolkits, Lucene can handle heterogeneous web collections at scale, but lacks systematic support for evaluation over standard test collections. This paper introduces Anserini, a new information retrieval toolkit that aims to provide the best of both worlds, to better align information retrieval practice and research. Anserini provides wrappers and extensions on top of core Lucene libraries that allow researchers to use more intuitive APIs to accomplish common research tasks. Our initial efforts have focused on three functionalities: scalable, multi-threaded inverted indexing to handle modern web-scale collections, streamlined IR evaluation for ad hoc retrieval on standard test collections, and an extensible architecture for multi-stage ranking. Anserini ships with support for many TREC test collections, providing a convenient way to replicate competitive baselines right out of the box. Experiments verify that our system is both efficient and effective, providing a solid foundation to support future research.},
+	booktitle = {Proceedings of the 40th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {1253–1256},
+	numpages = {4},
+	keywords = {reproducibility, multi-threaded inverted indexing, trec test collections, open-source toolkits},
+	location = {Shinjuku, Tokyo, Japan},
+	series = {SIGIR '17}
+}
+@inproceedings{terrier,
+	author="Ounis, Iadh
+	and Amati, Gianni
+	and Plachouras, Vassilis
+	and He, Ben
+	and Macdonald, Craig
+	and Johnson, Douglas",
+	editor="Losada, David E.
+	and Fern{\'a}ndez-Luna, Juan M.",
+	title={{Terrier Information Retrieval Platform}},
+	booktitle="Advances in Information Retrieval",
+	year="2005",
+	publisher="Springer Berlin Heidelberg",
+	address="Berlin, Heidelberg",
+	pages="517--519",
+	abstract="Terrier is a modular platform for the rapid development of large-scale Information Retrieval (IR) applications. It can index various document collections, including TREC and Web collections. Terrier also offers a range of document weighting and query expansion models, based on the Divergence From Randomness framework. It has been successfully used for ad-hoc retrieval, cross-language retrieval, Web IR and intranet search, in a centralised or distributed setting.",
+	isbn="978-3-540-31865-1"
+}
+@article{pyserini,
+	title={Pyserini: An easy-to-use Python toolkit to support replicable IR research with sparse and dense representations},
+	author={Lin, Jimmy and Ma, Xueguang and Lin, Sheng-Chieh and Yang, Jheng-Hong and Pradeep, Ronak and Nogueira, Rodrigo},
+	journal={arXiv preprint arXiv:2102.10073},
+	year={2021},
+	numpages={8}
+}
+
+@inproceedings{REL,
+	author = {van Hulst, Johannes M. and Hasibi, Faegheh and Dercksen, Koen and Balog, Krisztian and de Vries, Arjen P.},
+	title = {{REL: An Entity Linker Standing on the Shoulders of Giants}},
+	year = {2020},
+	booktitle = {Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {2197–2200},
+	numpages = {4}
+}
+
+@inproceedings{Gerritse:2020:GEER,
+	author = {Gerritse, Emma J and Hasibi, Faegheh and de Vries, Arjen P},
+	booktitle = {Proceedings of the 42nd European Conference on Information Retrieval},
+	pages = {97--110},
+	title = {{Graph-Embedding Empowered Entity Retrieval}},
+	year = {2020}
+}
+
+@inproceedings{msmarco,
+	title={{MS MARCO}: {A} {H}uman {G}enerated {MA}chine {R}eading {CO}mprehension {D}ataset},
+	author={Payal Bajaj and Daniel Campos and Nick Craswell and Li Deng and Jianfeng Gao and Xiaodong Liu and Rangan Majumder and Andrew McNamara, Bhaskar Mitra and Tri Nguyen and Mir Rosenberg and Xia Song and Alina Stoica and Saurabh Tiwary and Tong Wang},
+	booktitle={InCoCo@NIPS},
+	pages={},
+	year={2016}
+}
+
+@inproceedings{flair,
+	title={{FLAIR}: An easy-to-use framework for state-of-the-art {NLP}},
+	author={Akbik, Alan and Bergmann, Tanja and Blythe, Duncan and Rasul, Kashif and Schweter, Stefan and Vollgraf, Roland},
+	booktitle={Annual Conference of the North American Chapter of the Association for Computational Linguistics (Demonstrations)},
+	pages={54--59},
+	year={2019}
+}
+
+@inproceedings{Gerritse:2022:EMBERT,
+	author = {Gerritse, Emma J and Hasibi, Faegheh and de Vries, Arjen P.},
+	booktitle = {Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {1455--1465},
+	series = {SIGIR '22},
+	title = {{Entity-Aware Transformers for Entity Search}},
+	year = {2022}
+}
+
+@inproceedings{lin-etal-2012-entity,
+	title = "Entity Linking at Web Scale",
+	author = "Lin, Thomas  and
+	{Mausam}  and
+	Etzioni, Oren",
+	booktitle = "Proceedings of the Joint Workshop on Automatic Knowledge Base Construction and Web-scale Knowledge Extraction ({AKBC}-{WEKEX})",
+	month = jun,
+	year = "2012",
+	pages = "84--88"}
+
+@inproceedings{doc-ranking-entity,
+	author = {Xiong, Chenyan and Callan, Jamie and Liu, Tie-Yan},
+	title = {{Word-Entity Duet Representations for Document Ranking}},
+	year = {2017},
+	booktitle = {Proceedings of the 40th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {763–772},
+	series = {SIGIR '17}
+}
+
+@inproceedings{query-recommendation-entity,
+	author = {Reinanda, Ridho and Meij, Edgar and de Rijke, Maarten},
+	title = {{Mining, Ranking and Recommending Entity Aspects}},
+	year = {2015},
+	booktitle = {Proceedings of the 38th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {263–272},
+	numpages = {10},
+	series = {SIGIR '15}
+}
+
+@inproceedings{dbpedia-spotlight,
+	author = {Mendes, Pablo N. and Jakob, Max and Garc\'{\i}a-Silva, Andr\'{e}s and Bizer, Christian},
+	title = {{DBpedia Spotlight: Shedding Light on the Web of Documents}},
+	year = {2011},
+	booktitle = {Proceedings of the 7th International Conference on Semantic Systems},
+	pages = {1–8},
+	numpages = {9},
+	series = {I-Semantics '11}
+}
+
+@inproceedings{tagme,
+	author = {Ferragina, Paolo and Scaiella, Ugo},
+	title = {{TAGME: On-the-Fly Annotation of Short Text Fragments (by Wikipedia Entities)}},
+	year = {2010},
+	booktitle = {Proceedings of the 19th ACM International Conference on Information and Knowledge Management},
+	pages = {1625–1628},
+	numpages = {4},
+	series = {CIKM '10}
+}
+
+@inproceedings{wat,
+	title={{From TagME to WAT: a new entity annotator}},
+	author={Francesco Piccinno and Paolo Ferragina},
+	booktitle={ERD '14},
+	year={2014}
+}
+
+@inproceedings{cross-wiki,
+	title = {{A Cross-Lingual Dictionary for English Wikipedia Concepts}},
+	author = "Spitkovsky, Valentin I.  and
+	Chang, Angel X.",
+	booktitle = "Proceedings of the Eighth International Conference on Language Resources and Evaluation ({LREC}'12)",
+	
+	year = "2012",
+	publisher = "European Language Resources Association (ELRA)",
+	pages = "3168--3175"
+}
+
+@inproceedings{ED-paper,
+	title = {{Improving Entity Linking by Modeling Latent Relations between Mentions}},
+	author = "Le, Phong  and
+	Titov, Ivan",
+	booktitle = "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+	month = jul,
+	year = "2018",
+	pages = "1595--1604"
+}
+
+@inproceedings{nordlys,
+	author = {Hasibi, Faegheh and Balog, Krisztian and Garigliotti, Dar\'{\i}o and Zhang, Shuo},
+	title = {{Nordlys: A Toolkit for Entity-Oriented and Semantic Search}},
+	year = {2017},
+	booktitle = {Proceedings of the 40th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {1289–1292},
+	series = {SIGIR '17}
+}
+
+@inproceedings{el-ranking-hasibi,
+	author = {Hasibi, Faegheh and Balog, Krisztian and Bratsberg, Svein Erik},
+	title = {{Exploiting Entity Linking in Queries for Entity Retrieval}},
+	year = {2016},
+	
+	booktitle = {Proceedings of the 2016 ACM International Conference on the Theory of Information Retrieval},
+	pages = {209–218},
+	numpages = {10},
+	series = {ICTIR '16}
+}
+
+@inproceedings{el-balog,
+	author = {Balog, Krisztian and Ramampiaro, Heri and Takhirov, Naimdjon and N\o{}rv\r{a}g, Kjetil},
+	title = {{Multi-Step Classification Approaches to Cumulative Citation Recommendation}},
+	year = {2013},
+	booktitle = {Proceedings of the 10th Conference on Open Research Areas in Information Retrieval},
+	pages = {121–128},
+	series = {OAIR '13}
+}
+
+@article{watson,
+	author = {Ferrucci, D.A.},
+	year = {2012},
+	month = {05},
+	pages = {1:1-1:15},
+	title = {Introduction to {``This is Watson''}},
+	volume = {56},
+	journal = {IBM Journal of Research and Development},
+	doi = {10.1147/JRD.2012.2184356}
+}
+
+@inproceedings{yang-etal-2018-collective,
+	title = {{Collective Entity Disambiguation with Structured Gradient Tree Boosting}},
+	author = "Yang, Yi  and
+	Irsoy, Ozan  and
+	Rahman, Kazi Shefaet",
+	booktitle = "Proceedings of the 2018 Conference of the North {A}merican Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long Papers)",
+	year = "2018",
+	
+	pages = "777--786"
+}
+
+@inproceedings{chatterjee2022bert,
+	title={{BERT-ER: Query-specific BERT Entity Representations for Entity Ranking}},
+	author={Chatterjee, Shubham and Dietz, Laura},
+	year = {2022},
+	booktitle = {Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {1466–1477},
+	series = {SIGIR '22}
+}
+
+@inproceedings{genre,
+	author = {Cao, Nicola De and Izacard, Gautier and Riedel, Sebastian and Petroni, Fabio},
+	booktitle = {International Conference on Learning Representations},
+	mendeley-groups = {entity linking},
+	title = {{Autoregressive Entity Retrieval}},
+	year = {2021}
+}
+
+@inproceedings{cypher,
+	author = {Francis, Nadime and Green, Alastair and Guagliardo, Paolo and Libkin, Leonid and Lindaaker, Tobias and Marsault, Victor and Plantikow, Stefan and Rydberg, Mats and Selmer, Petra and Taylor, Andr\'{e}s},
+	title = {{Cypher: An Evolving Query Language for Property Graphs}},
+	year = {2018},
+	isbn = {9781450347037},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3183713.3190657},
+	doi = {10.1145/3183713.3190657},
+	abstract = {The Cypher property graph query language is an evolving language, originally designed and implemented as part of the Neo4j graph database, and it is currently used by several commercial database products and researchers. We describe Cypher 9, which is the first version of the language governed by the openCypher Implementers Group. We first introduce the language by example, and describe its uses in industry. We then provide a formal semantic definition of the core read-query features of Cypher, including its variant of the property graph data model, and its ASCII Art graph pattern matching mechanism for expressing subgraphs of interest to an application. We compare the features of Cypher to other property graph query languages, and describe extensions, at an advanced stage of development, which will form part of Cypher 10, turning the language into a compositional language which supports graph projections and multiple named graphs.},
+	booktitle = {Proceedings of the 2018 International Conference on Management of Data},
+	pages = {1433–1445},
+	numpages = {13},
+	keywords = {graph databases, formal specification, formal semantics, query language, cypher, property graphs},
+	location = {Houston, TX, USA},
+	series = {SIGMOD '18}
+}
+
+@inproceedings{soboroff2018trec,
+	title={{TREC 2018 News Track Overview.}},
+	author={Soboroff, Ian and Huang, Shudong and Harman, Donna},
+	booktitle={Proceedings of The Twenty-Seventh Text REtrieval Conference},
+	series={TREC '18},
+	location = {Gaithersburg, Maryland, USA},
+	address = {Gaithersburg, Maryland, USA},
+	publisher = {National Institute for Standards and Technology (NIST)},
+	year={2018},
+	numpages={9}
+}
+
+@inproceedings{ciff,
+	author = {Lin, Jimmy and Mackenzie, Joel and Kamphuis, Chris and Macdonald, Craig and Mallia, Antonio and Siedlaczek, Micha\l{} and Trotman, Andrew and de Vries, Arjen},
+	title = {Supporting Interoperability Between Open-Source Search Engines with the Common Index File Format},
+	year = {2020},
+	isbn = {9781450380164},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3397271.3401404},
+	doi = {10.1145/3397271.3401404},
+	abstract = {There exists a natural tension between encouraging a diverse ecosystem of open-source search engines and supporting fair, replicable comparisons across those systems. To balance these two goals, we examine two approaches to providing interoperability between the inverted indexes of several systems. The first takes advantage of internal abstractions around index structures and building wrappers that allow one system to directly read the indexes of another. The second involves sharing indexes across systems via a data exchange specification that we have developed, called the Common Index File Format (CIFF). We demonstrate the first approach with the Java systems Anserini and Terrier, and the second approach with Anserini, JASSv2, OldDog, PISA, and Terrier. Together, these systems provide a wide range of implementations and features, with different research goals. Overall, we recommend CIFF as a low-effort approach to support independent innovation while enabling the types of fair evaluations that are critical for driving the field forward.},
+	booktitle = {Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {2149–2152},
+	numpages = {4},
+	keywords = {inverted indexes, effectiveness and efficiency evaluation, protocol buffers},
+	location = {Virtual Event, China},
+	series = {SIGIR '20}
+}
+
+@inproceedings{entities-loc,
+	title={Radboud University at TREC 2019.},
+	author={Kamphuis, Chris and Hasibi, Faegheh and de Vries, Arjen P and Crijns, Tanja},
+	booktitle={{Proceedings of The Twenty-Eight Text REtrieval Conference}},
+	series={TREC '19},
+	location = {Gaithersburg, Maryland, USA},
+	address = {Gaithersburg, Maryland, USA},
+	publisher={National Institute for Standards and Technology (NIST)},
+	year={2019},
+	numpages={10}
+}
+
+@inproceedings{van2020rel,
+	author = {van Hulst, Johannes M. and Hasibi, Faegheh and Dercksen, Koen and Balog, Krisztian and de Vries, Arjen P.},
+	title = {{REL: An Entity Linker Standing on the Shoulders of Giants}},
+	year = {2020},
+	isbn = {9781450380164},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3397271.3401416},
+	doi = {10.1145/3397271.3401416},
+	abstract = {Entity linking is a standard component in modern retrieval system that is often performed by third-party toolkits. Despite the plethora of open source options, it is difficult to find a single system that has a modular architecture where certain components may be replaced, does not depend on external sources, can easily be updated to newer Wikipedia versions, and, most important of all, has state-of-the-art performance. The REL system presented in this paper aims to fill that gap. Building on state-of-the-art neural components from natural language processing research, it is provided as a Python package as well as a web API. We also report on an experimental comparison against both well-established systems and the current state-of-the-art on standard entity linking benchmarks.},
+	booktitle = {Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {2197–2200},
+	numpages = {4},
+	keywords = {entity linking, toolkit, entity disambiguation, NER},
+	location = {Virtual Event, China},
+	series = {SIGIR '20}
+}
+@inproceedings{flair,
+	title={{FLAIR}: An easy-to-use framework for state-of-the-art {NLP}},
+	author={Akbik, Alan and Bergmann, Tanja and Blythe, Duncan and Rasul, Kashif and Schweter, Stefan and Vollgraf, Roland},
+	booktitle={Annual Conference of the North American Chapter of the Association for Computational Linguistics (Demonstrations)},
+	pages={54--59},
+	year={2019}
 }

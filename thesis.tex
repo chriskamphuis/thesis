@@ -1,17 +1,10 @@
 \documentclass[twoside,12pt]{book}
 
 \def\mytitle{Graphs and Information Retrieval}
-\def\myauthor{Chris Kamphuis}
+\def\myauthor{Chris Frans Henri Kamphuis}
 \def\mydate{\formatdate{22}{03}{2023}}
 
 \input{./preamble}
-
-\usepackage{todonotes}
-\setuptodonotes{
-	backgroundcolor=white,
-	linecolor=black,
-	size=tiny,
-}
 
 \author{\myauthor}
 \title{\mytitle}
@@ -26,13 +19,19 @@
 
 \mainmatter
 \include{./introduction}
+\include{./related_work}
 \include{./information_retrieval_using_relational_databases}
 \include{./from_tables_to_graphs}
 \include{./data_modeling_using_graphs}
 \include{./applications}
 \include{./conclusion}
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{acm}
 \bibliography{./refs.bib}
+
 
 \backmatter
 % bibliography, glossary and index would go here.

@@ -1,18 +1,31 @@
 \chapter{IR using Relational Databases}
+\epigraph{``Is this new question a worthy one to investigate?'' This latter question we investigate without further ado, thereby cutting short an infinite regress.}{Alan Turing - 1950}
+
 \section{Introduction}
-Where commonly information retrieval researchers use inverted indexes as data structures, there is also a rich history of researchers using relational databases for representing the data in information retrieval systems. 
+Where commonly information retrieval researchers use inverted indexes as data structures, there is also history of researchers using relational databases for representing the data in information retrieval systems.
 
-% todo Describe boolean retrieval systems
-% todo Describe other systems by for example Norbert 
+\subsection{Boolean retrieval}
+Perhaps the earliest work on using relational databases for information retrieval is the work by Schek and Pistor~\cite{SchekPistor}. In this work the authors recognize that the relational data model is widely accepted as an interface to query structured data, however in cases of unstructured data, like text, it is inconvenient to use. They proposed an extension for the relational model by allowing Non First Normal Form ($NF^2$) relations. This allows for text queries to be more easily expressed, however the systems that can be build in this language are basically boolean retrieval systems. Which at the time worked well, but scoring was not a feature implemented.  
 
-In a more recent work by M\"{u}hleisen et al.~\cite{OldDog} showed that the common used BM25 ranking function can also be easily expressed using relational tables. Their work specifically focused on the retrieval efficiency of several systems.   
-% todo End with OldDog system by Hannes
+In as similar fashion, Macleod~\cite{macleod}, compared the relational model with the inverted index model. He showed how queries of the IBM STAIRS system could be expressed using the relational model. These were however still boolean queries, so scoring using uncertainty was not considered. 
 
-The systems evaluated in this paper all purported to implement BM25, there was however a substantial difference between the effectiveness scores produced by these systems, as shown in table~\ref{olddog_results}. 
+\subsection{Probabilistic Relational Algebra}
+Fuhr~\cite{fuhr1996probabilistic} recognized that where databases contain formatted data, IR systems deal with unformatted data and that for this kind of data uncertain inference is required. %todo expand
+
+
+% S. Chaudhuri, R. Ramakrishnan, and G. Weikum. Integrating DB and IR technologies: What is the sound of one hand clapping? CIDR, 2005.
+% T. Grabs, K. Bhoem, and H.-J. Schek. PowerDB-IR: scalable information retrieval and storage with a cluster of databases. Knowledge and Information Systems, 6(4):465–505, 2004.
+% R. Cornacchia, S. H´eman, M. Zukowski, A. de Vries, and P. Boncz. Flexible and efficient IR using array databases. VLDB, 2008.
+
+\subsection{BOW retrieval models in SQL}
+
+In a more recent work by M\"{u}hleisen et al.~\cite{OldDog} showed that the common used BM25 ranking function can also be easily expressed using relational tables. Their work specifically focused on the retrieval efficiency of several systems. They argue that instead of using a custom build information retrieval system using an inverted index, researchers could just simply store their data representations in a column-oriented relational database, and formulate the ranking functions using SQL. They show that their implementation of BM25 in SQL is on par in efficiency and effectiveness compared to systems that use an inverted index. 
+
+There was however an interesting observation in the paper that I would like to highlight: All the systems evaluated in this paper implement BM25, there was however a substantial difference between the effectiveness scores produced by these systems, as shown in table~\ref{olddog_results}. The only two systems that achieved the exact same effectiveness score were the two database systems. I should however note that both these systems were however developed by the same research group.
 
 \begin{table}
 	\centering
-	\caption{Results presented by M\"{u}hleisen et al.~\cite{OldDog}; MAP and P@5 on the ClueWeb12 collection are reported for five different systems that run BM25. As shown in the table, only the two database systems achieve the same effectiveness score. Both these systems were however developed by the same research group.}
+	\caption{Results presented by M\"{u}hleisen et al.~\cite{OldDog}; \texttt{MAP} and \texttt{P@5} on the ClueWeb12 collection are reported for five different systems that run BM25. As shown in the table, only the two database systems achieve the same effectiveness score.}
 	\label{olddog_results}
 	\begin{tabular}{c c c}
 		\toprule
@@ -30,11 +43,11 @@ These results came out as quite a surprise as the authors took specific care to 
 
 
 \section{Reproducibility}
-Not only did we observe the differences in effectiveness scores for BM25 in the paper by M\"{u}hleisen et al.~\cite{OldDog}. In the SIGIR 2015 Workshop on Reproducibility, Inexplicability, and Generalizability of Results (RIGOR)~\cite{RIGOR} and the Open-Source IR Replicability Challenge (OSIRRC) workshop~\cite{OSIRRC} similar results are observed. See tables~\ref{rigor_results} and~\ref{osirrc_results} respectively.  
+Not only did we observe the differences in effectiveness scores for BM25 in the paper by M\"{u}hleisen et al.~\cite{OldDog}. In the SIGIR 2015 Workshop on Reproducibility, Inexplicability, and Generalizability of Results (RIGOR)~\cite{RIGOR} and the Open-Source IR Replicability Challenge (OSIRRC) workshop~\cite{OSIRRC} similar results are observed. See tables~\ref{rigor_results} and~\ref{osirrc_results}, respectively.  
 
 \begin{table}
 	\centering
-	\caption{Results from the RIGOR workshop\cite{RIGOR}, MAP@1000 on the .GOV2 collection is reported for four different systems that run BM25. As shown in the table, all four implementations report a different effectiveness score.}
+	\caption{Results from the RIGOR workshop\cite{RIGOR}, \texttt{MAP@1000} on the .GOV2 collection is reported for four different systems that run BM25. As shown in the table, all four implementations report a different effectiveness score.}
 	\label{rigor_results}
 	\begin{tabular}{c c}
 		\toprule
@@ -51,7 +64,7 @@ Not only did we observe the differences in effectiveness scores for BM25 in the 
 
 \begin{table}
 	\centering
-	\caption{Results from the OSIRRC workshop\cite{OSIRRC}, AP, P@30, and NDCG@20 on the robust04 collection are reported for seven different systems that run BM25. As shown in the table, all implementations report (again) a different effectiveness score.}
+	\caption{Results from the OSIRRC workshop\cite{OSIRRC}, \texttt{AP}, \texttt{P@30}, and \texttt{NDCG@20} on the robust04 collection are reported for seven different systems that run BM25. As shown in the table, all implementations report (again) a different effectiveness score.}
 	\label{osirrc_results}
 	\begin{tabular}{c c c c}
 		\toprule
@@ -71,11 +84,9 @@ Not only did we observe the differences in effectiveness scores for BM25 in the 
 It is not clear 
 
 \section{Variants of BM25}
-Introduce what we did here
-
 We examined several BM25 variants which will be introduced, how the variant varies from the original formulation as proposed by Robertson et al.~is marked in red. 
 
-\subsubsection{Robertson et al.} 
+\subsubsection{Robertson et al.~\cite{bm25-robertson}} 
 Equation~\ref{bm25-robertson} shows the original formulation of BM25: $N$ is the number of documents in the collection, $df_t$ is the number of documents containing term $t$, $tf_{td}$ is the term frequency of term $t$ in document $d$. Document lengths $L_d$ and $L_{avg}$ are the number of tokens in document $d$ and the average number of tokens in a document in the collection, respectively. Finally, $k_1$ and $b$ are free parameters that can be optimized per collection. 
 
 \begin{equation}
@@ -84,50 +95,120 @@ Equation~\ref{bm25-robertson} shows the original formulation of BM25: $N$ is the
 \end{equation}
 
 \subsubsection{Lucene (default)}
+Equation~\ref{lucene-default} shows the variant implemented in Lucene (as of version 8), which introduces two main differences highlighted in red. First, since the IDF component of Robertson et al. is negative when $df_t > N/2$, Lucene adds a constant one before calculating the log value. Second, the document length used in the scoring function is compressed (in a lossy manner) to a one byte value, denoted $L_{d\text{lossy}}$. With only 256 distinct document lengths, Lucene can pre-compute the value of $k_1 \cdot (1-b+b\cdot(L_{d\text{lossy}}/L_{avg}))$ for each possible length, resulting in fewer computations at query time.
 
 \begin{equation}
+	\label{lucene-default}
 	\sum_{t\in q}\log\left(\mathbf{\begingroup\color{ruhuisstijlrood}1 +\endgroup} \frac{N-df_t+0.5}{df_t+0.5}\right)\cdot\frac{tf_{td}}{k_1\cdot\left(1-b+b\cdot\left(\frac{L_{d \mathbf{\begingroup\color{ruhuisstijlrood}lossy\endgroup}}}{L_{avg}}\right)\right)+tf_{td}}
 \end{equation}
 
 \subsubsection{Lucene (accurate)}
 
+Equation~\ref{lucene-accurate} represents our attempt to measure the impact of Lucene’s lossy document length encoding. We implemented a variant that uses exact document lengths, but is otherwise identical to the Lucene default.
+
 \begin{equation}
+	\label{lucene-accurate}
 	\sum_{t\in q}\log\left(\mathbf{\begingroup\color{ruhuisstijlrood}1 +\endgroup} \frac{N-df_t+0.5}{df_t+0.5}\right)\cdot\frac{tf_{td}}{k_1\cdot \left(1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right)\right)+tf_{td}}
 \end{equation}
 
-\subsubsection{ATIRE}
+\subsubsection{ATIRE~\cite{ATIRE}}
+Equation~\ref{atire-variant} shows BM25 as implemented by ATIRE; it implements the IDF component of BM25 as $log(N/df_{t})$, which also avoids negative values. The TF component is multiplied by $k_1+1$ to make it look more like the classic RSJ weight; this has no effect on the resulting ranked list, as all scores are scaled linearly with this factor.
 
 \begin{equation}
+	\label{atire-variant}
 	\sum_{t\in q}\log\left(\mathbf{\begingroup\color{ruhuisstijlrood}\frac{N}{df_t}\endgroup}\right)\cdot\frac{\mathbf{\begingroup\color{ruhuisstijlrood}\left(k_1 + 1\right)\endgroup}\cdot tf_{td}}{k_1\cdot\left(1-b+b\cdot\left(\frac{L_{d}}{L_{avg}}\right)\right)+tf_{td}}
 \end{equation}
 
-\subsubsection{BM25L}
+\subsubsection{BM25L~\cite{bm25l}}
+BM25L, as shown in equation~\ref{bm25l}, builds on the observation that BM25 penalizes longer documents too much compared to shorter ones. The IDF component differs, to avoid negative values. The TF component is reformulated as $(k_1+1)\cdot c_{td} / (k_1+c_{td})$ with $c_{td} = tf_{td} / (1 - b + b \cdot (L_d/L_{avg}))$. The $c_{td}$ component is further modified by adding a constant $\delta$ to it, boosting the score for longer documents. The authors report using $\delta = 0.5$ for highest effectiveness.
 
 \begin{equation}
+	\label{bm25l}
 	\sum_{t\in q} \log\left(\mathbf{\begingroup\color{ruhuisstijlrood}\frac{N+1}{df_t + 0.5}\endgroup}\right)\cdot\frac{\mathbf{\begingroup\color{ruhuisstijlrood}(k_1 + 1)\endgroup}\cdot(c_{td} \mathbf{\begingroup\color{ruhuisstijlrood}+ \delta\endgroup})}{k_1 + (c_{td} \mathbf{\begingroup\color{ruhuisstijlrood}+ \delta\endgroup})}
 \end{equation}
 
-\subsubsection{BM25+}
+\subsubsection{BM25+~\cite{bm25+}}
+BM25+, as shown in equation~\ref{bm25+}, encodes a general approach for dealing with the issue that ranking functions unfairly prefer shorter documents over longer ones. The proposal is to add a lower-bound bonus when a term appears at least one time in a document. The difference with BM25L is a constant $\delta$ to the TF component. The IDF component is again changed to a variant that disallows negative values.
 
 \begin{equation}
+	\label{bm25+}
 	\sum_{t\in q} \log\left(\mathbf{\begingroup\color{ruhuisstijlrood}\frac{N+1}{df_t}\endgroup}\right)\cdot\left(\frac{\mathbf{\begingroup\color{ruhuisstijlrood}\left(k_1 + 1\right)\endgroup}\cdot tf_{td}}{k_1\cdot\left(\left(1-b\right)+b\cdot\left(\frac{L_d}{L_{avg}}\right)\right)+tf_{td}}+\mathbf{\begingroup\color{ruhuisstijlrood}\delta\endgroup}\right)
 \end{equation}
 
-\subsubsection{BM25-adpt}
+\subsubsection{BM25-adpt~\cite{bm25-adpt}}
+BM25-adpt, as shown in \ref{bm25-adpt}, is an approach that varies $k_1$ per term (i.e., uses term specific $k_1$ values). In order to determine the optimal value for $k_1$, the method starts by identifying the probability of a term occurring at least once in a document as:
 
 \begin{equation}
+	p(1|0,q) = \frac{df_r+0.5}{N+1}
+\end{equation}
+
+The probability of a term occurring one more time is defined as:
+
+\begin{equation}
+p(r+1|r,q) = \frac{df_{r+1}+0.5}{df_r+1}
+\end{equation}
+
+The information gain of a term occurring $r + 1$ instead of $r$ times is defined as $G^r_q = log_2 ((df_{r+1} + 0.5)/(df_r+1)) - log_2 ((df_{r} + 0.5)/(N+1))$, where $df_r$ is defined as follows:
+$|D_{t|c_{td}}\geq r-0.5|$ if $r > 1$, $df_t$ if $r=1$, and $N$ if $r = 0$ ($c_{td}$ is the same as in BM25L). The information gain is calculated for $r \in \{0,\cdots,T\}$, until $G^r_q > G^{r+1}_q$. The optimal value for $k_1$ is then determined by finding the value for $k_1$ that minimizes the equation $k_1 = argmin_{k_1}$ $\sum_{r=0}^{T}(G^r_q/G^1_q - \frac{(k_1+1)\cdot r}{k_1+r})^2$. Essentially, this gives a value for $k_1$ that maximizes information gain for that specific term; $k_1$ and $G^1_q$ are then plugged into the BM25-adpt formula.
+We found that the optimal value of $k_1$ is actually not defined for about 90\% of
+the terms. A unique optimal value for $k_1$ only exists when $r > 1$ while calculating
+$G^r_q$. For many terms, especially those with a low $df$, $G^r_q > G^{r+1}_q$ occurs before $r > 1$. In these cases, picking different values for $k_1$ has virtually no effect on retrieval effectiveness. For undefined values, we set $k_1$ to $0.001$, the same as Trotman et al.~\cite{trotman-bm25}
+
+\begin{equation}
+	\label{bm25-adpt}
 	\sum_{t\in q}\mathbf{\begingroup\color{ruhuisstijlrood}G_q^1\endgroup}\cdot\frac{\mathbf{\begingroup\color{ruhuisstijlrood}\left(k'_1+1\right)\endgroup}\cdot tf_{td}}{\mathbf{\begingroup\color{ruhuisstijlrood}k'_1\endgroup}\cdot\left(\left(1-b\right)+\cdot\left(\frac{L_d}{L_{avg}}\right)\right)+tf_{td}}
 \end{equation}
 
-\subsubsection{TF $l\circ\delta\circ p\times$IDF}
+\subsubsection{TF $l\circ\delta\circ p\times$IDF~\cite{tf-ldp-idf}}
+TF $l\circ\delta\circ p\times$IDF, as shown in equation \ref{tf-ldp-idf}, models the non-linear gain of a term occurring multiple times in a document as $1+log(1+log(tf_{td}))$. To ensure that terms occurring at least once in a document get boosted, the approach adds a fixed component $\delta$, following BM25+. These parts are combined into the TF component using$tf_{td}/(1-b+b\cdot (L_d/L_{avg}))$. The same IDF component as in BM25+ is used.
 
 \begin{equation}
+	\label{tf-ldp-idf}
 	\sum_{t\in q}\log\left(\mathbf{\begingroup\color{ruhuisstijlrood}\frac{N+1}{df_t}\endgroup}\right)\cdot\left(\mathbf{\begingroup\color{ruhuisstijlrood}1+\log\endgroup}\left(\mathbf{\begingroup\color{ruhuisstijlrood}1+\log\endgroup}\left(\frac{tf_{td}}{1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right)}\mathbf{\begingroup\color{ruhuisstijlrood}+\delta\endgroup}\right)\right)\right)
 \end{equation}
 
-\section{Results}
-We found that 
+\section{Experiments}
+Our experiments were conducted using Anserini (v0.6.0) on Java 11 to create
+an initial index, and subsequently using relational databases for rapid prototyping, which we dub ``OldDog''~\cite{olddog-docker} after M\"{u}hleisen et al.~\cite{OldDog}; following that work use MonetDB as well. Evaluations with Lucene (default) and Lucene (accurate) were performed directly in Anserini; the latter was based on previously-released code that we updated and incorporated into Anserini.\footnote{http://searchivarius.org/blog/accurate-bm25-similarity-lucene} The inverted index was exported from Lucene to OldDog, ensuring that all experiments share exactly the same document processing pipeline (tokenization, stemming, stopword removal, etc.). While exporting the inverted index, we precalculate all $k_1$ values for BM25-
+adpt as suggested by Lv and Zhai~\cite{bm25-adpt}. As an additional verification step, we implemented both Lucene (default) and Lucene (accurate) in OldDog and compared results to the output from Anserini. We are able to confirm that the results are the same, setting aside unavoidable differences related to floating point precision. All BM25 variants are then implemented in OldDog as minor variations upon the original SQL query provided in M\"{u}hleisen et al.~\cite{OldDog}. The term-specific parameter optimization for the adpt variant was already calculated during the index extraction stage, allowing us to upload the optimal $(t, k)$ pairs and directly use the term-specific $k$ values in the SQL query. The advantage of our experimental methodology is that we did not need to implement a single new ranking function from scratch. % todo All the SQL variants implemented for this paper can be found on GitHub. 
 
+The experiments use three TREC newswire test collections: TREC Disks 4 and 5, excluding Congressional Record, with topics and relevance judgments from the TREC 2004 Robust Track (Robust04); the New York Times Annotated Corpus, with topics and relevance judgments from the TREC 2017 Common Core Track (Core17); the TREC Washington Post Corpus, with topics and relevance judgments from the TREC 2018 Common Core Track (Core18). Following standard experimental practice, we assess ranked list output in terms of average precision (\texttt{AP}) and precision at rank 30 (\texttt{P@30}). The parameters shared by all models are set to $k_1$ = 0.9 and $b$ = 0.4, Anserini’s defaults. The parameter $\delta$ is set to the value reported as best in the corresponding source publication. 
+
+All experiments were run on a Linux desktop (Fedora 30, Kernel 5.2.18, SELinux enabled) with 4 cores (Intel Xeon CPU E3-1226 v3 @ 3.30 GHz) and 16 GB of main memory; the MonetDB 11.33.11 server was compiled from source using the \texttt{---enable-optimize} flag.
+
+% todo Table 2 presents the effectiveness scores for the implemented retrieval functions on all three test collections.
+% todo Table 3 presents the average retrieval time per query in milliseconds (without standard deviation for Anserini, which does not report time per query). MonetDB uses all cores for both inter-and intraquery parallelism, while Anserini is single-threaded.
+
+\section{Results}
+Table~\ref{bm25_variant_results} shows the effectiveness scores of the different BM25 variants.  
+
+\begin{table}
+	\centering
+	\caption{Effectiveness scores different BM25 variants, all were implement as SQL queries, so the underlying data representations are exactly the same. }
+	\label{bm25_variant_results}
+	\begin{tabular}{l| c c c c c c}
+		\toprule
+		&\multicolumn{2}{c}{Robust04}&\multicolumn{2}{c}{Core17}&\multicolumn{2}{c}{Core18}\\
+		&AP&P@30&AP&P@30&AP&P@30\\
+		\midrule
+		Robertson et al. & .2526 & .3086 & .2094 & .4327 & .2465 & \textbf{.3647} \\ 
+		Lucene (default) & .2531 & .3102 & .2087 & .4293 & .2495 & .3567 \\ 
+		Lucene (accurate) & .2533 & .3104 & .2094 & .4327 & .2495 & .3593 \\ 
+		ATIRE & .2533 & .3104 & .2094 & .4327 & .2495 & .3593 \\ 
+		BM25L & .2542 & .3092 & .1975 & .4253 & \textbf{.2501} & .3607 \\ 
+		BM25+ & .2526 & .3071 & .1931 & .4260 & .2447 & .3513 \\ 
+		BM25-adpt & \textbf{.2571} & \textbf{.3135} & \textbf{.2112} & .4133 & .2480 & .3533\\ 
+		TF $l\circ\delta\circ p\times$IDF & .2516 & .3084 & .1932 & .4340 & .2465 & .3647\\ 
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Firstly, % describe the results as presented in the paper
+
+You might have caught that the effectiveness scores of both ATIRE and Lucene (accurate) are exactly the same. % Show that the IDF function is essentially the same. 
+
+
+ 
 \section{Conclusion}
 We can conclude that
 
