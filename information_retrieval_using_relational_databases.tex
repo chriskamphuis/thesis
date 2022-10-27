@@ -10,7 +10,9 @@ Perhaps the earliest work on using relational databases for information retrieva
 In as similar fashion, Macleod~\cite{macleod}, compared the relational model with the inverted index model. He showed how queries of the IBM STAIRS system could be expressed using the relational model. These were however still boolean queries, so scoring using uncertainty was not considered. 
 
 \subsection{Probabilistic Relational Algebra}
-Fuhr~\cite{fuhr1996probabilistic} recognized that where databases contain formatted data, IR systems deal with unformatted data and that for this kind of data uncertain inference is required. %todo expand
+Fuhr~\cite{fuhr1996probabilistic} recognized that where databases contain formatted data, IR systems deal with unformatted data and that for this kind of data uncertain inference is required. He proposes to express this uncertainty using a probabilistic relational algebra~\cite{fuhr-pra}. 
+
+%todo expand
 
 
 % S. Chaudhuri, R. Ramakrishnan, and G. Weikum. Integrating DB and IR technologies: What is the sound of one hand clapping? CIDR, 2005.
@@ -91,7 +93,7 @@ Equation~\ref{bm25-robertson} shows the original formulation of BM25: $N$ is the
 
 \begin{equation}
 	\label{bm25-robertson}
-	\sum_{t\in q} log\left(\frac{N-df_t+0.5}{df_t+0.5}\right)\cdot\frac{tf_{td}}{1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right) + tf_{td}}
+	\sum_{t\in q} \log\left(\frac{N-df_t+0.5}{df_t+0.5}\right)\cdot\frac{tf_{td}}{1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right) + tf_{td}}
 \end{equation}
 
 \subsubsection{Lucene (default)}
@@ -136,28 +138,58 @@ BM25+, as shown in equation~\ref{bm25+}, encodes a general approach for dealing 
 \end{equation}
 
 \subsubsection{BM25-adpt~\cite{bm25-adpt}}
-BM25-adpt, as shown in \ref{bm25-adpt}, is an approach that varies $k_1$ per term (i.e., uses term specific $k_1$ values). In order to determine the optimal value for $k_1$, the method starts by identifying the probability of a term occurring at least once in a document as:
+BM25-adpt is an approach that varies $k_1$ per term (i.e., uses term specific $k_1$ values). In the original formulation of BM25, $k_1$ can be considered a hyperparameter that regulates the increase of score for additional occurrences of a term; $k_1$ ensures that every additional occurrence gets discounted as it provides less information. However, Lv and Zhai argued that this does not necessary have to be the case. If there are much fewer documents that have $t+1$ occurrences versus $t$, it should provide more information compared to when the number of documents are almost equal. In order to find the optimal term-specific $k_1$ value, the authors want to maximize the information gain for that particular query term. 
+This is done by first identifying the probability of selecting a document randomly from the collection that contains term $q$ at least once in a document as:
 
 \begin{equation}
-	p(1|0,q) = \frac{df_r+0.5}{N+1}
+	p(1|0,q) = \frac{df_t+0.5}{N+1}
 \end{equation}
 
 The probability of a term occurring one more time is defined as:
 
 \begin{equation}
-p(r+1|r,q) = \frac{df_{r+1}+0.5}{df_r+1}
+p(t+1|t,q) = \frac{df_{t+1}+0.5}{df_t+1}
 \end{equation}
 
-The information gain of a term occurring $r + 1$ instead of $r$ times is defined as $G^r_q = log_2 ((df_{r+1} + 0.5)/(df_r+1)) - log_2 ((df_{r} + 0.5)/(N+1))$, where $df_r$ is defined as follows:
-$|D_{t|c_{td}}\geq r-0.5|$ if $r > 1$, $df_t$ if $r=1$, and $N$ if $r = 0$ ($c_{td}$ is the same as in BM25L). The information gain is calculated for $r \in \{0,\cdots,T\}$, until $G^r_q > G^{r+1}_q$. The optimal value for $k_1$ is then determined by finding the value for $k_1$ that minimizes the equation $k_1 = argmin_{k_1}$ $\sum_{r=0}^{T}(G^r_q/G^1_q - \frac{(k_1+1)\cdot r}{k_1+r})^2$. Essentially, this gives a value for $k_1$ that maximizes information gain for that specific term; $k_1$ and $G^1_q$ are then plugged into the BM25-adpt formula.
-We found that the optimal value of $k_1$ is actually not defined for about 90\% of
-the terms. A unique optimal value for $k_1$ only exists when $r > 1$ while calculating
-$G^r_q$. For many terms, especially those with a low $df$, $G^r_q > G^{r+1}_q$ occurs before $r > 1$. In these cases, picking different values for $k_1$ has virtually no effect on retrieval effectiveness. For undefined values, we set $k_1$ to $0.001$, the same as Trotman et al.~\cite{trotman-bm25}
+In both these formulas, $1$ and $0.5$ are added for smoothing to avoid zero probabilities. Then the information gain from $t$ to $t+1$ occurrences is computed as, subtracting the initial probability: 
+
+\begin{equation}
+	G^t_q = log_2\left(\frac{df_{t+1} + 0.5}{df_t+1}\right) - log_2 \left(\frac{df_{t} + 0.5}{N+1})\right)
+\end{equation}
+
+Here $df_t$ is not defined as a normal document frequency, but based on the length normalized term frequency:
+
+\begin{equation}
+	df_t = 
+	\begin{cases}
+		|D_{t|c_{td}\geq t-0.5}| & t > 1\\ 
+		df(q) & t = 1\\
+		N & t = 0
+	\end{cases}
+\end{equation}
+
+In this case $df(q)$ is the ``normal'' document frequency, and $c_{td}$ is the same as in BM25L (pivoted method for length normalization~\cite{ctd}):
+
+\begin{equation}
+	c_{td} = \frac{tf_{td}}{1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right)}
+\end{equation}
+
+This means the following: $df_t$ is equal to number of documents in the collection when $t = 0$, it is equal to the ``normal'' document frequency when $t = 1$, and otherwise it will be the number of documents that have at least $t$ occurrences of the term (rounded up) using the pivoted method $c_{td}$. 
+
+Then, the information gain is calculated for $t \in \{0,\cdots,T\}$,until $G^t_q > G^{t+1}_q$. This threshold is chosen as a heuristic: When $t$ becomes large, the estimated information gain can be very noisy. So $T$ is chosen as the smallest value that breaks the worst burstiness rule~\cite{burstiness_rule} (the information gain starts decreasing). The optimal value for $k_1$ is then determined by finding the value for $k_1$ that minimizes the following equation:
+\begin{equation}
+	k'_1 = \argmin_{k_1} \sum_{t=0}^{T}\left(\frac{G^t_q}{G^1_q} - \frac{(k_1+1)\cdot t}{k_1+t}\right)^2
+\end{equation}
+
+Essentially, this gives a value for $k_1$ that maximizes information gain for that specific term; $k_1$ and $G^1_q$ are then plugged into the BM25-adpt formula: 
 
 \begin{equation}
 	\label{bm25-adpt}
 	\sum_{t\in q}\mathbf{\begingroup\color{ruhuisstijlrood}G_q^1\endgroup}\cdot\frac{\mathbf{\begingroup\color{ruhuisstijlrood}\left(k'_1+1\right)\endgroup}\cdot tf_{td}}{\mathbf{\begingroup\color{ruhuisstijlrood}k'_1\endgroup}\cdot\left(\left(1-b\right)+\cdot\left(\frac{L_d}{L_{avg}}\right)\right)+tf_{td}}
 \end{equation}
+
+We found that the optimal value of $k_1$ is actually not defined for about 90\% of the terms. A unique optimal value for $k_1$ only exists when $t > 1$ while calculating $G^t_q$. For many terms, especially those with a low $df$, $G^t_q > G^{t+1}_q$ occurs before $t > 1$. In these cases, picking different values for $k_1$ has virtually no effect on retrieval effectiveness. For undefined values, we set $k_1$ to $0.001$, the same as Trotman et al.~\cite{trotman-bm25}
+
 
 \subsubsection{TF $l\circ\delta\circ p\times$IDF~\cite{tf-ldp-idf}}
 TF $l\circ\delta\circ p\times$IDF, as shown in equation \ref{tf-ldp-idf}, models the non-linear gain of a term occurring multiple times in a document as $1+log(1+log(tf_{td}))$. To ensure that terms occurring at least once in a document get boosted, the approach adds a fixed component $\delta$, following BM25+. These parts are combined into the TF component using$tf_{td}/(1-b+b\cdot (L_d/L_{avg}))$. The same IDF component as in BM25+ is used.
