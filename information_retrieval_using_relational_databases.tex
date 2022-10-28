@@ -86,7 +86,7 @@ Not only did we observe the differences in effectiveness scores for BM25 in the 
 It is not clear 
 
 \section{Variants of BM25}
-We examined several BM25 variants which will be introduced, how the variant varies from the original formulation as proposed by Robertson et al.~is marked in red. 
+We~\cite{Kamphuis2020BM25} examined several BM25 variants which will be introduced, how the variant varies from the original formulation as proposed by Robertson et al.~is marked in red. 
 
 \subsubsection{Robertson et al.~\cite{bm25-robertson}} 
 Equation~\ref{bm25-robertson} shows the original formulation of BM25: $N$ is the number of documents in the collection, $df_t$ is the number of documents containing term $t$, $tf_{td}$ is the term frequency of term $t$ in document $d$. Document lengths $L_d$ and $L_{avg}$ are the number of tokens in document $d$ and the average number of tokens in a document in the collection, respectively. Finally, $k_1$ and $b$ are free parameters that can be optimized per collection. 
@@ -154,7 +154,7 @@ p(t+1|t,q) = \frac{df_{t+1}+0.5}{df_t+1}
 In both these formulas, $1$ and $0.5$ are added for smoothing to avoid zero probabilities. Then the information gain from $t$ to $t+1$ occurrences is computed as, subtracting the initial probability: 
 
 \begin{equation}
-	G^t_q = log_2\left(\frac{df_{t+1} + 0.5}{df_t+1}\right) - log_2 \left(\frac{df_{t} + 0.5}{N+1})\right)
+	G^t_q = \log_2\left(\frac{df_{t+1} + 0.5}{df_t+1}\right) - \log_2 \left(\frac{df_{t} + 0.5}{N+1}\right)
 \end{equation}
 
 Here $df_t$ is not defined as a normal document frequency, but based on the length normalized term frequency:
@@ -192,11 +192,22 @@ We found that the optimal value of $k_1$ is actually not defined for about 90\% 
 
 
 \subsubsection{TF $l\circ\delta\circ p\times$IDF~\cite{tf-ldp-idf}}
-TF $l\circ\delta\circ p\times$IDF, as shown in equation \ref{tf-ldp-idf}, models the non-linear gain of a term occurring multiple times in a document as $1+log(1+log(tf_{td}))$. To ensure that terms occurring at least once in a document get boosted, the approach adds a fixed component $\delta$, following BM25+. These parts are combined into the TF component using$tf_{td}/(1-b+b\cdot (L_d/L_{avg}))$. The same IDF component as in BM25+ is used.
+TF$l\circ\delta\circ p\times$IDF, as shown in equation \ref{tf-ldp-idf}, models the non-linear gain of a term occurring multiple times in a document as:
+\begin{equation}
+	1+\log\left(1+\log\left(tf_{td}\right)\right) 
+\end{equation}
+
+To ensure that terms occurring at least once in a document get boosted, the approach adds a fixed component $\delta$, following BM25+. These parts are combined into the TF component using the pivoted method for length normalization~\cite{ctd}:
+
+\begin{equation}
+	c_{td} = \frac{tf_{td}}{1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right)}
+\end{equation}
+
+The same IDF component as in BM25+ is used, which gives us TF$l\circ\delta\circ p\times$IDF: 
 
 \begin{equation}
 	\label{tf-ldp-idf}
-	\sum_{t\in q}\log\left(\mathbf{\begingroup\color{ruhuisstijlrood}\frac{N+1}{df_t}\endgroup}\right)\cdot\left(\mathbf{\begingroup\color{ruhuisstijlrood}1+\log\endgroup}\left(\mathbf{\begingroup\color{ruhuisstijlrood}1+\log\endgroup}\left(\frac{tf_{td}}{1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right)}\mathbf{\begingroup\color{ruhuisstijlrood}+\delta\endgroup}\right)\right)\right)
+	\sum_{t\in q}\log\left(\mathbf{\begingroup\color{ruhuisstijlrood}\frac{N+1}{df_t}\endgroup}\right)\cdot\left(\mathbf{\begingroup\color{ruhuisstijlrood}1+\log\endgroup}\left(\mathbf{\begingroup\color{ruhuisstijlrood}1+\log\endgroup}\left(\mathbf{\begingroup\color{ruhuisstijlrood}c_{td}+\delta\endgroup}\right)\right)\right)
 \end{equation}
 
 \section{Experiments}
@@ -230,18 +241,51 @@ Table~\ref{bm25_variant_results} shows the effectiveness scores of the different
 		BM25L & .2542 & .3092 & .1975 & .4253 & \textbf{.2501} & .3607 \\ 
 		BM25+ & .2526 & .3071 & .1931 & .4260 & .2447 & .3513 \\ 
 		BM25-adpt & \textbf{.2571} & \textbf{.3135} & \textbf{.2112} & .4133 & .2480 & .3533\\ 
-		TF $l\circ\delta\circ p\times$IDF & .2516 & .3084 & .1932 & .4340 & .2465 & .3647\\ 
+		TF $l\circ\delta\circ p\times$IDF & .2516 & .3084 & .1932 & \textbf{.4340} & .2465 & .3647\\ 
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-Firstly, % describe the results as presented in the paper
+The observed differences in effectiveness are very small and can be fully attributed to variations in the scoring function; our methodology fixes all other parts of the indexing pipeline (tag cleanup, tokenization, stopwords, etc.). Both an ANOVA and Tukey’s HSD show no significant differences between any variant, on all test collections. This confirms the findings of Trotman et al.~\cite{trotman-bm25}: effectiveness differences are unlikely an effect of the choice of the BM25 variant. Across the IR literature, we find that differences due to more mundane settings (such as the choice of stopwords) are often larger than the differences we observe here. Although we find no significant improvements over the original Robertson et al.~\cite{bm25-robertson} formulation, it might still be worthwhile to use a variant of BM25 that avoids negative ranking scores.
 
-You might have caught that the effectiveness scores of both ATIRE and Lucene (accurate) are exactly the same. % Show that the IDF function is essentially the same. 
+You might have caught that the effectiveness scores of both ATIRE and Lucene (accurate) are exactly the same. This is not a mistake. As explained, the $k_1+1$ in ATIRE scales the scores linearly and does not effect the ranking. So the only difference that can change the effectiveness scores are the different IDF functions, but these are practically the same, especially when a collection has a large number of documents ($N$):
 
+\begin{align}
+	\log\left(\frac{N}{df_t}\right) &= \log\left(\frac{N-df_t+df_t}{df_t}\right) \\
+									&= \log\left(\frac{N-df_t}{df_t} + \frac{df_t}{df_t}\right) \\
+									&= \log\left(\frac{N-df_t}{df_t} + 1\right) \\
+									&\approx \log\left(\frac{N-df_t+0.5}{df_t+0.5} + 1\right)
+\end{align}
 
+Table~\ref{bm25_effiency} presents the average retrieval time per query in milliseconds (without standard deviation for Anserini, which does not report time per query). MonetDB uses all cores for both inter- and intra-query parallelism, while Anserini is single-threaded.
+
+\begin{table}
+	\centering
+	\caption{Average retrieval time per query in ms: Anserini (top) and OldDog (bottom)}
+	\label{bm25_effiency}
+	\begin{tabular}{l | c c c}
+		\toprule
+		&Robust04&Core17&Core18\\
+		\midrule
+		Lucene (default)&52&111&120\\
+		Lucene (accurate)&55&115&123\\
+		\midrule
+		Robertsen et al.&$158\pm25$&$703\pm162$&$331\pm96$\\
+		Lucene (default)&$157\pm24$&$699\pm154$&$326\pm90$\\
+		Lucene (accurate)&$157\pm24$&$701\pm156$&$324\pm88$\\
+		ATIRE&$157\pm24$&$698\pm159$&$331\pm94$\\
+		BM25L&$158\pm25$&$697\pm160$&$333\pm96$\\
+		BM25+&$158\pm25$&$700\pm160$&$334\pm96$\\
+		BM25-adpt&$158\pm24$&$700\pm157$&$330\pm92$\\
+		TF$_{l\circ\delta\circ p}\times$IDF&$158\pm24$&$698\pm158$&$331\pm96$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Comparing Lucene (default) and Lucene (accurate), we find negligible differences in effectiveness. However, the differences in retrieval time are also negligible, which calls into question the motivation behind the original length approximation. Currently, the similarity function and thus the document length encoding are defined at index time. Storing exact document lengths would allow for different ranking functions to be swapped at query time more easily, as no information would be discarded at index time. Accurate document lengths might additionally benefit downstream modules that depend on Lucene. We therefore suggest that Lucene might benefit from storing exact document lengths.
  
-\section{Conclusion}
-We can conclude that
+\section{Do BM25 variants matter?}
+In summary, the previous sections describe a double reproducibility study: it methodologically validates the usefulness of databases for IR prototyping claimed by M\"{u}hleisen et al.~\cite{OldDog} and performed a large-scale study of BM25 to confirm the findings of Trotman et al.~\cite{trotman-bm25}. Returning to our original motivating question regarding the multitude of BM25 variants: ``Does it matter?'', we can conclude that the answer appears to be ``no, it does not''.
 
-We \cite{Kamphuis2020BM25}
+\section{CIFF}
+In the work by Lin et al.~\cite{ciff} a common index file format was proposed.  
