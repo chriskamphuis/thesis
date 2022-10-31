@@ -1,6 +1,14 @@
 \chapter{IR using Relational Databases}
 \epigraph{``Is this new question a worthy one to investigate?'' This latter question we investigate without further ado, thereby cutting short an infinite regress.}{Alan Turing - 1950}
 
+\begin{Abstract}
+\begin{changemargin}{1cm}{1cm}
+	In this chapter we first look at the history of using relations databases for information retrieval. We see that their have been many attempts to express information retrieval problems using relational databases. We will highlight one of the latter attempts that revived the idea of expressing bag-of-words ranking functions using SQL. A prototype systems that makes use of these expressions, dubbed OldDog, is presented, and we show that this system can be used for rapid IR prototyping, and is especially helpful in the context of reproducible information retrieval research:
+	We implement many different BM25 variants that have been proposed in the literature, and we do not find the expected effectiveness gains we would expect based on the results presented in the work that proposed them.  
+\end{changemargin}
+\end{Abstract}
+
+
 \section{Introduction}
 Where commonly information retrieval researchers use inverted indexes as data structures, there is also history of researchers using relational databases for representing the data in information retrieval systems.
 
@@ -76,7 +84,7 @@ Not only did we observe the differences in effectiveness scores for BM25 in the 
 		ATIRE & 0.2184 & 0.3199 & 0.4211 \\
 		ielab & 0.1826 & 0.2605 & 0.3477 \\
 		Indri & 0.2388 & 0.2995 & 0.4041 \\
-		OldDog & 0.2434 & 0.2985 & 0.4002 \\
+		OldDog~\cite{olddog-docker} & 0.2434 & 0.2985 & 0.4002 \\
 		Pisa & 0.2534 & 0.3120 & 0.4221 \\
 		Terrier & 0.2363 & 0.2977 & 0.4049 \\
 		\bottomrule
@@ -89,6 +97,16 @@ It is not clear
 We~\cite{Kamphuis2020BM25} examined several BM25 variants which will be introduced, how the variant varies from the original formulation as proposed by Robertson et al.~is marked in red. 
 
 \subsubsection{Robertson et al.~\cite{bm25-robertson}} 
+The original formulation of BM25 consists of three parts, the first part is derived from the binary independence relevance model~\cite{bm25-beyond}, which results in an approximation of the classical \textit{idf}:
+
+\begin{equation} 
+	w_i^{\text{IDF}} = \log\frac{N-df_t+0.5}{df_t+0.5}
+\end{equation}
+where $N$ is the size of the collection, and $df_t$ are the number of documents in the collection that contain query term $t$. 
+% todo explain add k_1
+% todo explain add b
+
+
 Equation~\ref{bm25-robertson} shows the original formulation of BM25: $N$ is the number of documents in the collection, $df_t$ is the number of documents containing term $t$, $tf_{td}$ is the term frequency of term $t$ in document $d$. Document lengths $L_d$ and $L_{avg}$ are the number of tokens in document $d$ and the average number of tokens in a document in the collection, respectively. Finally, $k_1$ and $b$ are free parameters that can be optimized per collection. 
 
 \begin{equation}
@@ -97,7 +115,21 @@ Equation~\ref{bm25-robertson} shows the original formulation of BM25: $N$ is the
 \end{equation}
 
 \subsubsection{Lucene (default)}
-Equation~\ref{lucene-default} shows the variant implemented in Lucene (as of version 8), which introduces two main differences highlighted in red. First, since the IDF component of Robertson et al. is negative when $df_t > N/2$, Lucene adds a constant one before calculating the log value. Second, the document length used in the scoring function is compressed (in a lossy manner) to a one byte value, denoted $L_{d\text{lossy}}$. With only 256 distinct document lengths, Lucene can pre-compute the value of $k_1 \cdot (1-b+b\cdot(L_{d\text{lossy}}/L_{avg}))$ for each possible length, resulting in fewer computations at query time.
+Equation~\ref{lucene-default} shows the variant implemented in Lucene (as of version 8), which introduces two main differences highlighted in red. First, since the IDF component of Robertson et al. is negative when:
+
+\begin{equation}
+	df_t > \frac{N}{2} 
+\end{equation}
+
+This happens for terms that appear in more than half of all documents, e.g.: ``the'' or ``a''. Many systems do not consider these terms when searching by keeping a list of common words that can be ignored (stop words). However, if these words are considered, having a negative IDF would decrease the relevance score of documents that have the query term in the document. To avoid negative values in all possible cases, Lucene adds a constant one before calculating the $log$ value. 
+
+Second, the document length used in the scoring function is compressed (in a lossy manner) to a one byte value, denoted $L_{d\text{lossy}}$. With only 256 distinct document lengths, Lucene can pre-compute the value of
+
+\begin{equation}
+	k_1 \cdot \left(1-b+b\cdot\left(\frac{L_{d\text{lossy}}}{L_{avg}}\right)\right)
+\end{equation}
+
+for each possible length, resulting in fewer computations at query time.
 
 \begin{equation}
 	\label{lucene-default}
@@ -114,7 +146,7 @@ Equation~\ref{lucene-accurate} represents our attempt to measure the impact of L
 \end{equation}
 
 \subsubsection{ATIRE~\cite{ATIRE}}
-Equation~\ref{atire-variant} shows BM25 as implemented by ATIRE; it implements the IDF component of BM25 as $log(N/df_{t})$, which also avoids negative values. The TF component is multiplied by $k_1+1$ to make it look more like the classic RSJ weight; this has no effect on the resulting ranked list, as all scores are scaled linearly with this factor.
+Equation~\ref{atire-variant} shows BM25 as implemented by ATIRE; it implements the IDF component of BM25 as $log(N/df_{t})$, which also avoids negative values. The TF component is multiplied by $k_1+1$ to make it look more like the classic Robertson/Sparck Jones (RSJ) weight~\cite{RSJ}; this has no effect on the resulting ranked list, as all scores are scaled linearly with this factor.
 
 \begin{equation}
 	\label{atire-variant}
@@ -122,7 +154,16 @@ Equation~\ref{atire-variant} shows BM25 as implemented by ATIRE; it implements t
 \end{equation}
 
 \subsubsection{BM25L~\cite{bm25l}}
-BM25L, as shown in equation~\ref{bm25l}, builds on the observation that BM25 penalizes longer documents too much compared to shorter ones. The IDF component differs, to avoid negative values. The TF component is reformulated as $(k_1+1)\cdot c_{td} / (k_1+c_{td})$ with $c_{td} = tf_{td} / (1 - b + b \cdot (L_d/L_{avg}))$. The $c_{td}$ component is further modified by adding a constant $\delta$ to it, boosting the score for longer documents. The authors report using $\delta = 0.5$ for highest effectiveness.
+BM25L, as shown in equation~\ref{bm25l}, builds on the observation that BM25 penalizes longer documents too much compared to shorter ones. The IDF component differs, to avoid negative values. The TF component is reformulated as:
+\begin{equation}
+	\frac{\left(k_1+1\right)\cdot c_{td}}{k_1+c_{td}}  
+\end{equation}
+with 
+
+\begin{equation}
+	c_{td} = \frac{tf_{td}}{1 - b + b \cdot \left(\frac{L_d}{L_{avg}}\right)}  
+\end{equation}
+The $c_{td}$ component is further modified by adding a constant $\delta$ to it, boosting the score for longer documents. The authors report using $\delta = 0.5$ for highest effectiveness.
 
 \begin{equation}
 	\label{bm25l}
