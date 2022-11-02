@@ -1,9 +1,10 @@
 \chapter{IR using Relational Databases}
+\label{ir-using-relational-databases}
 \epigraph{``Is this new question a worthy one to investigate?'' This latter question we investigate without further ado, thereby cutting short an infinite regress.}{Alan Turing - 1950}
 
 \begin{Abstract}
 \begin{changemargin}{1cm}{1cm}
-	In this chapter we first look at the history of using relations databases for information retrieval. We see that their have been many attempts to express information retrieval problems using relational databases. We will highlight one of the latter attempts that revived the idea of expressing bag-of-words ranking functions using SQL. A prototype systems that makes use of these expressions, dubbed OldDog, is presented, and we show that this system can be used for rapid IR prototyping, and is especially helpful in the context of reproducible information retrieval research:
+	In this chapter we first look at the history of using relations databases for information retrieval. We see that their have been many attempts to express information retrieval problems using relational databases. We will highlight one of the latter attempts that revived the idea of expressing bag-of-words ranking functions using SQL. A prototype systems that makes use of these expressions is presented. We show that this system can be used for rapid IR prototyping, and is especially helpful in the context of reproducible information retrieval research.
 	We implement many different BM25 variants that have been proposed in the literature, and we do not find the expected effectiveness gains we would expect based on the results presented in the work that proposed them.  
 \end{changemargin}
 \end{Abstract}
@@ -18,7 +19,8 @@ Perhaps the earliest work on using relational databases for information retrieva
 In as similar fashion, Macleod~\cite{macleod}, compared the relational model with the inverted index model. He showed how queries of the IBM STAIRS system could be expressed using the relational model. These were however still boolean queries, so scoring using uncertainty was not considered. 
 
 \subsection{Probabilistic Relational Algebra}
-Fuhr~\cite{fuhr1996probabilistic} recognized that where databases contain formatted data, IR systems deal with unformatted data and that for this kind of data uncertain inference is required. He proposes to express this uncertainty using a probabilistic relational algebra~\cite{fuhr-pra}. 
+Fuhr~\cite{fuhr1996probabilistic} recognized that where databases contain formatted data, IR systems deal with unformatted data and that for this kind of data uncertain inference is required. He proposes to express this uncertainty using a probabilistic relational algebra~\cite{fuhr-pra} (PRA). 
+PRA can be considered an extension of the standard relational algebra. 
 
 %todo expand
 

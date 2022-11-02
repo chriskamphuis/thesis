@@ -1,4 +1,11 @@
-\chapter{Applications}
+\chapter{A Graph of Entities}
+\label{a-graph-of-entities}
+
+\begin{Abstract}
+	\begin{changemargin}{1cm}{1cm}
+		This is the abstract  
+	\end{changemargin}
+\end{Abstract}
 
 \section{Introduction}
 
@@ -11,11 +18,12 @@ A caveat in existing entity linking toolkits is that they have not been designed
 \section{REL}
 This paper describes our experience with optimizing the Radboud Entity Linking (REL) toolkit for batch processing large corpora. REL annotates individual documents efficiently, requiring only modest computational resources, while performing competitively when compared to the state-of-the-art methods on effectiveness. It considers entity linking as a modular problem consisting of three stages: 
 
-\textbf{(i) Mention detection.} The goal of this step is to identify all possible text spans in a document that might refer to an entity. If a text span that refers to an entity is not identified properly in this stage, the system will not be able to correctly link the entity in later stages.
+\subsection{Mention Detection}
+The goal of this step is to identify all possible text spans in a document that might refer to an entity. If a text span that refers to an entity is not identified properly in this stage, the system will not be able to correctly link the entity in later stages.
 
-\textbf{(ii) Candidate selection.} For every detected mention, REL considers up to $k_1 + k_2 (=7)$ candidate entities. $k_1 (=4)$ candidate entities are selected based on their prior occurrence probability $p(e|m)$ (for entity \textit{e} given mention \textit{m}). These priors are pre-calculated from Wikipedia hyperlinks and the CrossWiki~\cite{cross-wiki} corpus. The other $k_2 (=3)$ entities are chosen based on the similarity of their embeddings to the contextual embedding of the mention (considering a context of maximum 200 word tokens).
+\subsection{Candidate Selection} For every detected mention, REL considers up to $k_1 + k_2 (=7)$ candidate entities. $k_1 (=4)$ candidate entities are selected based on their prior occurrence probability $p(e|m)$ (for entity \textit{e} given mention \textit{m}). These priors are pre-calculated from Wikipedia hyperlinks and the CrossWiki~\cite{cross-wiki} corpus. The other $k_2 (=3)$ entities are chosen based on the similarity of their embeddings to the contextual embedding of the mention (considering a context of maximum 200 word tokens).
 
-\textbf{(iii) Entity disambiguation.} The goal of this final step is to map the mention to the correct entity in a knowledge base. The candidate entities for each mention are obtained from the previous stage and REL implements the Ment-norm method proposed by Le and Titov~\cite{ED-paper}. 
+\subsection{Entity Disambiguation} The goal of this final step is to map the mention to the correct entity in a knowledge base. The candidate entities for each mention are obtained from the previous stage and REL implements the Ment-norm method proposed by Le and Titov~\cite{ED-paper}. 
 
 This paper explains the challenges of batch processing in REL and presents the approaches we found to overcome these challenges. We show that our updated REL toolkit, REBL, improves REL efficiency 9.5 times, decreasing the processing time per document (excluding mention detection) on a sample of 5000 MS MARCO documents from 1.23 seconds to 0.13 seconds. We demonstrate that REBL enables the annotation of a large corpus like MS MARCO v2, given modest computational resources. We discuss potential improvements that can be made in order to further improve efficiency of batch entity linking. The REBL code and toolkit are available publicly at \url{https://github.com/informagi/REBL}.
 

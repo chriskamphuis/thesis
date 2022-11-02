@@ -1,8 +1,22 @@
 \chapter{From Tables to Graphs}
+\label{from-tables-to-graphs}
+
+\begin{Abstract}
+	\begin{changemargin}{1cm}{1cm}
+		This is the abstract 
+	\end{changemargin}
+\end{Abstract}
+
 \section{Introduction}
 In recent years there has been a lot of exciting new information retrieval research that makes use of non-text data to improve the effectiveness of search systems. Consider for example dense representations for retrieval~\cite{dense-retrieval-1, dense-retrieval-2, dense-retrieval-3}, knowledge graphs to leverage entity information~\cite{entity-1, entity-2, entity-3}, and non-textual learning-to-rank features~\cite{ltr-1, ltr-2}. All these research directions have improved the effectiveness of search systems by making use of more diverse data. Despite the fact that search systems consider more diverse sources of data, the usage of this data is often implemented through the use of a coupled architecture. In particular, first-stage retrieval is often carried out with different software compared to later retrieval stages where these novel reranking techniques tend to be used. In our view, researchers could benefit from a system where retrieval stages are more tightly coupled, that facilitates the exploration on how to use non-content data for ranking, and serves the data in a format suitable for reranking with e.g.\ transformers or tree based methods.
 
-In order to fulfill these needs we propose GeeseDB\footnote{\url{https://github.com/informagi/geesedb}}, a prototype Python toolkit for information retrieval that leverages graphs as data structures, allowing metadata and graph oriented data to be easily included in the ranking pipeline. The toolkit is designed to quickly set up first stage retrieval, and make it easy for researchers to explore new ranking models quickly.  
+\subsection{Current solutions}
+PyTerrier was developed by Macdonald et al.~\cite{pyterrier}, which is a Python extension of Terrier~\cite{terrier}. 
+Pyserini was developed by Lin et al.~\cite{pyserini}, which is a Python extension of Anserini~\cite{anserini}.
+
+
+\subsection{Research Questions}
+In order to fulfill these needs we propose GeeseDB\footnote{\url{https://github.com/informagi/geesedb}}, a prototype Python toolkit for information retrieval that leverages graphs as data structures, allowing metadata and graph oriented data to be easily included in the ranking pipeline. The toolkit is designed to quickly set up first stage retrieval, and make it easy for researchers to explore new ranking models quickly. 
 
 \section{GeeseDB}
 In short, GeeseDB aims to provide the following functionalities:
@@ -15,7 +29,7 @@ In short, GeeseDB aims to provide the following functionalities:
 
 \section{Design}
 At the core of GeeseDB lies the full text search design presented by M\"{u}hleisen et al.~\cite{OldDog}. In this work, a column-store database for IR prototyping is proposed, which uses the database schema described in Figure~\ref{olddog_schema}, consisting of three database tables.
-\begin{figure}[!h]
+\begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{./imgs/olddog-schema-2.pdf}
 	\caption{Database schema by M\"{u}hleisen et al.~for full text search in relational databases}
@@ -23,14 +37,14 @@ At the core of GeeseDB lies the full text search design presented by M\"{u}hleis
 \end{figure}
 (One for all term information, one for all document information, and one that contains the information on how terms relate to documents; the information that is found in a posting list of an inverted index). Using these three tables they show that BM25 can be easily expressed as a SQL query, with latencies that are on par with custom-build IR engines. In GeeseDB we use the exact same relational schema for full text search.
 Instead of seeing the document data and term data as tables that relate to each other through a many-to-many join table, it is also possible to consider this schema as a bipartite graph. In this graph both documents and terms are considered as nodes, connected to each other through edges. Basically, if a term occurs in a document there exists an edge between that term and document. GeeseDB uses the data model of property graphs; labeled multigraphs where both edges and nodes can have property-value pairs. The database schema as described in Figure~\ref{olddog_schema} would then translate to the property graph schema shown in Figure~\ref{olddog-graph-schema}.
-\begin{figure}[!h]
+\begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{./imgs/olddog-graph-schema.pdf}
 	\caption{Graph schema representing bipartite document-term graph}
 	\label{olddog-graph-schema}
 \end{figure}
 A small example of a graph represented by this schema is shown in Figure~\ref{example-olddog-graph}, document nodes contain document specific information (i.e. document length and the collection identifier), term nodes contain information relevant to the term (i.e. the term string and the term's document frequency), and the the edges between document and terms nodes contain term frequency information (i.e. how often is the term mentioned in the document represented the respective nodes it connects).
-\begin{figure}[!h]
+\begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{./imgs/example_olddog_graph.pdf}
 	\caption{Example term-document graph that maps to relational database schema}
@@ -89,7 +103,7 @@ GeeseDB comes as an easy-to-install Python package that can be installed using p
 	$ pip install geesedb==0.0.1
 \end{verbatim}
 After installing GeeseDB we can immediately start using it. All examples we show in this paper were run on version v0.0.1 of GeeseDB. However, as GeeseDB is actively being developed we advise readers to use the latest version of GeeseDB, which can be installed when not specifying a package version. It is also possible to install the latest commit by installing the latest version directly from GitHub.
-As an example, we will show how to use GeeseDB for the background linking task of the TREC News Track~\cite{soboroff2018trec}. The goal of this task is: \textit{Given a news story, find other news articles that can provide important context or background information.} These articles can then be recommended to the reader to help them understand the context in which these news articles take place. The collection used for this task is the Washington Post V3 collection\footnote{\url{https://trec.nist.gov/data/wapost/}} released for the 2020 edition of TREC. It contains $671.945$ news articles published by the Washington Post published between 2012 and 2020, and 50 topics with relevance assessments (topics correspond to collection identifiers of documents for which relevant data has to be found). The articles in this collection contain useful metadata; in particular, we will use authorship information. We extracted $25.703$ unique article authors, where it is possible that multiple authors co-wrote a news article. We also annotate documents with entity information which was obtained by using the Radboud Entity Linker~\cite{van2020rel}. In total $31.622.419$ references to $541.729$ unique entities were found, the links also contain mention and location information, as well as the \texttt{ner\_tag} found by the linker's entity recognition module (The \texttt{ner\_tag} is part of a link, as the entity linker can assign different tags to the same entity).\footnote{The annotated data will be made publicly available.} Figure~\ref{fig:geesedb-graph} illustrates the data schema that we use for the background linking task. 
+As an example, we will show how to use GeeseDB for the background linking task of the TREC News Track~\cite{soboroff2018trec}. The goal of this task is: \textit{Given a news story, find other news articles that can provide important context or background information.} These articles can then be recommended to the reader to help them understand the context in which these news articles take place. The collection used for this task is the Washington Post V3 collection\footnote{\url{https://trec.nist.gov/data/wapost/}} released for the 2020 edition of TREC. It contains $671,945$ news articles published by the Washington Post published between 2012 and 2020, and 50 topics with relevance assessments (topics correspond to collection identifiers of documents for which relevant data has to be found). The articles in this collection contain useful metadata; in particular, we will use authorship information. We extracted $25,703$ unique article authors, where it is possible that multiple authors co-wrote a news article. We also annotate documents with entity information which was obtained by using the Radboud Entity Linker~\cite{REL}. In total $31,622,419$ references to $541,729$ unique entities were found, the links also contain mention and location information, as well as the \texttt{ner\_tag} found by the linker's entity recognition module (The \texttt{ner\_tag} is part of a link, as the entity linker can assign different tags to the same entity).\footnote{The annotated data will be made publicly available.} Figure~\ref{fig:geesedb-graph} illustrates the data schema that we use for the background linking task. 
 
 \begin{figure}
 	\centering

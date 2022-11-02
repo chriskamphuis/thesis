@@ -21,24 +21,6 @@
 	series="ECIR '20"
 }
 
-@inproceedings{10.1145/3397271.3401404,
-	author = {Lin, Jimmy and Mackenzie, Joel and Kamphuis, Chris and Macdonald, Craig and Mallia, Antonio and Siedlaczek, Micha\l{} and Trotman, Andrew and de Vries, Arjen},
-	title = {{Supporting Interoperability Between Open-Source Search Engines with the Common Index File Format}},
-	year = {2020},
-	isbn = {9781450380164},
-	publisher = {Association for Computing Machinery},
-	address = {New York, NY, USA},
-	url = {https://doi.org/10.1145/3397271.3401404},
-	doi = {10.1145/3397271.3401404},
-	abstract = {There exists a natural tension between encouraging a diverse ecosystem of open-source search engines and supporting fair, replicable comparisons across those systems. To balance these two goals, we examine two approaches to providing interoperability between the inverted indexes of several systems. The first takes advantage of internal abstractions around index structures and building wrappers that allow one system to directly read the indexes of another. The second involves sharing indexes across systems via a data exchange specification that we have developed, called the Common Index File Format (CIFF). We demonstrate the first approach with the Java systems Anserini and Terrier, and the second approach with Anserini, JASSv2, OldDog, PISA, and Terrier. Together, these systems provide a wide range of implementations and features, with different research goals. Overall, we recommend CIFF as a low-effort approach to support independent innovation while enabling the types of fair evaluations that are critical for driving the field forward.},
-	booktitle = {Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
-	pages = {2149–2152},
-	numpages = {4},
-	keywords = {effectiveness and efficiency evaluation, protocol buffers, inverted indexes},
-	location = {Virtual Event, China},
-	series = {SIGIR '20}
-}
-
 @inproceedings{OldDog,
 	author = {M\"{u}hleisen, Hannes and Samar, Thaer and Lin, Jimmy and de Vries, Arjen},
 	title = {{Old Dogs Are Great at New Tricks: Column Stores for IR Prototyping}},
@@ -407,6 +389,7 @@
 	location = {Shinjuku, Tokyo, Japan},
 	series = {SIGIR '17}
 }
+
 @inproceedings{terrier,
 	author="Ounis, Iadh
 	and Amati, Gianni
@@ -425,21 +408,13 @@
 	abstract="Terrier is a modular platform for the rapid development of large-scale Information Retrieval (IR) applications. It can index various document collections, including TREC and Web collections. Terrier also offers a range of document weighting and query expansion models, based on the Divergence From Randomness framework. It has been successfully used for ad-hoc retrieval, cross-language retrieval, Web IR and intranet search, in a centralised or distributed setting.",
 	isbn="978-3-540-31865-1"
 }
+
 @article{pyserini,
 	title={{Pyserini: An easy-to-use Python toolkit to support replicable IR research with sparse and dense representations}},
 	author={Lin, Jimmy and Ma, Xueguang and Lin, Sheng-Chieh and Yang, Jheng-Hong and Pradeep, Ronak and Nogueira, Rodrigo},
 	journal={arXiv preprint arXiv:2102.10073},
 	year={2021},
 	numpages={8}
-}
-
-@inproceedings{REL,
-	author = {van Hulst, Johannes M. and Hasibi, Faegheh and Dercksen, Koen and Balog, Krisztian and de Vries, Arjen P.},
-	title = {{REL: An Entity Linker Standing on the Shoulders of Giants}},
-	year = {2020},
-	booktitle = {Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
-	pages = {2197–2200},
-	numpages = {4}
 }
 
 @inproceedings{Gerritse:2020:GEER,
@@ -481,7 +456,8 @@
 	booktitle = "Proceedings of the Joint Workshop on Automatic Knowledge Base Construction and Web-scale Knowledge Extraction ({AKBC}-{WEKEX})",
 	month = jun,
 	year = "2012",
-	pages = "84--88"}
+	pages = "84--88"
+}
 
 @inproceedings{doc-ranking-entity,
 	author = {Xiong, Chenyan and Callan, Jamie and Liu, Tie-Yan},
@@ -674,7 +650,7 @@
 	numpages={10}
 }
 
-@inproceedings{van2020rel,
+@inproceedings{REL,
 	author = {van Hulst, Johannes M. and Hasibi, Faegheh and Dercksen, Koen and Balog, Krisztian and de Vries, Arjen P.},
 	title = {{REL: An Entity Linker Standing on the Shoulders of Giants}},
 	year = {2020},
@@ -691,9 +667,10 @@
 	location = {Virtual Event, China},
 	series = {SIGIR '20}
 }
+
 @inproceedings{ctd,
 	author = {Singhal, Amit and Buckley, Chris and Mitra, Mandar},
-	title = {{Pivoted Document Length Normalization}}],
+	title = {{Pivoted Document Length Normalization}},
 	year = {1996},
 	isbn = {0897917928},
 	publisher = {Association for Computing Machinery},
@@ -762,4 +739,60 @@
 	number = {4},
 	pages = {333-389},
 	author = {Stephen Robertson and Hugo Zaragoza}
+}
+
+@inproceedings{pyterrier,
+	author = {Macdonald, Craig and Tonellotto, Nicola and MacAvaney, Sean and Ounis, Iadh},
+	title = {{PyTerrier: Declarative Experimentation in Python from BM25 to Dense Retrieval}},
+	year = {2021},
+	isbn = {9781450384469},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3459637.3482013},
+	doi = {10.1145/3459637.3482013},
+	abstract = {PyTerrier is a Python-based retrieval framework for expressing simple and complex information retrieval (IR) pipelines in a declarative manner. While making use of the long-established Terrier IR platform for basic text indexing and retrieval, its salient utility comes from its expressive Python operators, which allow for individual IR operations to be pipelined and combined in different flexible manners as requested by the search application. Each operation applies a transformation upon a dataframe, while operators are defined with clear semantics in relational algebra. Going further, we have recently expanded the PyTerrier framework to include additional support for state-of-the-art BERT-based text re-rankers (such as EPIC) and dense retrieval implementations (such as ANCE and ColBERT). Transformer pipelines can be tuned and evaluated in a declarative manner. To increase the reusability of this framework as a resource for the IR community, PyTerrier provides easy access to a variety of standard benchmark datasets, including pre-built indices. Finally, we highlight the advantages of such a framework for information retrieval researchers and educators.},
+	booktitle = {Proceedings of the 30th ACM International Conference on Information \& Knowledge Management},
+	pages = {4526–4533},
+	numpages = {8},
+	keywords = {neural ranking, experimentation, dense retrieval},
+	location = {Virtual Event, Queensland, Australia},
+	series = {CIKM '21}
+}
+
+@inproceedings{need-graph-db,
+	author    = {Chris Kamphuis and Arjen P. de Vries},
+	title     = {{Reproducible IR needs an (IR) (graph) query language}},
+	booktitle = {Proceedings of the Open-Source {IR} Replicability Challenge co-located
+	with 42nd International {ACM} {SIGIR} Conference on Research and Development
+	in Information Retrieval, {OSIRRC}@{SIGIR} 2019, Paris, France, July 25,
+	2019},
+	pages     = {17--20},
+	year      = {2019},
+	url       = {http://ceur-ws.org/Vol-2409/position03.pdf},
+	timestamp = {Fri, 30 Aug 2019 13:15:06 +0200},
+	address={Aachen},
+	publisher={CEUR-WS.org}
+}
+
+@inproceedings{geesedb,
+	author    = {Chris Kamphuis and Arjen P. de Vries},
+	title     = {{GeeseDB: A Python Graph Engine for Exploration and Search}},
+	booktitle = {Proceedings of the 2nd International Conference on Design of Experimental Search \& Information REtrieval Systems},
+	pages     = {10-18},
+	year      = {2021},
+	url       = {http://ceur-ws.org/Vol-2950/paper-11.pdf},
+	address={Aachen},
+	publisher={CEUR-WS.org},
+	series = {DESIRES '21}
+}
+
+@inproceedings{rebl,
+	author    = {Chris Kamphuis and Faegheh Hasibi and Jimmy Lin and Arjen P. de Vries},
+	title     = {{REBL: Entity Linking at Scale}},
+	booktitle = {Proceedings of the 3rd International Conference on Design of Experimental Search \& Information REtrieval Systems},
+	year      = {2022},
+	url       = {https://desires.dei.unipd.it/2022/papers/paper-08.pdf},
+	address={Aachen},
+	publisher={CEUR-WS.org},
+	series = {DESIRES '22}
 }
