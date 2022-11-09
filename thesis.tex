@@ -16,6 +16,8 @@
 \frontmatter
 
 \input{./titlepage}
+
+\setcounter{tocdepth}{1}
 \tableofcontents
 
 \mainmatter
@@ -31,7 +33,9 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{acm}
-\bibliography{./refs.bib}
+\small{
+	\bibliography{./refs.bib}
+}
 
 
 \backmatter

@@ -16,7 +16,7 @@ Where commonly information retrieval researchers use inverted indexes as data st
 \subsection{Boolean retrieval}
 Perhaps the earliest work on using relational databases for information retrieval is the work by Schek and Pistor~\cite{SchekPistor}. In this work the authors recognize that the relational data model is widely accepted as an interface to query structured data, however in cases of unstructured data, like text, it is inconvenient to use. They proposed an extension for the relational model by allowing Non First Normal Form ($NF^2$) relations. This allows for text queries to be more easily expressed, however the systems that can be build in this language are basically boolean retrieval systems. Which at the time worked well, but scoring was not a feature implemented.  
 
-In as similar fashion, Macleod~\cite{macleod}, compared the relational model with the inverted index model. He showed how queries of the IBM STAIRS system could be expressed using the relational model. These were however still boolean queries, so scoring using uncertainty was not considered. 
+In as similar fashion, \cite{macleod}, compared the relational model with the inverted index model. He showed how queries of the IBM STAIRS system could be expressed using the relational model. These were however still boolean queries, so scoring using uncertainty was not considered. 
 
 \subsection{Probabilistic Relational Algebra}
 Fuhr~\cite{fuhr1996probabilistic} recognized that where databases contain formatted data, IR systems deal with unformatted data and that for this kind of data uncertain inference is required. He proposes to express this uncertainty using a probabilistic relational algebra~\cite{fuhr-pra} (PRA). 
