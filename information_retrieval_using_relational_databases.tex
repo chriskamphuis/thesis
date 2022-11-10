@@ -99,22 +99,37 @@ It is not clear
 We~\cite{Kamphuis2020BM25} examined several BM25 variants which will be introduced, how the variant varies from the original formulation as proposed by Robertson et al.~is marked in red. 
 
 \subsubsection{Robertson et al.~\cite{bm25-robertson}} 
-The original formulation of BM25 consists of three parts, the first part is derived from the binary independence relevance model~\cite{bm25-beyond}, which results in an approximation of the classical \textit{idf}:
+The original formulation of BM25 consists of two parts, the first part is derived from the binary independence relevance model~\cite{bm25-beyond}, which results in an approximation of the classical inverse document frequency (\textit{idf}):
 
 \begin{equation} 
 	w_i^{\text{IDF}} = \log\frac{N-df_t+0.5}{df_t+0.5}
 \end{equation}
+
 where $N$ is the size of the collection, and $df_t$ are the number of documents in the collection that contain query term $t$. 
-% todo explain add k_1
-% todo explain add b
 
+The second part can be considered as a term frequency weighting $tf$, these two parts are then multiplied to get something like the traditional term frequency - inverse document frequency weighting $tf \times w_i^{\text{IDF}}$.
+However the \textit{tf} in BM25 is extended such that every additional occurrence of a term does not increase the ranking score value as much as the previous one; e.g. a term being present twice in a document versus once provides more information than a term being present ten times versus nine. For this the following convenient formula as a replacement for \text{tf} was chosen:
 
-Equation~\ref{bm25-robertson} shows the original formulation of BM25: $N$ is the number of documents in the collection, $df_t$ is the number of documents containing term $t$, $tf_{td}$ is the term frequency of term $t$ in document $d$. Document lengths $L_d$ and $L_{avg}$ are the number of tokens in document $d$ and the average number of tokens in a document in the collection, respectively. Finally, $k_1$ and $b$ are free parameters that can be optimized per collection. 
+\begin{align}
+	\frac{tf}{k+tf} & \text{ where } k>0
+\end{align}
+
+This ensures the term frequency does not increase linearly. In the final formulation of BM25 $k$ is written as $k_1$, this is because earlier versions of this ranking formula also had a $k_2$ and $k_3$ parameter. 
+
+Then lastly, a second component is added that can correct for documents being longer than others. It is however not clear how you should deal with documents being longer than others; the author of a document can be verbose, in which case additional term occurrences do not provide anymore information. On the other hand, a long document can be because more relevant information is provided in the document, in which the document is more relevant than its shorter counterpart. For these reasons, the following soft length normalization is introduced:
+
+\begin{align}
+	\left(1-b\right) + b \times \left(\frac{L_d}{L_{avg}}\right) & \text{ with } 0 <= b <= 1
+\end{align}
+
+When setting $b=1$, full length normalization is used, while if $b=0$ none is used. Combining these parts, including the correction for term frequency and the length normalization we get BM25 as originally proposed by Robertson et al.~\cite{bm25-robertson}:
 
 \begin{equation}
 	\label{bm25-robertson}
-	\sum_{t\in q} \log\left(\frac{N-df_t+0.5}{df_t+0.5}\right)\cdot\frac{tf_{td}}{1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right) + tf_{td}}
+	\sum_{t\in q} \log\left(\frac{N-df_t+0.5}{df_t+0.5}\right)\cdot\frac{tf_{td}}{k_1\cdot\left(1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right)\right) + tf_{td}}
 \end{equation}
+
+\paragraph{Characteristics}
 
 \subsubsection{Lucene (default)}
 Equation~\ref{lucene-default} shows the variant implemented in Lucene (as of version 8), which introduces two main differences highlighted in red. First, since the IDF component of Robertson et al. is negative when:
