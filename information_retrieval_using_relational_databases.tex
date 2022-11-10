@@ -107,6 +107,8 @@ The original formulation of BM25 consists of two parts, the first part is derive
 
 where $N$ is the size of the collection, and $df_t$ are the number of documents in the collection that contain query term $t$. 
 
+In particular I would like to highlight a negative consequence of using this formula for weighing term importance. 
+
 The second part can be considered as a term frequency weighting $tf$, these two parts are then multiplied to get something like the traditional term frequency - inverse document frequency weighting $tf \times w_i^{\text{IDF}}$.
 However the \textit{tf} in BM25 is extended such that every additional occurrence of a term does not increase the ranking score value as much as the previous one; e.g. a term being present twice in a document versus once provides more information than a term being present ten times versus nine. For this the following convenient formula as a replacement for \text{tf} was chosen:
 
@@ -128,8 +130,6 @@ When setting $b=1$, full length normalization is used, while if $b=0$ none is us
 	\label{bm25-robertson}
 	\sum_{t\in q} \log\left(\frac{N-df_t+0.5}{df_t+0.5}\right)\cdot\frac{tf_{td}}{k_1\cdot\left(1-b+b\cdot\left(\frac{L_d}{L_{avg}}\right)\right) + tf_{td}}
 \end{equation}
-
-\paragraph{Characteristics}
 
 \subsubsection{Lucene (default)}
 Equation~\ref{lucene-default} shows the variant implemented in Lucene (as of version 8), which introduces two main differences highlighted in red. First, since the IDF component of Robertson et al. is negative when:
