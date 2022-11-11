@@ -53,10 +53,19 @@
 \usepackage{subfiles}
 \usepackage{epigraph}
 
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% We will externalize the figures
+\usepgfplotslibrary{external}
+\tikzexternalize
+
 \def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]}
 \let\endchangemargin=\endlist 
 
 %   Generate the environment for the abstract:
 \newcommand\summaryname{Abstract}
 \newenvironment{Abstract}{\small\begin{center}\bfseries{\summaryname}\end{center}}
+
+\usepackage{booktabs}
 

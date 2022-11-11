@@ -15,15 +15,14 @@ Where commonly information retrieval researchers use inverted indexes as data st
 
 \subsection{Boolean retrieval}
 Perhaps the earliest work on using relational databases for information retrieval is the work by Schek and Pistor~\cite{SchekPistor}. In this work the authors recognize that the relational data model is widely accepted as an interface to query structured data, however in cases of unstructured data, like text, it is inconvenient to use. They proposed an extension for the relational model by allowing Non First Normal Form ($NF^2$) relations. This allows for text queries to be more easily expressed, however the systems that can be build in this language are basically boolean retrieval systems. Which at the time worked well, but scoring was not a feature implemented.  
-
-In as similar fashion, \cite{macleod}, compared the relational model with the inverted index model. He showed how queries of the IBM STAIRS system could be expressed using the relational model. These were however still boolean queries, so scoring using uncertainty was not considered. 
+In as similar fashion, Macleod~\cite{macleod} compared the relational model with the inverted index model. He showed how queries of the IBM STAIRS system could be expressed using the relational model. These were however still boolean queries, so scoring using uncertainty was not considered. 
 
 \subsection{Probabilistic Relational Algebra}
 Fuhr~\cite{fuhr1996probabilistic} recognized that where databases contain formatted data, IR systems deal with unformatted data and that for this kind of data uncertain inference is required. He proposes to express this uncertainty using a probabilistic relational algebra~\cite{fuhr-pra} (PRA). 
 PRA can be considered an extension of the standard relational algebra. 
+The basic idea behind PRA is that tuples are being assigned weights, the weight represents the probability that the tuple belongs to the relation. These probabilities gives two advantages. Uncertain information can be expressed and tuples that represent answers to queries can be ordered by the weights that represent the uncertainty. The most certain tuples are ranked to the top. Although these extensions give advantages over boolean retrieval, how to assign these probabilities to for example a document term pair remains a question.
 
-%todo expand
-
+\subsection{More recent approaches}
 
 % S. Chaudhuri, R. Ramakrishnan, and G. Weikum. Integrating DB and IR technologies: What is the sound of one hand clapping? CIDR, 2005.
 % T. Grabs, K. Bhoem, and H.-J. Schek. PowerDB-IR: scalable information retrieval and storage with a cluster of databases. Knowledge and Information Systems, 6(4):465–505, 2004.
@@ -35,13 +34,13 @@ In a more recent work by M\"{u}hleisen et al.~\cite{OldDog} showed that the comm
 
 There was however an interesting observation in the paper that I would like to highlight: All the systems evaluated in this paper implement BM25, there was however a substantial difference between the effectiveness scores produced by these systems, as shown in table~\ref{olddog_results}. The only two systems that achieved the exact same effectiveness score were the two database systems. I should however note that both these systems were however developed by the same research group.
 
-\begin{table}
+\begin{table}[!ht]
 	\centering
 	\caption{Results presented by M\"{u}hleisen et al.~\cite{OldDog}; \texttt{MAP} and \texttt{P@5} on the ClueWeb12 collection are reported for five different systems that run BM25. As shown in the table, only the two database systems achieve the same effectiveness score.}
 	\label{olddog_results}
 	\begin{tabular}{c c c}
 		\toprule
-		System &  MAP & P@5 \\
+		System &  \texttt{MAP} & \texttt{P@5} \\
 		\midrule
 		Indri & 0.246 & 0.304 \\
 		MonetDB \& VectorWise & 0.225 & 0.276 \\
@@ -59,11 +58,11 @@ Not only did we observe the differences in effectiveness scores for BM25 in the 
 
 \begin{table}
 	\centering
-	\caption{Results from the RIGOR workshop\cite{RIGOR}, \texttt{MAP@1000} on the .GOV2 collection is reported for four different systems that run BM25. As shown in the table, all four implementations report a different effectiveness score.}
+	\caption{Results from the RIGOR workshop~\cite{RIGOR}, \texttt{MAP@1000} on the .GOV2 collection is reported for four different systems that run BM25. As shown in the table, all four implementations report a different effectiveness score.}
 	\label{rigor_results}
 	\begin{tabular}{c c}
 		\toprule
-		System &  MAP@1000 \\
+		System &  \texttt{MAP@1000} \\
 		\midrule
 		ATIRE & 0.2902 \\
 		Lucene & 0.3029 \\
@@ -76,11 +75,11 @@ Not only did we observe the differences in effectiveness scores for BM25 in the 
 
 \begin{table}
 	\centering
-	\caption{Results from the OSIRRC workshop\cite{OSIRRC}, \texttt{AP}, \texttt{P@30}, and \texttt{NDCG@20} on the robust04 collection are reported for seven different systems that run BM25. As shown in the table, all implementations report (again) a different effectiveness score.}
+	\caption{Results from the OSIRRC workshop~\cite{OSIRRC}, \texttt{AP}, \texttt{P@30}, and \texttt{NDCG@20} on the robust04 collection are reported for seven different systems that run BM25. As shown in the table, all implementations report (again) a different effectiveness score.}
 	\label{osirrc_results}
 	\begin{tabular}{c c c c}
 		\toprule
-		System & AP & P@30 & NDCG@20 \\
+		System & \texttt{AP} & \texttt{P@30} & \texttt{NDCG@20} \\
 		\midrule
 		Anserini (Lucene) & 0.2531 & 0.3102 & 0.4240 \\
 		ATIRE & 0.2184 & 0.3199 & 0.4211 \\
@@ -99,18 +98,38 @@ It is not clear
 We~\cite{Kamphuis2020BM25} examined several BM25 variants which will be introduced, how the variant varies from the original formulation as proposed by Robertson et al.~is marked in red. 
 
 \subsubsection{Robertson et al.~\cite{bm25-robertson}} 
-The original formulation of BM25 consists of two parts, the first part is derived from the binary independence relevance model~\cite{bm25-beyond}, which results in an approximation of the classical inverse document frequency (\textit{idf}):
+The original formulation of BM25 is constructed from two parts, the first part is derived from the binary independence relevance model~\cite{bm25-beyond}, which results in an approximation of the classical inverse document frequency ($ idf $) for a query term $t$:
 
 \begin{equation} 
-	w_i^{\text{IDF}} = \log\frac{N-df_t+0.5}{df_t+0.5}
+	w_i^{\text{IDF}} = \log\left(\frac{N-df_t+0.5}{df_t+0.5}\right)
 \end{equation}
-
 where $N$ is the size of the collection, and $df_t$ are the number of documents in the collection that contain query term $t$. 
 
-In particular I would like to highlight a negative consequence of using this formula for weighing term importance. 
+In particular I would like to highlight a negative consequence of using this formula for weighing term importance. Lets say we have a collection with $10,000$ documents, we can plot the ranking score value for each term as shown in fig.~\ref{idf}. The figure shows that the $ idf $ score becomes negative when $df_t > \frac{N}{2}$. This happens for terms that appear in more than half of all documents, e.g.: ``the'' or ``a''. Many systems do not consider these terms when searching by keeping a list of common words that can be ignored (stop words). However, if these words are considered, having a negative $ idf $ would decrease the relevance score of documents that have the query term in the document. Some variations of BM25 deal with this, which will be discussed soon. 
+ 
+\begin{figure}
+	\caption{Inverse document frequency as used by Robertson et al.~\cite{bm25-robertson}}
+	\label{idf}
+	\begin{tikzpicture}
+		\begin{axis}[
+			axis lines = left,
+			xlabel = \(df_t\),
+			ylabel = {\(rsv\)},
+			]
+			%Below the red parabola is defined
+			\addplot [
+			domain=0:10000, 
+			samples=1000, 
+			color=red,
+			]
+			{ln((10000-x+0.5)/(x+0.5))};
+			\addlegendentry{\(ln(\frac{10000-df_t+0.5}{df_t+0.5})\)}
+		\end{axis}
+	\end{tikzpicture}
+\end{figure}
 
-The second part can be considered as a term frequency weighting $tf$, these two parts are then multiplied to get something like the traditional term frequency - inverse document frequency weighting $tf \times w_i^{\text{IDF}}$.
-However the \textit{tf} in BM25 is extended such that every additional occurrence of a term does not increase the ranking score value as much as the previous one; e.g. a term being present twice in a document versus once provides more information than a term being present ten times versus nine. For this the following convenient formula as a replacement for \text{tf} was chosen:
+The second part of BM25 can be considered as a term frequency weighting $tf$, these two parts are then multiplied to get something like the traditional term frequency - inverse document frequency weighting $tf \times w_i^{\text{IDF}}$.
+However the $tf$ in BM25 is extended such that every additional occurrence of a term does not increase the ranking score value as much as the previous one; for example a term being present twice in a document versus once provides more information than a term being present ten times versus nine. For this the following convenient formula as a replacement for \textit{tf} was chosen:
 
 \begin{align}
 	\frac{tf}{k+tf} & \text{ where } k>0
@@ -138,7 +157,7 @@ Equation~\ref{lucene-default} shows the variant implemented in Lucene (as of ver
 	df_t > \frac{N}{2} 
 \end{equation}
 
-This happens for terms that appear in more than half of all documents, e.g.: ``the'' or ``a''. Many systems do not consider these terms when searching by keeping a list of common words that can be ignored (stop words). However, if these words are considered, having a negative IDF would decrease the relevance score of documents that have the query term in the document. To avoid negative values in all possible cases, Lucene adds a constant one before calculating the $log$ value. 
+To avoid negative values in all possible cases, Lucene adds a constant one before calculating the $log$ value. 
 
 Second, the document length used in the scoring function is compressed (in a lossy manner) to a one byte value, denoted $L_{d\text{lossy}}$. With only 256 distinct document lengths, Lucene can pre-compute the value of
 
@@ -287,19 +306,19 @@ Table~\ref{bm25_variant_results} shows the effectiveness scores of the different
 	\centering
 	\caption{Effectiveness scores different BM25 variants, all were implement as SQL queries, so the underlying data representations are exactly the same. }
 	\label{bm25_variant_results}
-	\begin{tabular}{l| c c c c c c}
+	\begin{tabular}{l c c c c c c}
 		\toprule
 		&\multicolumn{2}{c}{Robust04}&\multicolumn{2}{c}{Core17}&\multicolumn{2}{c}{Core18}\\
-		&AP&P@30&AP&P@30&AP&P@30\\
+		&\texttt{AP}&\texttt{P@30}&\texttt{AP}&\texttt{P@30}&\texttt{AP}&\texttt{P@30}\\
 		\midrule
-		Robertson et al. & .2526 & .3086 & .2094 & .4327 & .2465 & \textbf{.3647} \\ 
-		Lucene (default) & .2531 & .3102 & .2087 & .4293 & .2495 & .3567 \\ 
-		Lucene (accurate) & .2533 & .3104 & .2094 & .4327 & .2495 & .3593 \\ 
-		ATIRE & .2533 & .3104 & .2094 & .4327 & .2495 & .3593 \\ 
-		BM25L & .2542 & .3092 & .1975 & .4253 & \textbf{.2501} & .3607 \\ 
-		BM25+ & .2526 & .3071 & .1931 & .4260 & .2447 & .3513 \\ 
-		BM25-adpt & \textbf{.2571} & \textbf{.3135} & \textbf{.2112} & .4133 & .2480 & .3533\\ 
-		TF $l\circ\delta\circ p\times$IDF & .2516 & .3084 & .1932 & \textbf{.4340} & .2465 & .3647\\ 
+		{\small Robertson et al.} & .2526 & .3086 & .2094 & .4327 & .2465 & \textbf{.3647} \\ 
+		{\small Lucene (default)} & .2531 & .3102 & .2087 & .4293 & .2495 & .3567 \\ 
+		{\small Lucene (accurate)} & .2533 & .3104 & .2094 & .4327 & .2495 & .3593 \\ 
+		{\small ATIRE} & .2533 & .3104 & .2094 & .4327 & .2495 & .3593 \\ 
+		{\small BM25L} & .2542 & .3092 & .1975 & .4253 & \textbf{.2501} & .3607 \\ 
+		{\small BM25+} & .2526 & .3071 & .1931 & .4260 & .2447 & .3513 \\ 
+		{\small BM25-adpt} & \textbf{.2571} & \textbf{.3135} & \textbf{.2112} & .4133 & .2480 & .3533\\ 
+		{\small $\text{TF}_{l\circ\delta\circ p}\times\text{IDF}$} & .2516 & .3084 & .1932 & \textbf{.4340} & .2465 & .3647\\ 
 		\bottomrule
 	\end{tabular}
 \end{table}
