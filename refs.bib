@@ -434,7 +434,7 @@
 }
 
 @inproceedings{flair,
-	title={{FLAIR: An easy-to-use framework for state-of-the-art NLP}},
+	title={{FLAIR: An Easy-to-Use Framework for State-of-the-Art NLP}},
 	author={Akbik, Alan and Bergmann, Tanja and Blythe, Duncan and Rasul, Kashif and Schweter, Stefan and Vollgraf, Roland},
 	booktitle={Annual Conference of the North American Chapter of the Association for Computational Linguistics (Demonstrations)},
 	pages={54--59},
@@ -855,4 +855,101 @@
 	timestamp = {Mon, 02 Nov 2020 18:17:09 +0100},
 	biburl    = {https://dblp.org/rec/journals/corr/abs-2010-12674.bib},
 	bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Chaudhuri2005IntegratingDA,
+	title={{Integrating DB and IR Technologies: What is the Sound of One Hand Clapping?}},
+	author={Surajit Chaudhuri and Raghu Ramakrishnan and Gerhard Weikum},
+	booktitle={Proceedings of the Second Biennial Conference on Innovative Data Systems Research},
+	series={CIDR'05},
+	year={2005},
+	location={Asilomar, CA, USA}
+}
+
+@article{PowerDB-IR,
+	author = {Grabs, Torsten and B\"{o}hm, Klemens and Schek, Hans-J\"{o}rg},
+	title = {{PowerDB-IR – Scalable Information Retrieval and Storage with a Cluster of Databases}},
+	year = {2004},
+	issue_date = {July 2004},
+	publisher = {Springer-Verlag},
+	address = {Berlin, Heidelberg},
+	volume = {6},
+	number = {4},
+	issn = {0219-1377},
+	abstract = {Our objective is a scalable infrastructure for information retrieval (IR) with up-to-date retrieval results in the presence of updates. Timely processing of updates is important with novel application domains such as e-commerce. These issues are challenging, given the additional requirement that the system must scale well. We have built PowerDB-IR, a system that has the characteristics sought. This article describes its design, implementation, and evaluation. We follow a three-tier architecture with a database cluster as the bottom layer for storage management. The rationale for a database cluster is to ‘scale out’, i.e., to add further cluster nodes, whenever necessary for better performance. The middle tier provides IR-specific retrieval and update services. We deploy state-of-the-art middleware software to coordinate the cluster and to invoke IR-specific components. PowerDB-IR extends the middleware layer with service decomposition and parallelisation. PowerDB-IR has the following features: It supports state-of-the-art retrieval models such as vector space retrieval. It allows documents to be inserted and retrieved concurrently and ensures up-to-date retrieval results with almost no overhead. PowerDB-IR ensures the correctness of global concurrency and recovery. Alternative physical data organisation schemes and respective query processing techniques provide adequate performance for different workloads and database sizes. Scaling out the database cluster yields higher throughput and lower response times. We have run extensive experiments with PowerDB-IR using several commercial database systems as well as different middleware products. Further experiments have quantified the effect of transactional guarantees on performance. The main result is that PowerDB-IR shows surprisingly good scalability and low response times.},
+	journal = {Knowl. Inf. Syst.},
+	month = {jul},
+	pages = {465–505},
+	numpages = {41},
+	keywords = {Transaction management for IR, Concurrent update and retrieval, Information retrieval, Database cluster}
+}
+
+@article{array-db,
+	author = {Cornacchia, Roberto and H\'{e}man, S\'{a}ndor and Zukowski, Marcin and Vries, Arjen P. and Boncz, Peter},
+	title = {{Flexible and Efficient IR Using Array Databases}},
+	year = {2008},
+	issue_date = {January 2008},
+	publisher = {Springer-Verlag},
+	address = {Berlin, Heidelberg},
+	volume = {17},
+	number = {1},
+	issn = {1066-8888},
+	url = {https://doi.org/10.1007/s00778-007-0071-0},
+	doi = {10.1007/s00778-007-0071-0},
+	abstract = {The Matrix Framework is a recent proposal by Information Retrieval (IR) researchers to flexibly represent information retrieval models and concepts in a single multi-dimensional array framework. We provide computational support for exactly this framework with the array database system SRAM (Sparse Relational Array Mapping), that works on top of a DBMS. Information retrieval models can be specified in its comprehension-based array query language, in a way that directly corresponds to the underlying mathematical formulas. SRAM efficiently stores sparse arrays in (compressed) relational tables and translates and optimizes array queries into relational queries. In this work, we describe a number of array query optimization rules. To demonstrate their effect on text retrieval, we apply them in the TREC TeraByte track (TREC-TB) efficiency task, using the Okapi BM25 model as our example. It turns out that these optimization rules enable SRAM to automatically translate the BM25 array queries into the relational equivalent of inverted list processing including compression, score materialization and quantization, such as employed by custom-built IR systems. The use of the high-performance MonetDB/X100 relational backend, that provides transparent database compression, allows the system to achieve very fast response times with good precision and low resource usage.},
+	journal = {The VLDB Journal},
+	month = {jan},
+	pages = {151–168},
+	numpages = {18},
+	keywords = {Array databases, Query optimization, Database compression, Information retrieval}
+}
+
+@book{modern-information-retrieval,
+	title={{Modern information retrieval}},
+	author={Baeza-Yates, Ricardo and Ribeiro-Neto, Berthier and others},
+	volume={463},
+	year={1999},
+	publisher={ACM press New York}
+}
+
+@inproceedings{risc,
+	author = {Chaudhuri, Surajit and Weikum, Gerhard},
+	title = {{Rethinking Database System Architecture: Towards a Self-Tuning RISC-Style Database System}},
+	year = {2000},
+	isbn = {1558607153},
+	publisher = {Morgan Kaufmann Publishers Inc.},
+	address = {San Francisco, CA, USA},
+	booktitle = {Proceedings of the 26th International Conference on Very Large Data Bases},
+	pages = {1–10},
+	numpages = {10},
+	series = {VLDB '00}
+}
+
+@inproceedings{handwritten,
+	author={S\'andor H\'eman and Marcin Zukowski and Arjen de Vries and Peter Boncz},
+	title={{MonetDB/X100 at the 2006 TREC TeraByte Track}},
+	year={2006},
+	publisher={[Sl]: NIST},
+	booktitle={NIST Special Publication: SP 500-272. The Fifteenth Text REtrieval Conference (TREC 2006) Proceedings},
+	address={Gaithersburg, Maryland},
+	series = {TREC'06},
+	url={https://trec.nist.gov/pubs/trec15/papers/cwi-heman.tera.final.pdf}
+}
+
+@inproceedings{weak-baselines,
+	author = {Yang, Wei and Lu, Kuang and Yang, Peilin and Lin, Jimmy},
+	title = {{Critically Examining the "Neural Hype": Weak Baselines and the Additivity of Effectiveness Gains from Neural Ranking Models}},
+	year = {2019},
+	isbn = {9781450361729},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3331184.3331340},
+	doi = {10.1145/3331184.3331340},
+	abstract = {Is neural IR mostly hype? In a recent SIGIR Forum article, Lin expressed skepticism that neural ranking models were actually improving ad hoc retrieval effectiveness in limited data scenarios. He provided anecdotal evidence that authors of neural IR papers demonstrate "wins" by comparing against weak baselines. This paper provides a rigorous evaluation of those claims in two ways: First, we conducted a meta-analysis of papers that have reported experimental results on the TREC Robust04 test collection. We do not find evidence of an upward trend in effectiveness over time. In fact, the best reported results are from a decade ago and no recent neural approach comes close. Second, we applied five recent neural models to rerank the strong baselines that Lin used to make his arguments. A significant improvement was observed for one of the models, demonstrating additivity in gains. While there appears to be merit to neural IR approaches, at least some of the gains reported in the literature appear illusory.},
+	booktitle = {Proceedings of the 42nd International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {1129–1132},
+	numpages = {4},
+	keywords = {document ranking, neural IR, meta-analysis},
+	location = {Paris, France},
+	series = {SIGIR'19}
 }
