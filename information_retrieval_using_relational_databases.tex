@@ -3,20 +3,23 @@
 \epigraph{``Is this new question a worthy one to investigate?'' This latter question we investigate without further ado, thereby cutting short an infinite regress.}{Alan Turing - 1950}
 
 \begin{Abstract}
-\begin{changemargin}{1cm}{1cm}
-	This chapter will examine the history of using relational databases for information retrieval. There have been many attempts to express information retrieval problems using relational databases. The chapter will highlight one of the latter attempts that revived the idea of expressing bag-of-words ranking functions using SQL. A prototype system that uses these expressions is presented, dubbed OldDog. This system can be used for rapid IR prototyping and is especially helpful in the context of reproducible information retrieval research.
-	lso, when researchers speak of BM25, it is not always clear which variant they mean since many tweaks to \citeauthor{bm25-robertson}'s original formulation have been proposed. Does this ambiguity ``matter''? We attempt to answer this question with a large-scale reproducibility study of BM25, considering eight variants implemented in the OldDog system. Experiments on three newswire collections show no significant effectiveness differences between them, including Lucene's often maligned approximation of document length.
-\end{changemargin}
+	\begin{changemargin}{1cm}{1cm}
+		There have been many attempts to express information retrieval problems using relational databases. In this chapter, one of the latter attempts that revived the idea of expressing bag-of-words ranking functions using SQL will be highlighted. A prototype system that uses these expressions is presented, dubbed OldDog. This system can be used for rapid IR prototyping and is especially helpful in the context of reproducible information retrieval research.
+		Also, when researchers speak of BM25, it is not always clear which variant they mean since many tweaks to \citeauthor{bm25-robertson}'s original formulation have been proposed. Does this ambiguity ``matter''? We attempt to answer this question with a large-scale reproducibility study of BM25, considering eight variants implemented in the OldDog system. Experiments on three newswire collections show no significant effectiveness differences between them, including Lucene's often maligned approximation of document length.
+	\end{changemargin}
 \end{Abstract}
 
-
 \section{Introduction}
-Where information retrieval researchers commonly use inverted indexes as data structures, there is also a history of researchers using relational databases to represent the data in information retrieval systems. Different approaches in the literature present varying successes. First, we summarize what approaches have been tried in the past decades.
+Where information retrieval researchers commonly use inverted indexes as data structures, there is also a rich history of researchers using relational databases to represent the data in information retrieval systems. Different approaches in the literature present varying successes. Given this context, we arrive at the first research question: 
+\begin{itemize}
+	\item[\textbf{RQ1:}] What are the benefits of using relational databases for information retrieval?
+\end{itemize}
+In order to answer this question, first, we will look at the history of using database systems for IR. Then, one of the latter attempts of using a relational database for information retrieval will be highlighted. Using this work a prototype system is built, dubbed ``OldDog''. This system will be used in a reproduction experiment, which compares several variants of BM25 which each other. This reproduction study does not only confirm previous findings found in the literature, it also verifies that relational databases systems are suited for running IR experiments. 
 
 \section{Related work}
 
 \subsection{Boolean retrieval}
-Perhaps the earliest work on using relational databases for information retrieval is the work by~\citet{SchekPistor}. In their work, the authors recognize that the relational data model is widely accepted as an interface to query structured data. However, in cases of unstructured data, like text, it is inconvenient to use. They proposed an extension for the relational model by allowing Non First Normal Form ($NF^2$) relations. This extension allows for text queries to be more easily expressed. However, the systems that can be built in this language are boolean retrieval systems. Which at the time worked well, but scoring was not a feature implemented.  
+Perhaps the earliest work on using relational databases for information retrieval is the work by~\citet{SchekPistor}. In their work, the authors recognize that the relational data model is widely accepted as an interface to query structured data. However, in cases of unstructured data, like text, it is inconvenient to use. They proposed an extension for the relational model by allowing Non First Normal Form ($\text{NF}^2$) relations. This extension allows for text queries to be more easily expressed. However, the systems that can be built in this language are boolean retrieval systems. Which at the time worked well, but scoring was not a feature implemented.  
 Similarly, \citet{macleod} compared the relational model with the inverted index model. \Citeauthor{macleod} showed how queries of the IBM STAIRS system could be expressed using the relational model. These were, however, still boolean queries, so scoring using uncertainty was not considered. 
 
 \subsection{Probabilistic Relational Algebra}
@@ -26,7 +29,7 @@ The basic idea behind PRA is that tuples are assigned weights; the weight repres
 
 \subsection{IR on top of a database cluster}
 % T. Grabs, K. Bhoem, and H.-J. Schek. PowerDB-IR: scalable information retrieval and storage with a cluster of databases. Knowledge and Information Systems, 6(4):465–505, 2004.
-\Citet{PowerDB-IR} propose PowerDB-IR, developed to run IR applications on a scalable infrastructure. It should also be able to update the data in a timely fashion while retrieving up-to-date results. \Citeauthor{PowerDB-IR} achieve this by assigning every document to a category, e.g., sports or news. In their experiments, they use 16 artificial categories. A dedicated node is created for every category, containing tables containing documents, inverted lists, and statistics tables. 
+\Citet{PowerDB-IR} propose PowerDB-IR, developed to run IR applications on a scalable infrastructure. It should also be able to update the data quickly while retrieving up-to-date results. \Citeauthor{PowerDB-IR} achieve this by assigning every document to a category, e.g., sports or news. In their experiments, they use 16 artificial categories. A dedicated node is created for every category, containing tables containing documents, inverted lists, and statistics tables. 
 The system supports both single-category and multi-category searches. For a single query search, the following ranking score value is calculated:
 \begin{equation}
 	\text{RSV}(d,q) = \sum_{t\in q} \mathit{tf}(t, d) \cdot \mathit{idf}(t)^2 \cdot \mathit{tf}(t, q)
@@ -63,7 +66,7 @@ The disadvantage of this approach was that the query plans were not generated fr
 The same research group~\citep{array-db} also ran experiments on the TREC TeraByte track using the array database SRAM (Sparse Relational Array Mapping). SRAM automatically translate BM25 queries to run them on a relational engine (particularly X100). However, SRAM is quite an exotic query language, only used by some researchers. 
 
 \subsection{Retrieval models only using SQL}
-In more recent work, \citet{OldDog} showed that the commonly used BM25 ranking function could also be easily expressed using SQL. This is done similarly to \citet{PowerDB-IR}. In this work, the MonetDB~\citep{monet} and Vectorwise~\citep{vectorwise} systems were used, making it much faster. \Citeauthor{OldDog} specifically focused on the retrieval efficiency of several systems. They argue that instead of using a custom build IR system using an inverted index, researchers could simply store their data representations in a column-oriented relational database and formulate the ranking functions using SQL. They show that their implementation of BM25 in SQL is on par in efficiency and effectiveness compared to systems that use an inverted index.\footnote{In particular the Vectorwise system.}  
+In more recent work, \citet{OldDog} showed that the commonly used BM25 ranking function could also be easily expressed using SQL. This is done similarly to \citet{PowerDB-IR}. In this work, the MonetDB~\citep{monet} and Vectorwise~\citep{vectorwise} systems were used, making it much faster. \Citeauthor{OldDog} specifically focused on the retrieval efficiency of several systems. They argue that instead of using a custom build IR system using an inverted index, researchers could store their data representations in a column-oriented relational database and formulate the ranking functions using SQL. They show that their implementation of BM25 in SQL is on par in efficiency and effectiveness compared to systems that use an inverted index.\footnote{In particular the Vectorwise system.}  
 
 There was an interesting observation in the paper to highlight: All the systems evaluated in this paper implement BM25. However, there was a substantial difference between the effectiveness scores produced by these systems, as shown in \cref{olddog_results}. The only two systems that achieved the same effectiveness score were the two database systems (MonetDB and Vectorwise). However, these two systems were developed by the same research group.
 
@@ -84,7 +87,7 @@ There was an interesting observation in the paper to highlight: All the systems 
 	\end{tabular}
 \end{table}
 
-These results were quite surprising as the authors took specific care to keep document pre-processing identical for all systems. However, the observed difference in \texttt{MAP} of 3\% absolute was the largest deviation in the score reported.
+These results were surprising as the authors took specific care to keep document preprocessing identical for all systems. However, the observed difference in \texttt{MAP} of 3\% absolute was the largest deviation in the score reported.
 
 \subsection{Reproducibility}
 Not only did we observe the differences in effectiveness scores for BM25 in the paper by \citet{OldDog}. In the SIGIR 2015 Workshop on Reproducibility, Inexplicability, and Generalizability of Results (RIGOR)~\citep{RIGOR} and the Open-Source IR Replicability Challenge (OSIRRC) workshop~\citep{OSIRRC} similar results are observed. See \cref{rigor_results} and \cref{osirrc_results} respectively.  
@@ -97,10 +100,10 @@ Not only did we observe the differences in effectiveness scores for BM25 in the 
 		\toprule
 		System &  \texttt{MAP@1000} \\
 		\midrule
-		ATIRE~\citep{ATIRE} & 0.2902 \\
-		Lucene~\citep{lucene} & 0.3029 \\
-		MG4J~\citep{MG4J} & 0.2994 \\
-		Terrier~\citep{terrier} & 0.2697 \\
+		ATIRE~\citep{ATIRE} & 0.290 \\
+		Lucene~\citep{lucene} & 0.303 \\
+		MG4J~\citep{MG4J} & 0.299 \\
+		Terrier~\citep{terrier} & 0.270 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
@@ -124,13 +127,36 @@ Not only did we observe the differences in effectiveness scores for BM25 in the 
 	\end{tabular}
 \end{table}
 
-It is unclear why the results between these systems differ this much; many explanations are possible. Examples include; different preprocessing\footnote{But not in~\citeauthor{OldDog}, as they ensured preprocessing was the same for all systems.}, different hyperparameter settings, other functions for inverse document frequency ($idf$), or erroneous implementation of the ranking function. Using, for example, non-optimized hyperparameter settings can lead to considerable gaps in differences between effectiveness scores. \citet{weak-baselines} showed that in many cases, new ranking methods had been proposed that compared the results of a newly proposed method to a non-fine-tuned version of BM25, making the results look better than they are. The choices for hyperparameters are often left out of papers, while BM25 is the baseline compared against.
- 
-\section{Prototype}
-We build a prototype system based on the paper by \citet{OldDog}
+It is unclear why the results between these systems differ this much; many explanations are possible. Examples include; different preprocessing\footnote{But not in~\citeauthor{OldDog}, as they ensured preprocessing was the same for all systems.}, different hyperparameter settings, other functions for inverse document frequency ($idf$), or erroneous implementation of the ranking function. Using, for example, non-optimized hyperparameter settings can lead to considerable gaps in differences between effectiveness scores. \citet{weak-baselines} showed that in many cases, new ranking methods had been proposed that compared the results of a newly proposed method to a non-fine-tuned version of BM25, making the results look better than they are. The choices for hyperparameters are often left out of papers, while BM25 is the baseline compared against. As BM25 is often used as a baseline, it is important to understand why these difference exists, and how they arise.
+
+\section{Prototype OldDog}
+As shown in \cref{osirrc_results}, one of the submissions to the workshop was by us~\citep{olddog-docker}. This prototype is a software project to replicate and extend the database approach to information retrieval presented in \citet{OldDog}. As the prototype was based on their work, we dub it \emph{OldDog}. OldDog uses column store database MonetDB~\citep{monet} for query processing. 
+\Citeauthor{OldDog} produced the database tables to represent ``postings'' using a custom program running on Hadoop.
+Instead, we relied on the Anserini toolsuite~\cite{anserini} to create a
+Lucene index. From this index, we extracted the data necessary to fill the tables. Anserini takes care of standard document preprocessing. The ranking function implemented in OldDog was BM25 as proposed by \citet{bm25-robertson}.
+
+\subsection{Docker}
+For the submission to the OSIRRC workshop~\citep{OSIRRC}, we created a docker image of OldDog\footnote{\url{https://hub.docker.com/r/osirrc2019/olddog}}. \Citeauthor{OldDog} implemented a conjunctive variant of BM25 (all query terms have to be present in a document in order for a document to be considered relevant). When creating the submission for the workshop, we noticed that the effectiveness scores were substantially lower than other submissions. When removing the conjunctive constraint, the effectiveness results increased. So our prototype supports both conjunctive and disjunctive versions of BM25. Our entry in \cref{osirrc_results} presents the effectiveness scores of the disjunctive variant. The retrieval effectiveness degraded more than we expected a priori, given the results in previous work. The number of relevant documents per topic for this collection was likely relatively low.
+
+\subsection{Ease-of-Use}
+Having implemented BM25 in a database system enabled us to carry out some experiments quite easily that are more mundane when using an inverted index. As all document frequencies are stored in one table, filtering out the terms with a large document frequency is easy. In only two lines of SQL, we updated the table removing the terms with large document frequency, as shown in \cref{fig:remove-high-df}. This approach could be an automatic way to remove stopwords from a collection. This filter was too strict to improve retrieval effectiveness but can easily be fine-tuned.
+
+\begin{figure}
+	\begin{minted}[linenos, breaklines, breakafter=-, escapeinside=||]{sql}
+ALTER TABLE dict 
+RENAME TO odict;
+CREATE table dict 
+AS SELECT * FROM odict WHERE df <= (
+	SELECT 0.1 * COUNT(*) FROM docs
+);		
+	\end{minted}
+	\caption{This code updates the \texttt{docs} table such that all terms with a document frequency greater than a tenth of the collection size are removed.}
+	\label{fig:remove-high-df}
+\end{figure}
 
 \section{Variants of BM25}
-We~\citep{Kamphuis2020BM25} examined several BM25 variants, which will be introduced. How the variant varies from the original formulation as proposed by \citeauthor{bm25-robertson} is marked in red. 
+Having ``OldDog'' set up, we can quickly run retrieval experiments. As mentioned in the previous section, it is still unclear why the differences between the submissions were this big. Also, many different variants of BM25 that claim to be more effective have been proposed in the literature. A study by \citet{trotman-bm25} compared several variants and found that improvements presented in the literature do not add up. 
+As we now have a system in which the BM25 formula is written directly in SQL, we can easily swap this version of BM25 with its proposed improvements. By using OldDog, we can ensure the data representation is the same when we compare these variants; the results will only reflect what the effects are applying a different variant of BM25. This way, we can easily confirm the findings of \citeauthor{trotman-bm25}.
 
 \subsubsection{\Citet{bm25-robertson}} 
 The original formulation of BM25 is constructed from two parts. The first part is derived from the binary independence relevance model~\citep{bm25-beyond}, which results in an approximation of the classical inverse document frequency ($\mathit{idf}$) for a query term $t$:
@@ -140,22 +166,22 @@ The original formulation of BM25 is constructed from two parts. The first part i
 \end{equation}
 where $N$ is the collection size, and $df_t$ are the number of documents in the collection that contain query term $t$.  
 
-There is, however, a negative consequence of using this formula for weighing term importance. Let us say there is a collection with $10,000$ documents; then it is possible to plot the $\mathit{idf}$ for each term as shown in~\cref{idf}. The figure shows that the $\mathit{idf}$ score becomes negative when $\mathit{df}_t > \frac{N}{2}$. This happens for terms that appear in more than half of all documents, e.g.: ``the'' or ``a''. Many systems do not consider these terms when searching by keeping a list of common words that can be ignored (stop words). However, when these words are considered,  a negative $\mathit{idf}$ would decrease the relevance scores of documents with the query term in the document—some variations of BM25 deal with this, which are discussed in the following sections.  
- 
+There is, however, a negative consequence of using this formula for weighing term importance. Let us say there is a collection with $10,000$ documents; then, it is possible to plot the $\mathit{idf}$ for each term as shown in~\cref{idf}. The figure shows that the $\mathit{idf}$ score becomes negative when $\mathit{df}_t > \frac{N}{2}$. This happens for terms that appear in more than half of all documents, e.g.: ``the'' or ``a''. Many systems do not consider these terms when searching by keeping a list of common words that can be ignored (stop words). However, when these words are considered,  a negative $\mathit{idf}$ would decrease the relevance scores of documents with the query term in the document—some variations of BM25 deal with this, which are discussed in the following sections.  
+
 \begin{figure}
 	\caption{Inverse document frequency as used by \citet{bm25-robertson}}
 	\label{idf}
 	\begin{tikzpicture}
 		\begin{axis}[
-				axis lines = left,
-				xlabel = \(\mathit{df}_t\),
-				ylabel = {\(\mathit{idf}\)},
+			axis lines = left,
+			xlabel = \(\mathit{df}_t\),
+			ylabel = {\(\mathit{idf}\)},
 			]
 			%Below the red parabola is defined
 			\addplot [
-				domain=0:10000, 
-				samples=1000, 
-				color=red,
+			domain=0:10000, 
+			samples=1000, 
+			color=red,
 			]
 			{ln((10000-x+0.5)/(x+0.5))};
 			\addlegendentry{\(ln(\frac{10000-df_t+0.5}{df_t+0.5})\)}
@@ -259,7 +285,7 @@ First, they identify the probability of selecting a document randomly from the c
 The probability of a term occurring one more time is defined as:
 
 \begin{equation}
-p(t+1|t,q) = \frac{\mathit{df}_{t+1}+0.5}{\mathit{df}_t+1}
+	p(t+1|t,q) = \frac{\mathit{df}_{t+1}+0.5}{\mathit{df}_t+1}
 \end{equation}
 
 In both these formulas, $1$ and $0.5$ are added for smoothing to avoid zero probabilities. Then the information gain from $t$ to $t+1$ occurrences is computed as, subtracting the initial probability: 
@@ -352,13 +378,13 @@ All experiments were run on a Linux desktop (Fedora 30, Kernel 5.2.18, SELinux e
 \end{table}
 The observed differences in effectiveness are small and can be fully attributed to variations in the scoring function; our methodology fixes all other parts of the indexing pipeline (e.g., tag cleanup, tokenization, and stopwords). Both an ANOVA and Tukey’s HSD show no significant differences between any variant on all test collections. These results confirm the findings of~\citet{trotman-bm25}: effectiveness differences are unlikely an effect of the choice of the BM25 variant. Across the IR literature, we find that differences due to more mundane settings (such as the choice of stopwords) are often larger than the differences we observe here. Although we find no significant improvements over the original~\citep{bm25-robertson} formulation, it might still be worthwhile to use a variant of BM25 that avoids negative ranking scores.
 
-You might have caught that the effectiveness scores of ATIRE and Lucene (accurate) are the same. This is not a mistake. As explained, the $k_1+1$ in ATIRE scales the scores linearly and does not affect the ranking. So the only difference that can change the effectiveness scores are the different $\mathit{idf}$ functions, but these are practically the same, especially when a collection has a large number of documents ($N$):
+You might have caught that the effectiveness scores of ATIRE and Lucene (accurate) are the same. This is not a mistake. As explained, the $k_1+1$ in ATIRE scales the scores linearly and does not affect the ranking. So the only difference that can change the effectiveness scores is the different $\mathit{idf}$ functions. However, these are practically the same, especially when a collection has a large number of documents ($N$):
 
 \begin{align}
 	\log\left(\frac{N}{\mathit{df}_t}\right) &= \log\left(\frac{N-\mathit{df}_t+\mathit{df}_t}{\mathit{df}_t}\right) \\
-									   		 &= \log\left(\frac{N-\mathit{df}_t}{\mathit{df}_t} + \frac{\mathit{df}_t}{\mathit{df}_t}\right) \\
-											 &= \log\left(\frac{N-\mathit{df}_t}{\mathit{df}_t} + 1\right) \\
-											 &\approx \log\left(\frac{N-\mathit{df}_t+0.5}{\mathit{df}_t+0.5} + 1\right)
+	&= \log\left(\frac{N-\mathit{df}_t}{\mathit{df}_t} + \frac{\mathit{df}_t}{\mathit{df}_t}\right) \\
+	&= \log\left(\frac{N-\mathit{df}_t}{\mathit{df}_t} + 1\right) \\
+	&\approx \log\left(\frac{N-\mathit{df}_t+0.5}{\mathit{df}_t+0.5} + 1\right)
 \end{align}
 
 \Cref{bm25_effiency} presents the average retrieval time per query in milliseconds (without standard deviation for Anserini, which does not report time per query). MonetDB uses all cores for inter- and intra-query parallelism, while Anserini is single-threaded.
@@ -387,6 +413,7 @@ You might have caught that the effectiveness scores of ATIRE and Lucene (accurat
 \end{table}
 
 Comparing Lucene (default) and Lucene (accurate), we find negligible differences in effectiveness. However, the differences in retrieval time are also negligible, which calls into question the motivation behind the original length approximation. Currently, the similarity function and, thus, the document length encoding are defined at index time. Storing exact document lengths would allow for different ranking functions to be swapped at query time more effortlessly, as no information would be discarded at index time. Accurate document lengths might additionally benefit downstream modules that depend on Lucene. We suggest that Lucene might benefit from storing exact document lengths.
- 
-\section{Do BM25 variants matter?}
-In summary, the previous sections describe a double reproducibility study. The study methodologically validates the usefulness of databases for IR prototyping claimed by \citet{OldDog} and performed a large-scale study of BM25 to confirm the findings of \citet{trotman-bm25}. Returning to our original motivating question regarding the multitude of BM25 variants: ``Does it matter?'', we can conclude that the answer appears to be ``no, it does not''.
+
+\section{Conclusion}
+In summary, the previous sections describe a double reproducibility study. The study methodologically validated the usefulness of databases for IR prototyping and performed a large-scale study of BM25 to confirm the findings of \citet{trotman-bm25}. Returning to our original motivating question regarding the multitude of BM25 variants: ``Does it matter?'', we can conclude that the answer appears to be ``no, it does not''.
+Furthermore, to return to our research question, we can conclude that using relational databases for information retrieval is beneficial. Because data processing and storage are separated in relational databases, comparing different ranking functions in a relational system is much easier compared to a system that uses an inverted index. The work by \cite{OldDog} also confirmed that relational databases could be as efficient as inverted indexes in retrieval tasks. In short, databases have use cases in which they are easier to work with, while it is possible to have efficient systems.
