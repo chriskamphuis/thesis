@@ -3,14 +3,20 @@
 
 \begin{Abstract}
 	\begin{changemargin}{1cm}{1cm}
-		This chapter introduces GeeseDB. GeeseDB is a Python toolkit for solving information retrieval research problems that leverage graphs as data structures. It aims to simplify information retrieval research by allowing researchers to formulate graph queries through a graph query language quickly. GeeseDB is built on top of DuckDB, an embedded column-store relational database for analytical workloads. GeeseDB is available as an easy-to-install Python package. In only a few lines of code, users can create a first-stage retrieval ranking using BM25. Queries read and write Numpy arrays and Pandas dataframes at zero or negligible data transformation cost (dependent on a base datatype). Therefore, the results of a first-stage ranker expressed in GeeseDB can be used	in various stages in the ranking process, enabling all the power of Python machine learning libraries with minimal overhead. Also, because data representation and processing are strictly separated, GeeseDB forms an ideal basis for reproducible IR research.
+		This chapter introduces GeeseDB. GeeseDB is a Python toolkit for solving information retrieval research problems that leverage graphs as data structures. It aims to simplify information retrieval research by allowing researchers to formulate graph queries through a graph query language quickly. GeeseDB is built on top of DuckDB, an embedded column-store relational database for analytical workloads. GeeseDB is available as an easy-to-install Python package. In only a few lines of code, users can create a first-stage retrieval ranking using BM25. Queries read and write Numpy arrays and Pandas dataframes at negligible data transformation cost. Therefore, the results of a first-stage ranker expressed in GeeseDB can be used	in various stages in the ranking process, enabling all the power of Python machine learning libraries with minimal overhead. Also, because data representation and processing are strictly separated, GeeseDB forms an ideal basis for reproducible IR research.
 	\end{changemargin}
 \end{Abstract}
 
 \section{Introduction}
-In recent years there has been a lot of exciting new information retrieval research that uses non-text data to improve the effectiveness of search systems. All these research directions have improved search systems' effectiveness by using more diverse data. Although search systems consider more diverse data sources, the usage of this data is often implemented through a coupled architecture. In particular, first-stage retrieval is often carried out with different software compared to later retrieval stages, where these novel reranking techniques tend to be used. In our view, researchers could benefit from a system where retrieval stages are more tightly coupled, which facilitates the exploration of how to use non-content data for ranking, and serves the data in a format suitable for reranking with, e.g., transformers or tree-based methods.
+In recent years there has been a lot of exciting new information retrieval research that uses non-text data to improve the efficacy of search applications. All these research directions have improved search systems' effectiveness by using more diverse data. Although more diverse data sources are considered, this data is often implemented through a coupled architecture. In particular, first-stage retrieval is often carried out with different software compared to later retrieval stages, where these novel reranking techniques tend to be used. In our view, researchers could benefit from a system where retrieval stages are more tightly coupled, which facilitates the exploration of how to use non-content data for ranking, and serves the data in a format suitable for reranking with, e.g., transformers or tree-based methods.
+
+The previous chapter demonstrates how relational databases can be used for information retrieval problems. When using a relational database instead of an inverted index, it is already easier to integrate alternative data sources into your search system. In the case of information retrieval graph data can often be used to improve search effectiveness. One of the most famous examples where graphs help information retrieval is the PageRank algorithm~\citep{pagerank}; Google's claim to fame. 
+
+% rewrite and reflect on previous chapter, and give context in which graph databases are useful.
 
 \section{Related work }
+% Describe the related work which was presented in the GeeseDB paper, but also include more related work regarding approaches that use graph language like approaches (different subsection). 
+
 Consider for example dense representations for retrieval~\cite{dense-retrieval-1, dense-retrieval-2, dense-retrieval-3}, knowledge graphs to leverage entity information~\cite{entity-1, entity-2, entity-3}, and non-textual learning-to-rank features~\cite{ltr-1, ltr-2}.
 
 \subsection{Current solutions}
@@ -18,6 +24,7 @@ PyTerrier was developed by Macdonald et al.~\cite{pyterrier}, which is a Python 
 Pyserini was developed by Lin et al.~\cite{pyserini}, which is a Python extension of Anserini~\cite{anserini}.
 
 \section{GeeseDB}
+% Introduce GeeseDB, and the approach of what we are doing with GeeseDB
 In order to fulfill these needs we propose GeeseDB\footnote{\url{https://github.com/informagi/geesedb}}, a prototype Python toolkit for information retrieval that leverages graphs as data structures, allowing metadata and graph oriented data to be easily included in the ranking pipeline. The toolkit is designed to quickly set up first stage retrieval, and make it easy for researchers to explore new ranking models quickly. 
 
 In short, GeeseDB aims to provide the following functionalities:
@@ -29,6 +36,7 @@ In short, GeeseDB aims to provide the following functionalities:
 \end{itemize}
 
 \section{Design}
+% Expand the Design part a lot, how did we solve certain technical problems. 
 At the core of GeeseDB lies the full text search design presented by M\"{u}hleisen et al.~\cite{OldDog}. In this work, a column-store database for IR prototyping is proposed, which uses the database schema described in Figure~\ref{olddog_schema}, consisting of three database tables.
 \begin{figure}
 	\centering
