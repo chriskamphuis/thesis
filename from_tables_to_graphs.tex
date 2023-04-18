@@ -15,22 +15,28 @@ In recent years there has been a lot of exciting new information retrieval resea
 
 The previous chapter demonstrates how relational databases can be used for information retrieval problems. Integrating alternative data sources into search systems is easier when using a relational database instead of an inverted index. In the case of information retrieval, graph data can often be used to improve search effectiveness. One of the most famous examples where graphs help information retrieval is the PageRank algorithm~\citep{pagerank}. Although it might be possible to express this data in relational databases, they are not designed with graph structures in mind. 
 
-The data management community has shown much interest in graph databases in recent years. Graph databases are different from relational databases in that a relation is not the abstraction for representations, but a graph is. Graphs can be considered a better abstraction for real-world data than relations. Graphs focus much more on concepts (nodes in a graph) and how they relate to each other (edges in a graph). Many different graph types exist; one is called the \emph{property graph model}. This type of graph contains nodes and directed edges, which can be labeled; nodes and edges can also have associated key-value pairs. In this chapter, we will work with the property graph model and see how it benefits IR research.  %todo add GCORE
+The data management community has shown much interest in graph databases in recent years. Graph databases are different from relational databases in that a relation is not the abstraction for representations, but a graph is. Graphs can be considered a better abstraction for real-world data than relations. Graphs focus much more on concepts (nodes in a graph) and how they relate to each other (edges in a graph). Many different graph types exist; one is called the \emph{property graph model}. This type of graph contains nodes and directed edges, which can be labeled; nodes and edges can also have associated key-value pairs. In this chapter, we will work with the property graph model and see how it benefits IR research.
 
-%todo also add second reason: ensure compatibility with 2-stage retrieval
-The research goal in this chapter is two-fold; we want to develop a system that can search efficiently and handle graphs. In the previous chapter, we showed that relational databases could search efficiently and help reproducible research. However, these systems do not support graph data structures well. Systems built on inverted indexes use coupled architectures, which can introduce unnecessary overhead. So in this chapter, the prototype system GeeseDB is introduced; it tries to leverage the same techniques for search as relational databases do while also naturally being able to support graphs. This leads to the main research question for this chapter:
+The research goal in this chapter is two-fold; firstly we want to develop a system that can search efficiently and handle graphs. In the previous chapter, we showed that relational databases could search efficiently and help reproducible research. However, these systems do not support graph data structures well. Systems built on inverted indexes use coupled architectures, which can introduce unnecessary overhead.
+
+Secondly, we want to create a system where both first and second-stage retrieval are directly supported. In IR research multi-stage retrieval systems contain components that are not ran in the same ecosystem; introducing overhead in retrieval efficiency. 
+So in this chapter, the prototype system GeeseDB is introduced; it tries to leverage the same techniques for search as relational databases do while also naturally being able to support graphs. This leads to the main research question for this chapter:
 
 \begin{itemize}
 	\item[\textbf{RQ2:}] Can we extend the benefits from using relational databases for information retrieval to using graph databases, while being able to express graph-related problems easier?
 \end{itemize} 
 
-In order to answer this research question, we will work with the prototype system GeeseDB, but before GeeseDB is discussed, first we will look into work that used graph data for their information retrieval experiments; systems that try to combine two systems for two-stage retrieval experiments, and systems built for processing graphs.
+In order to answer this research question, we will work with the prototype system GeeseDB, but before GeeseDB is discussed, first we will look into work that uses systems that try to combine two systems for two-stage retrieval experiments, and systems built for processing graphs.
 
 % rewrite and reflect on the previous chapter, and give context in which graph databases are helpful.
 
 \section{Related work }
 % Describe the related work which was presented in the GeeseDB paper, but also include more related work regarding approaches that use graph language-like approaches (different subsection). 
 \subsection{Coupled architectures}
+\subsubsection{Learning To Rank}
+In learning-to-rank multi-stage approaches tend to be used. \Citet{ltr-1} showed that for the TREC Contextual Suggestion track~\cite {contextual-suggestion-track}, reranking using user-based features significantly improved retrieval effectiveness over a baseline language modeling approach. These features show that data not present in the document's text can help the retrieval effectiveness of systems; metadata helps to rank. 
+
+\Citet{ltr-2} show examples of many features that are effective for learning to rank, many of these features are non-textual. Some influential features are: click count, click entropy, and the number of displayed results in a session.  
 
 \subsubsection{Dense Retrieval}
 Where traditionally, search was carried out using inverted indexes, dense retrieval has become more prevalent in recent years. Consider, for example, the work by \citet{dense-retrieval-1}; in their work, they proposed \texttt{clear}, a model that aims to complement lexical models with a dense retrieval model. In their study, they use BM25 as the lexical model. The BM25 scores are calculated using an inverted index (Anserini~\citep{anserini}), while the dense retrieval model is a fine-tuned BERT bi-encoder. This dense model calculates a score using a different maximum inner-product search (MIPS) system (Faiss~\citep{faiss}) to calculate a similarity score for the query document pairs. Then scores are weighted and summed to calculate a new ranking score value. 
@@ -46,12 +52,6 @@ Knowledge graphs have been used a lot as well in IR research. \Citet{entity-1} p
 \Citet{entity-3} used entity features for query expansion. One of the features was calculated by tagging queries with an entity-linking system. When entities were found, information from the knowledge base linked to them was included in query expansion. Alternative names of the entity were also included in the query expansion. Then this expanded query provided a score for all documents. Another feature they calculate is by ranking the entities in the knowledge base using the original query text. Then the data (e.g., words in the descriptions) included in the knowledge base can be included as terms for query expansion. Multiple other features using entities were also calculated, 
 
 \Citet{entity-2} wrote an excellent book on entity-oriented search, giving an excellent outline of methods that use entities for search. I recommend it if you want to read more about entity information included in the search. 
-
-\subsubsection{Other non-textual Features}
-In learning-to-rank multi-stage approaches also are used. 
-\Citet{ltr-1} showed that for the TREC Contextual Suggestion track~\cite {contextual-suggestion-track}, reranking using user-based features significantly improved retrieval effectiveness over a baseline language modeling approach. These features show that data not present in the document's text can help the retrieval effectiveness of systems; metadata helps to rank.
-
-\Citet{ltr-2} show examples of many features that are effective for learning to rank, many of these features are non-textual. Some influential features are: click count, click entropy, and the number of displayed results in a session.  
 
 \subsection{Current approaches}
 Some systems are used a lot for information retrieval research. These systems are typically built as inverted index systems. Recently, retrieval methods using neural networks have become state-of-the-art, mainly using large language models. Some systems will be described, and how they deal with these recent advances will be highlighted.  
@@ -80,7 +80,11 @@ In order to be able to formalize these similarities and distinctions more clearl
 
 \subsubsection{A Graph Query Language for IR}
 % Reproducible IR needs a graph query language ook belangrijk
-In the context of separating logical and physical models, we \citep{need-graph-db} proposed to create graph query language for information retrieval problems. A graph query language can be interpreted as a logical model, while the engine that implements the graph query language can be considered the physical model. 
+We \citep{need-graph-db} proposed to create graph query language for information retrieval problems. In the context of separating logical and physical models, a graph query language can be interpreted as a logical model, while the engine that implements the graph query language can be considered the physical model.
+
+If it is possible to express both first stage and second stage retrieval in such a query language, both stages would be computed by the same physical model, automatically ensuring a coupled architecture is not necessary. Having a graph query language available, ensures that more complicated retrieval strategies can be expressed compared to when a relational query language is used. 
+
+So ideally we develop a system with the following two capabilities; the system supports first stage retrieval directly, and graph queries over the output of this first stage retrieval can be processed without a coupled architecture.  
 
 \section{GeeseDB}
 % Introduce GeeseDB, and the approach of what we are doing with GeeseDB
@@ -103,7 +107,7 @@ At the core of GeeseDB lies the full-text search design presented by~\citet{OldD
 	\caption{Database schema by \citeauthor{OldDog} for full text search in relational databases}
 	\label{olddog_schema}
 \end{figure}
-(One for all term information, one for all document information, and one that contains the information on how terms relate to documents; the information that is found in a posting list of an inverted index). Using these three tables, the authors show that BM25 can be easily expressed as a SQL query with latencies on par with custom-built IR engines. In GeeseDB, we use the same relational schema for full-text search.
+These tables are exactly the same as the tables described in the previous chapter. Using these three tables, the authors show that BM25 can be easily expressed as a SQL query with latencies on par with custom-built IR engines. In GeeseDB, we use the same relational schema for full-text search.
 Instead of seeing the document data and term data as tables that relate to each other through a many-to-many join table, it is also possible to consider this schema as a bipartite graph. In this graph, documents and terms are considered nodes connected through edges. If a term occurs in a document, an edge exists between that term and the document. GeeseDB uses the data model of property graphs labeled multigraphs where both edges and nodes can have property-value pairs. The database schema, as described in~\cref{olddog_schema}, would then translate to the property graph schema shown in~\cref{olddog-graph-schema}.
 \begin{figure}
 	\centering
@@ -168,7 +172,7 @@ We plan to support the other keywords of Cypher in the future, as well as direct
 GeeseDB comes as an easy-to-install Python package that can be installed using pip, the standard package installer for Python:
 
 \begin{verbatim}
-	$ pip install geesedb==0.0.1
+	$ pip install geesedb
 \end{verbatim}
 After installing GeeseDB, we can immediately start using it. All examples in this paper were run on version v0.0.1 of GeeseDB. However, as GeeseDB is actively being developed, we advise readers to use the latest version of GeeseDB, which can be installed when not specifying a package version. It is also possible to install the latest commit by installing the latest version directly from GitHub.
 As an example, we will show how to use GeeseDB for the background linking task of the TREC News Track~\citep{soboroff2018trec}. The goal of this task is: \textit{Given a news story, find other news articles that can provide meaningful context or background information.} These articles can then be recommended to the reader to help them understand the context in which these news articles occur. The collection used for this task is the Washington Post V3 collection\footnote{\url{https://trec.nist.gov/data/wapost/}} released for the 2020 edition of TREC. It contains $671,945$ news articles published by the Washington Post published between 2012 and 2020 and 50 topics with relevance assessments (topics correspond to collection identifiers of documents for which relevant data has to be found). The articles in this collection contain valuable metadata; in particular, we will use authorship information. We extracted $25,703$ unique article authors, where it is possible that multiple authors co-wrote a news article. We also annotate documents with entity information which was obtained by using the Radboud Entity Linker~\citep{REL}. In total $31,622,419$ references to $541,729$ unique entities were found. The links also contain mention and location information, as well as the \texttt{ner\_tag} found by the linker's entity recognition module (The \texttt{ner\_tag} is part of a link, as the entity linker can assign different tags to the same entity).\footnote{The annotated data will be made publicly available.} \cref{fig:geesedb-graph} illustrates the data schema that we use for the background linking task. 
@@ -297,7 +301,7 @@ author_query = t.translate(author_c_query)
 
 cursor = get_connection(db_path).cursor
 topics = get_topics_backgroundlinking(
-	'/path/to/topics'
+    '/path/to/topics'
 )
 for topic_no, collection_id in topics:
     cursor.execute(query, [collection_id])
@@ -365,3 +369,11 @@ for topic_no, collection_id in topics:
 \end{figure}
 
 \section{Conclusion}
+This chapter described the prototype implementation of GeeseDB, and how we envision graph databases can be used for information retrieval research.
+The GeeseDB system can be considered the question on our research question: \emph{Can we extend the benefits from using relational databases for information retrieval to using graph databases, while being able to express graph-related problems easier?}
+As GeeseDB is built on top of a relational engine it automatically inherits the benefits of using relational databases for IR. As GeeseDB can process graph queries, we also are able to express graph related problems. 
+
+GeeseDB is still however a prototype system, and more functionalities need to be implemented. In particular, although the architecture is not coupled, it is not as efficient as traditional methods that do use coupled architectures. The overhead introduced introduce in coupled architectures is lower than the retrieval efficiency from methods that are state of the art but work coupled.
+
+Also, not all graph operators are yet supported. In order to make GeeseDB a usable system for IR researchers, more operators need to be implemented and the system needs to be developed to be more robust. 
+ 
