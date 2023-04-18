@@ -256,6 +256,7 @@
 	location = {Newark, Delaware, USA},
 	series = {ICTIR '16}
 }
+
 @book{entity-2,
 	title={{Entity-oriented search}},
 	author={Balog, Krisztian},
@@ -263,6 +264,7 @@
 	publisher={Springer Nature},
 	address={Gewerbestrasse 11, 6330 Cham, Switzerland}
 }
+
 @inproceedings{entity-3,
 	author = {Dalton, Jeffrey and Dietz, Laura and Allan, James},
 	title = {{Entity Query Feature Expansion Using Knowledge Base Links}},
@@ -784,8 +786,21 @@
 	location = {Gaithersburg, Maryland, USA},
 	address = {Gaithersburg, Maryland, USA},
 	publisher = {National Institute for Standards and Technology (NIST)},
-	year={2018},
+	year={2019},
 	numpages={9}
+}
+
+@inproceedings{contextual-suggestion-track,
+	title={{Overview of the TREC 2013 Contextual Suggestion Track}},
+	author={Dean-Hall, Adriel and {L.A. Clarke}, Charles and Kamps, Jaap and Thomas, Paul and Simone, Nicole and Voorhees, Ellen},
+	booktitle={Proceedings of The Twenty-Second Text REtrieval Conference
+	(TREC 2013) Proceedings},
+	series={TREC '13},
+	location = {Gaithersburg, Maryland, USA},
+	address = {Gaithersburg, Maryland, USA},
+	publisher = {National Institute for Standards and Technology (NIST)},
+	year={2014},
+	numpages={13}
 }
 
 @inproceedings{ciff,
@@ -1191,4 +1206,291 @@
 	institution = {Stanford InfoLab},
 	url = {http://ilpubs.stanford.edu:8090/422/},
 	abstract = {The importance of a Web page is an inherently subjective matter, which depends on the readers interests, knowledge and attitudes. But there is still much that can be said objectively about the relative importance of Web pages. This paper describes PageRank, a mathod for rating Web pages objectively and mechanically, effectively measuring the human interest and attention devoted to them. We compare PageRank to an idealized random Web surfer. We show how to efficiently compute PageRank for large numbers of pages. And, we show how to apply PageRank to search and to user navigation.}
+}
+
+@inproceedings{scann,
+	title={{Accelerating Large-Scale Inference with Anisotropic Vector Quantization}},
+	author={Guo, Ruiqi and Sun, Philip and Lindgren, Erik and Geng, Quan and Simcha, David and Chern, Felix and Kumar, Sanjiv},
+	booktitle={International Conference on Machine Learning},
+	year={2020},
+	URL={https://arxiv.org/abs/1908.10396}
+}
+
+@article{faiss,
+	title={{Billion-scale similarity search with GPUs}},
+	author={Johnson, Jeff and Douze, Matthijs and J{\'e}gou, Herv{\'e}},
+	journal={IEEE Transactions on Big Data},
+	volume={7},
+	number={3},
+	pages={535--547},
+	year={2019},
+	publisher={IEEE}
+}
+
+@article{seperation-logical-physical,
+	author = {Lin, Jimmy},
+	title = {{A Proposed Conceptual Framework for a Representational Approach to Information Retrieval}},
+	year = {2022},
+	issue_date = {December 2021},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {55},
+	number = {2},
+	issn = {0163-5840},
+	url = {https://doi.org/10.1145/3527546.3527552},
+	abstract = {This paper outlines a conceptual framework for understanding recent developments in information retrieval and natural language processing that attempts to integrate dense and sparse retrieval methods. I propose a representational approach that breaks the core text retrieval problem into a logical scoring model and a physical retrieval model. The scoring model is defined in terms of encoders, which map queries and documents into a representational space, and a comparison function that computes query-document scores. The physical retrieval model defines how a system produces the top-k scoring documents from an arbitrarily large corpus with respect to a query. The scoring model can be further analyzed along two dimensions: dense vs. sparse representations and supervised (learned) vs. unsupervised approaches. I show that many recently proposed retrieval methods, including multi-stage ranking designs, can be seen as different parameterizations in this framework, and that a unified view suggests a number of open research questions, providing a roadmap for future work. As a bonus, this conceptual framework establishes connections to sentence similarity tasks in natural language processing and information access "technologies" prior to the dawn of computing.},
+	journal = {SIGIR Forum},
+	month = {mar},
+	articleno = {4},
+	numpages = {29}
+}
+
+@inproceedings{trec-dl,
+	author = {Craswell, Nick and Mitra, Bhaskar and Yilmaz, Emine and Campos, Daniel and Voorhees, Ellen M. and Soboroff, Ian},
+	title = {{TREC Deep Learning Track: Reusable Test Collections in the Large Data Regime}},
+	year = {2021},
+	isbn = {9781450380379},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3404835.3463249},
+	abstract = {The TREC Deep Learning (DL) Track studies ad hoc search in the large data regime, meaning that a large set of human-labeled training data is available. Results so far indicate that the best models with large data may be deep neural networks. This paper supports the reuse of the TREC DL test collections in three ways. First we describe the data sets in detail, documenting clearly and in one place some details that are otherwise scattered in track guidelines, overview papers and in our associated MS MARCO leaderboard pages. We intend this description to make it easy for newcomers to use the TREC DL data. Second, because there is some risk of iteration and selection bias when reusing a data set, we describe the best practices for writing a paper using TREC DL data, without overfitting. We provide some illustrative analysis. Finally we address a number of issues around the TREC DL data, including an analysis of reusability.},
+	booktitle = {Proceedings of the 44th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {2369–2375},
+	numpages = {7},
+	keywords = {reusable benchmark, IR evaluation, deep learning},
+	series = {SIGIR '21}
+}
+
+@inproceedings{
+	thakur2021beir,
+	title={{BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models}},
+	author={Nandan Thakur and Nils Reimers and Andreas R{\"u}ckl{\'e} and Abhishek Srivastava and Iryna Gurevych},
+	booktitle={Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)},
+	year={2021},
+	url={https://openreview.net/forum?id=wCu6T5xFjeJ}
+}
+
+@article{xu2022laprador,
+	title={{Laprador: Unsupervised pretrained dense retriever for zero-shot text retrieval}},
+	author={Xu, Canwen and Guo, Daya and Duan, Nan and McAuley, Julian},
+	journal={arXiv preprint arXiv:2203.06169},
+	year={2022}
+}
+
+@article{thakur2022domain,
+	title={{Domain adaptation for memory-efficient dense retrieval}},
+	author={Thakur, Nandan and Reimers, Nils and Lin, Jimmy},
+	journal={arXiv preprint arXiv:2205.11498},
+	year={2022}
+}
+
+@inproceedings{dalton2021cast,
+	title={{CAsT 2020: The Conversational Assistance Track Overview}},
+	author={Dalton, Jeffrey and Xiong, Chenyan and Callan, Jamie},
+	year={2021},
+	booktitle={The Twenty-Ninth Text REtrieval Conference (TREC 2020) Proceedings},
+	publisher={[Sl]: NIST},
+	address={Gaithersburg, Maryland, USA},
+	institution={Technical report, Technical report}
+}
+
+@inproceedings{bosselut2021dynamic,
+	title={{Dynamic neuro-symbolic knowledge graph construction for zero-shot commonsense question answering}},
+	author={Bosselut, Antoine and Le Bras, Ronan and Choi, Yejin},
+	booktitle={Proceedings of the AAAI conference on Artificial Intelligence},
+	volume={35},
+	number={6},
+	pages={4923--4931},
+	year={2021}
+}
+
+@inproceedings{sciavolino:2021:simple,
+	title = {{Simple Entity-Centric Questions Challenge Dense Retrievers}},
+	author = "Sciavolino, Christopher  and
+	Zhong, Zexuan  and
+	Lee, Jinhyuk  and
+	Chen, Danqi",
+	booktitle = "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing",
+	month = nov,
+	year = "2021",
+	address = "Online and Punta Cana, Dominican Republic",
+	publisher = "Association for Computational Linguistics",
+	url = "https://aclanthology.org/2021.emnlp-main.496",
+	pages = "6138--6148",
+	abstract = "Open-domain question answering has exploded in popularity recently due to the success of dense retrieval models, which have surpassed sparse models using only a few supervised training examples. However, in this paper, we demonstrate current dense models are not yet the holy grail of retrieval. We first construct EntityQuestions, a set of simple, entity-rich questions based on facts from Wikidata (e.g., {``}Where was Arve Furset born?{''}), and observe that dense retrievers drastically under-perform sparse methods. We investigate this issue and uncover that dense retrievers can only generalize to common entities unless the question pattern is explicitly observed during training. We discuss two simple solutions towards addressing this critical problem. First, we demonstrate that data augmentation is unable to fix the generalization problem. Second, we argue a more robust passage encoder helps facilitate better quesDense Retrieval with Entity Viewstion adaptation using specialized question encoders. We hope our work can shed light on the challenges in creating a robust, universal dense retriever that works well across different input distributions.",
+}
+
+@inproceedings{Tran:2022:DRE,
+	author = {Tran, Hai Dang and Yates, Andrew},
+	title = {{Dense Retrieval with Entity Views}},
+	year = {2022},
+	isbn = {9781450392365},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3511808.3557285},
+	abstract = {Pre-trained language models like BERT have been demonstrated to be both effective and efficient ranking methods when combined with approximate nearest neighbor search, which can quickly match dense representations of queries and documents. However, pretrained language models alone do not fully capture information about uncommon entities. In this work, we investigate methods for enriching dense query and document representations with entity information from an external source. Our proposed method identifies groups of entities in a text and encodes them into a dense vector representation, which is then used to enrich BERT's vector representation of the text. To handle documents that contain many loosely-related entities, we devise a strategy for creating multiple entity representations that reflect different views of a document. For example, a document about a scientist may cover aspects of her personal life and recent work, which correspond to different views of the entity. In an evaluation on MS MARCO benchmarks, we find that enriching query and document representations in this way yields substantial increases in effectiveness.},
+	booktitle = {Proceedings of the 31st ACM International Conference on Information \& Knowledge Management},
+	pages = {1955–1964},
+	numpages = {10},
+	keywords = {entity representations, ad hoc ranking, dense retrieval},
+	series = {CIKM '22}
+}
+
+@inproceedings{blink,
+	title={{Zero-shot Entity Linking with Dense Entity Retrieval}},
+	author={Ledell Wu and Fabio Petroni and Martin Josifoski and Sebastian Riedel and Luke Zettlemoyer},
+	booktitle={EMNLP},
+	year={2020}
+}
+
+@inproceedings{wikipedia2vec,
+	title = {{Joint Learning of the Embedding of Words and Entities for Named Entity Disambiguation}},
+	author = "Yamada, Ikuya  and
+	Shindo, Hiroyuki  and
+	Takeda, Hideaki  and
+	Takefuji, Yoshiyasu",
+	booktitle = "Proceedings of the 20th {SIGNLL} Conference on Computational Natural Language Learning",
+	month = aug,
+	year = "2016",
+	address = "Berlin, Germany",
+	publisher = "Association for Computational Linguistics",
+	url = "https://aclanthology.org/K16-1025",
+	pages = "250--259",
+}
+
+@inproceedings{yago,
+	title = {{Robust Disambiguation of Named Entities in Text}},
+	author = {Hoffart, Johannes  and
+	Yosef, Mohamed Amir  and
+	Bordino, Ilaria  and
+	F{\"u}rstenau, Hagen  and
+	Pinkal, Manfred  and
+	Spaniol, Marc  and
+	Taneva, Bilyana  and
+	Thater, Stefan  and
+	Weikum, Gerhard},
+	booktitle = "Proceedings of the 2011 Conference on Empirical Methods in Natural Language Processing",
+	month = jul,
+	year = "2011",
+	address = "Edinburgh, Scotland, UK.",
+	publisher = "Association for Computational Linguistics",
+	url = "https://aclanthology.org/D11-1072",
+	pages = "782--792",
+}
+
+@inproceedings{crosswiki,
+	title = {{A Cross-Lingual Dictionary for {E}nglish {W}ikipedia Concepts}},
+	author = "Spitkovsky, Valentin I.  and
+	Chang, Angel X.",
+	booktitle = "Proceedings of the Eighth International Conference on Language Resources and Evaluation ({LREC}'12)",
+	month = may,
+	year = "2012",
+	address = "Istanbul, Turkey",
+	publisher = "European Language Resources Association (ELRA)",
+	url = "http://www.lrec-conf.org/proceedings/lrec2012/pdf/266_Paper.pdf",
+	pages = "3168--3175",
+	abstract = "We present a resource for automatically associating strings of text with English Wikipedia concepts. Our machinery is bi-directional, in the sense that it uses the same fundamental probabilistic methods to map strings to empirical distributions over Wikipedia articles as it does to map article URLs to distributions over short, language-independent strings of natural language text. For maximal inter-operability, we release our resource as a set of flat line-based text files, lexicographically sorted and encoded with UTF-8. These files capture joint probability distributions underlying concepts (we use the terms article, concept and Wikipedia URL interchangeably) and associated snippets of text, as well as other features that can come in handy when working with Wikipedia articles and related information.",
+}
+
+@inproceedings{BERT,
+	title	= {{BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding}},
+	author	= {Jacob Devlin and Ming-Wei Chang and Kenton Lee and Kristina N. Toutanova},
+	year	= {2018},
+	URL	= {https://arxiv.org/abs/1810.04805}
+}
+
+@inproceedings{poly-encoders,
+	title={{Poly-encoders: Transformer architectures and pre-training strategies for fast and accurate multi-sentence scoring}},
+	author={Humeau, Samuel and Shuster, Kurt and Lachaux, Marie-Anne and Weston, Jason},
+	year={2019},
+	booktitle={Proceedings of the 7th  International Conference on Learning Representations},
+	month={may},
+	address={New Orleans, LA, USA},
+	url={https://openreview.net/pdf?id=SkxgnnNFvH},
+	series={ICLR'19}
+}
+
+
+@article{fuhr-mrr,
+	author = {Fuhr, Norbert},
+	title = {{Some Common Mistakes In IR Evaluation, And How They Can Be Avoided}},
+	year = {2018},
+	issue_date = {December 2017},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {51},
+	number = {3},
+	issn = {0163-5840},
+	url = {https://doi.org/10.1145/3190580.3190586},
+	abstract = {This paper points out some mistakes that can be frequently found in IR publications: MRR and ERR violate basic requirements for a metric, MAP is based on unrealistic assumptions, the numbers shown overstate the precision of the result, relative improvements of arithmetic means are inappropriate, the simple holdout method yields unreliable results, hypotheses are often formulated after the experiment, significance tests frequently ignore the multiple comparisons problem, effect sizes are ignored, reproducibility of the experiments might be nearly impossible, and sometimes authors claim proof by experimentation.},
+	journal = {SIGIR Forum},
+	month = {feb},
+	pages = {32–41},
+	numpages = {10}
+}
+
+@mastersthesis{Shehata,
+	author={{Dahlia Shehata}},
+	title={{Information Retrieval with Entity Linking}},
+	year={2022},
+	publisher="UWSpace",
+	url={http://hdl.handle.net/10012/18557}
+}
+
+@inproceedings{RFF,
+	author = {Cormack, Gordon V. and Clarke, Charles L A and Buettcher, Stefan},
+	title = {{Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods}},
+	year = {2009},
+	isbn = {9781605584836},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/1571941.1572114},
+	abstract = {Reciprocal Rank Fusion (RRF), a simple method for combining the document rankings from multiple IR systems, consistently yields better results than any individual system, and better results than the standard method Condorcet Fuse. This result is demonstrated by using RRF to combine the results of several TREC experiments, and to build a meta-learner that ranks the LETOR 3 dataset better than any previously reported method},
+	booktitle = {Proceedings of the 32nd International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {758–759},
+	numpages = {2},
+	keywords = {aggregation, fusion, ranking},
+	series = {SIGIR '09}
+}
+
+@inproceedings{chameleons,
+	author = {Arabzadeh, Negar and Mitra, Bhaskar and Bagheri, Ebrahim},
+	title = {{MS MARCO Chameleons: Challenging the MS MARCO Leaderboard with Extremely Obstinate Queries}},
+	year = {2021},
+	isbn = {9781450384469},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3459637.3482011},
+	abstract = {During the recent years and with the growing influence of neural architectures, tasks such as ad hoc retrieval have witnessed an impressive improvement in performance. For instance, the performance of rankers on the passage retrieval task on the MS MARCO dataset has improved by an order of magnitude in less than two years. In this paper, we go beyond the overall performance of the state of the art rankers and empirically study their performance from a finer-grained perspective. We find that while neural rankers have been able to consistently improve performance, this has been in part thanks to a specific set of queries from within the larger query set. We systematically show that there are subsets of queries that are difficult for each and every one of the neural rankers, which we refer to as obstinate queries. We show the obstinate queries are similar to easier queries in terms of their number of available relevant judgement documents and the length of the query itself but they are extremely more difficult to satisfy by existing rankers. Furthermore, we observe that query reformulation methods cannot help these queries. On this basis, we present three datasets derived from the MS MARCO Dev set, called the MS MARCO Chameleon datasets. We believe that the next breakthrough in performance would need to necessarily consider the queries in the MS MARCO Chameleons, as such, propose that a well-rounded evaluation strategy for any new ranker would need to include performance measures on both the overall MS MARCO dataset as well as the proposed MS MARCO Chameleon datasets.},
+	booktitle = {Proceedings of the 30th ACM International Conference on Information \& Knowledge Management},
+	pages = {4426–4435},
+	numpages = {10},
+	keywords = {query difficulty, query reformulation, information retrieval},
+	series = {CIKM '21}
+}
+
+@inproceedings{qlever,
+	author = {Bast, Hannah and Buchhold, Bj\"{o}rn},
+	title = {{QLever: A Query Engine for Efficient SPARQL+Text Search}},
+	year = {2017},
+	isbn = {9781450349185},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	abstract = {We present QLever, a query engine for efficient combined search on a knowledge base and a text corpus, in which named entities from the knowledge base have been identified (that is, recognized and disambiguated). The query language is SPARQL extended by two QLever-specific predicates ql:contains-entity and ql:contains-word, which can express the occurrence of an entity or word (the object of the predicate) in a text record (the subject of the predicate). We evaluate QLever on two large datasets, including FACC (the ClueWeb12 corpus linked to Freebase). We compare against three state-of-the-art query engines for knowledge bases with varying support for text search: RDF-3X, Virtuoso, Broccoli. Query times are competitive and often faster on the pure SPARQL queries, and several orders of magnitude faster on the SPARQL+Text queries. Index size is larger for pure SPARQL queries, but smaller for SPARQL+Text queries.},
+	booktitle = {Proceedings of the 2017 ACM on Conference on Information and Knowledge Management},
+	pages = {647–656},
+	numpages = {10},
+	keywords = {indexing, sparql+text, efficiency},
+	series = {CIKM '17}
+}
+
+@article{2020t5,
+	author  = {Colin Raffel and Noam Shazeer and Adam Roberts and Katherine Lee and Sharan Narang and Michael Matena and Yanqi Zhou and Wei Li and Peter J. Liu},
+	title   = {{Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer}},
+	journal = {Journal of Machine Learning Research},
+	year    = {2020},
+	volume  = {21},
+	number  = {140},
+	pages   = {1-67},
+	url     = {http://jmlr.org/papers/v21/20-074.html}
 }
