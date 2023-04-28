@@ -57,6 +57,7 @@
 \usepackage{subfiles}
 \usepackage{epigraph}
 \usepackage{nowidow}
+\usepackage{rotating}
 
 \usepackage{pgfplots}
 \pgfplotsset{width=10cm,compat=1.9}
@@ -76,3 +77,10 @@
 \usepackage{hyperref}
 \usepackage[noabbrev,capitalize]{cleveref} % Easy references
 \interfootnotelinepenalty=10000
+
+\newcommand{\framedtext}[1]{%
+	\par%
+	\noindent\fbox{%
+		\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{#1}%
+	}%
+}
