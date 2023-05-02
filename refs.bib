@@ -437,24 +437,6 @@
 	publisher={CEUR-WS.org}
 }
 
-
-@inproceedings{anserini,
-	author = {Yang, Peilin and Fang, Hui and Lin, Jimmy},
-	title = {{Anserini: Enabling the Use of Lucene for Information Retrieval Research}},
-	year = {2017},
-	isbn = {9781450350228},
-	publisher = {Association for Computing Machinery},
-	address = {New York, NY, USA},
-	doi = {10.1145/3077136.3080721},
-	abstract = {Software toolkits play an essential role in information retrieval research. Most open-source toolkits developed by academics are designed to facilitate the evaluation of retrieval models over standard test collections. Efforts are generally directed toward better ranking and less attention is usually given to scalability and other operational considerations. On the other hand, Lucene has become the de facto platform in industry for building search applications (outside a small number of companies that deploy custom infrastructure). Compared to academic IR toolkits, Lucene can handle heterogeneous web collections at scale, but lacks systematic support for evaluation over standard test collections. This paper introduces Anserini, a new information retrieval toolkit that aims to provide the best of both worlds, to better align information retrieval practice and research. Anserini provides wrappers and extensions on top of core Lucene libraries that allow researchers to use more intuitive APIs to accomplish common research tasks. Our initial efforts have focused on three functionalities: scalable, multi-threaded inverted indexing to handle modern web-scale collections, streamlined IR evaluation for ad hoc retrieval on standard test collections, and an extensible architecture for multi-stage ranking. Anserini ships with support for many TREC test collections, providing a convenient way to replicate competitive baselines right out of the box. Experiments verify that our system is both efficient and effective, providing a solid foundation to support future research.},
-	booktitle = {Proceedings of the 40th International ACM SIGIR Conference on Research and Development in Information Retrieval},
-	pages = {1253–1256},
-	numpages = {4},
-	keywords = {reproducibility, multi-threaded inverted indexing, trec test collections, open-source toolkits},
-	location = {Shinjuku, Tokyo, Japan},
-	series = {SIGIR '17}
-}
-
 @inproceedings{terrier,
 	author="Ounis, Iadh
 	and Amati, Gianni
@@ -511,14 +493,6 @@
 	booktitle={InCoCo@NIPS},
 	pages={},
 	year={2016}
-}
-
-@inproceedings{flair,
-	title={{FLAIR: An Easy-to-Use Framework for State-of-the-Art NLP}},
-	author={Akbik, Alan and Bergmann, Tanja and Blythe, Duncan and Rasul, Kashif and Schweter, Stefan and Vollgraf, Roland},
-	booktitle={Annual Conference of the North American Chapter of the Association for Computational Linguistics (Demonstrations)},
-	pages={54--59},
-	year={2019}
 }
 
 @inproceedings{Gerritse:2022:EMBERT,
@@ -623,19 +597,6 @@
 	keywords = {entity annotation, wikipedia, tagme, graph-based algorithms},
 	location = {Gold Coast, Queensland, Australia},
 	series = {ERD '14}
-}
-
-@inproceedings{cross-wiki,
-	title = {{A Cross-Lingual Dictionary for {E}nglish {W}ikipedia Concepts}},
-	author = "Spitkovsky, Valentin I.  and Chang, Angel X.",
-	booktitle = "Proceedings of the Eighth International Conference on Language Resources and Evaluation ({LREC}'12)",
-	month = may,
-	year = "2012",
-	address = "Istanbul, Turkey",
-	publisher = "European Language Resources Association (ELRA)",
-	url = "http://www.lrec-conf.org/proceedings/lrec2012/pdf/266_Paper.pdf",
-	pages = "3168--3175",
-	abstract = "We present a resource for automatically associating strings of text with English Wikipedia concepts. Our machinery is bi-directional, in the sense that it uses the same fundamental probabilistic methods to map strings to empirical distributions over Wikipedia articles as it does to map article URLs to distributions over short, language-independent strings of natural language text. For maximal inter-operability, we release our resource as a set of flat line-based text files, lexicographically sorted and encoded with UTF-8. These files capture joint probability distributions underlying concepts (we use the terms article, concept and Wikipedia URL interchangeably) and associated snippets of text, as well as other features that can come in handy when working with Wikipedia articles and related information.",
 }
 
 @inproceedings{ED-paper,
@@ -820,35 +781,6 @@
 	series = {SIGIR '20}
 }
 
-@inproceedings{entities-loc,
-	title={{Radboud University at TREC 2019.}},
-	author={Kamphuis, Chris and Hasibi, Faegheh and de Vries, Arjen P. and Crijns, Tanja},
-	booktitle={{Proceedings of The Twenty-Eight Text REtrieval Conference}},
-	series={TREC '19},
-	location = {Gaithersburg, Maryland, USA},
-	address = {Gaithersburg, Maryland, USA},
-	publisher={National Institute for Standards and Technology (NIST)},
-	year={2019},
-	numpages={10}
-}
-
-@inproceedings{REL,
-	author = {van Hulst, Johannes M. and Hasibi, Faegheh and Dercksen, Koen and Balog, Krisztian and de Vries, Arjen P.},
-	title = {{REL: An Entity Linker Standing on the Shoulders of Giants}},
-	year = {2020},
-	isbn = {9781450380164},
-	publisher = {Association for Computing Machinery},
-	address = {New York, NY, USA},
-	doi = {10.1145/3397271.3401416},
-	abstract = {Entity linking is a standard component in modern retrieval system that is often performed by third-party toolkits. Despite the plethora of open source options, it is difficult to find a single system that has a modular architecture where certain components may be replaced, does not depend on external sources, can easily be updated to newer Wikipedia versions, and, most important of all, has state-of-the-art performance. The REL system presented in this paper aims to fill that gap. Building on state-of-the-art neural components from natural language processing research, it is provided as a Python package as well as a web API. We also report on an experimental comparison against both well-established systems and the current state-of-the-art on standard entity linking benchmarks.},
-	booktitle = {Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
-	pages = {2197–2200},
-	numpages = {4},
-	keywords = {entity linking, toolkit, entity disambiguation, NER},
-	location = {Virtual Event, China},
-	series = {SIGIR '20}
-}
-
 @inproceedings{ctd,
 	author = {Singhal, Amit and Buckley, Chris and Mitra, Mandar},
 	title = {Pivoted Document Length Normalization},
@@ -1000,7 +932,7 @@
 	publisher={[Sl]: NIST},
 	booktitle={NIST Special Publication 1250: The Twenty-Eighth Text REtrieval Conference Proceedings (TREC 2019)},
 	address={Gaithersburg, Maryland},
-	series={TREC'19},
+	series={TREC '19},
 	url={https://trec.nist.gov/pubs/trec28/papers/RUIR.N.C.pdf}
 }
 
@@ -1245,63 +1177,11 @@
 	numpages = {29}
 }
 
-@inproceedings{trec-dl,
-	author = {Craswell, Nick and Mitra, Bhaskar and Yilmaz, Emine and Campos, Daniel and Voorhees, Ellen M. and Soboroff, Ian},
-	title = {{TREC Deep Learning Track: Reusable Test Collections in the Large Data Regime}},
-	year = {2021},
-	isbn = {9781450380379},
-	publisher = {Association for Computing Machinery},
-	address = {New York, NY, USA},
-	url = {https://doi.org/10.1145/3404835.3463249},
-	abstract = {The TREC Deep Learning (DL) Track studies ad hoc search in the large data regime, meaning that a large set of human-labeled training data is available. Results so far indicate that the best models with large data may be deep neural networks. This paper supports the reuse of the TREC DL test collections in three ways. First we describe the data sets in detail, documenting clearly and in one place some details that are otherwise scattered in track guidelines, overview papers and in our associated MS MARCO leaderboard pages. We intend this description to make it easy for newcomers to use the TREC DL data. Second, because there is some risk of iteration and selection bias when reusing a data set, we describe the best practices for writing a paper using TREC DL data, without overfitting. We provide some illustrative analysis. Finally we address a number of issues around the TREC DL data, including an analysis of reusability.},
-	booktitle = {Proceedings of the 44th International ACM SIGIR Conference on Research and Development in Information Retrieval},
-	pages = {2369–2375},
-	numpages = {7},
-	keywords = {reusable benchmark, IR evaluation, deep learning},
-	series = {SIGIR '21}
-}
-
-@inproceedings{
-	thakur2021beir,
-	title={{BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models}},
-	author={Nandan Thakur and Nils Reimers and Andreas R{\"u}ckl{\'e} and Abhishek Srivastava and Iryna Gurevych},
-	booktitle={Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)},
-	year={2021},
-	url={https://openreview.net/forum?id=wCu6T5xFjeJ}
-}
-
-@article{xu2022laprador,
-	title={{Laprador: Unsupervised pretrained dense retriever for zero-shot text retrieval}},
-	author={Xu, Canwen and Guo, Daya and Duan, Nan and McAuley, Julian},
-	journal={arXiv preprint arXiv:2203.06169},
-	year={2022}
-}
-
 @article{thakur2022domain,
 	title={{Domain adaptation for memory-efficient dense retrieval}},
 	author={Thakur, Nandan and Reimers, Nils and Lin, Jimmy},
 	journal={arXiv preprint arXiv:2205.11498},
 	year={2022}
-}
-
-@inproceedings{dalton2021cast,
-	title={{CAsT 2020: The Conversational Assistance Track Overview}},
-	author={Dalton, Jeffrey and Xiong, Chenyan and Callan, Jamie},
-	year={2021},
-	booktitle={The Twenty-Ninth Text REtrieval Conference (TREC 2020) Proceedings},
-	publisher={[Sl]: NIST},
-	address={Gaithersburg, Maryland, USA},
-	institution={Technical report, Technical report}
-}
-
-@inproceedings{bosselut2021dynamic,
-	title={{Dynamic neuro-symbolic knowledge graph construction for zero-shot commonsense question answering}},
-	author={Bosselut, Antoine and Le Bras, Ronan and Choi, Yejin},
-	booktitle={Proceedings of the AAAI conference on Artificial Intelligence},
-	volume={35},
-	number={6},
-	pages={4923--4931},
-	year={2021}
 }
 
 @inproceedings{sciavolino:2021:simple,
@@ -1311,13 +1191,62 @@
 	Lee, Jinhyuk  and
 	Chen, Danqi",
 	booktitle = "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing",
+	series = "EMNLP '21",
 	month = nov,
 	year = "2021",
 	address = "Online and Punta Cana, Dominican Republic",
 	publisher = "Association for Computational Linguistics",
 	url = "https://aclanthology.org/2021.emnlp-main.496",
 	pages = "6138--6148",
-	abstract = "Open-domain question answering has exploded in popularity recently due to the success of dense retrieval models, which have surpassed sparse models using only a few supervised training examples. However, in this paper, we demonstrate current dense models are not yet the holy grail of retrieval. We first construct EntityQuestions, a set of simple, entity-rich questions based on facts from Wikidata (e.g., {``}Where was Arve Furset born?{''}), and observe that dense retrievers drastically under-perform sparse methods. We investigate this issue and uncover that dense retrievers can only generalize to common entities unless the question pattern is explicitly observed during training. We discuss two simple solutions towards addressing this critical problem. First, we demonstrate that data augmentation is unable to fix the generalization problem. Second, we argue a more robust passage encoder helps facilitate better quesDense Retrieval with Entity Viewstion adaptation using specialized question encoders. We hope our work can shed light on the challenges in creating a robust, universal dense retriever that works well across different input distributions.",
+	abstract = "Open-domain question answering has exploded in popularity recently due to the success of dense retrieval models, which have surpassed sparse models using only a few supervised training examples. However, in this paper, we demonstrate current dense models are not yet the holy grail of retrieval. We first construct EntityQuestions, a set of simple, entity-rich questions based on facts from Wikidata (e.g., {``}Where was Arve Furset born?{''}), and observe that dense retrievers drastically under-perform sparse methods. We investigate this issue and uncover that dense retrievers can only generalize to common entities unless the question pattern is explicitly observed during training. We discuss two simple solutions towards addressing this critical problem. First, we demonstrate that data augmentation is unable to fix the generalization problem. Second, we argue a more robust passage encoder helps facilitate better question adaptation using specialized question encoders. We hope our work can shed light on the challenges in creating a robust, universal dense retriever that works well across different input distributions.",
+}
+
+
+@inproceedings{dalton2021cast,
+	title={{CAsT 2020: The Conversational Assistance Track Overview}},
+	author={Dalton, Jeffrey and Xiong, Chenyan and Callan, Jamie},
+	year={2021},
+	booktitle={The Twenty-Ninth Text REtrieval Conference (TREC 2020) Proceedings},
+	publisher={NIST},
+	address={Gaithersburg, Maryland, USA},
+	institution={Technical report, Technical report}
+}
+
+@inproceedings{bosselut2021dynamic,
+	title={{Dynamic Neuro-Symbolic Knowledge Graph Construction for Zero-shot Commonsense Question Answering}},
+	author={Bosselut, Antoine and Le Bras, Ronan and Choi, Yejin},
+	booktitle={Proceedings of The Thirty-Fifth AAAI Conference on Artificial Intelligence},
+	series={AAAI '20},
+	volume={35},
+	number={6},
+	pages={4923--4931},
+	year={2021}
+}
+
+@inproceedings{
+	thakur2021beir,
+	title={{BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models}},
+	author={Nandan Thakur and Nils Reimers and Andreas R{\"u}ckl{\'e} and Abhishek Srivastava and Iryna Gurevych},
+	booktitle={Proceedings of the Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)},
+	series={NeurIPS '21},
+	year={2021},
+	url={https://openreview.net/forum?id=wCu6T5xFjeJ}
+}
+
+@inproceedings{xu2022laprador,
+	title = {{LaPraDoR: Unsupervised Pretrained Dense Retriever for Zero-Shot Text Retrieval}},
+	author = "Xu, Canwen  and
+	Guo, Daya  and
+	Duan, Nan  and
+	McAuley, Julian",
+	booktitle = "Findings of the Association for Computational Linguistics: ACL 2022",
+	month = may,
+	year = "2022",
+	address = "Dublin, Ireland",
+	publisher = "Association for Computational Linguistics",
+	url = "https://aclanthology.org/2022.findings-acl.281",
+	pages = "3557--3569",
+	abstract = "In this paper, we propose LaPraDoR, a pretrained dual-tower dense retriever that does not require any supervised data for training. Specifically, we first present Iterative Contrastive Learning (ICoL) that iteratively trains the query and document encoders with a cache mechanism. ICoL not only enlarges the number of negative instances but also keeps representations of cached examples in the same hidden space. We then propose Lexicon-Enhanced Dense Retrieval (LEDR) as a simple yet effective way to enhance dense retrieval with lexical matching. We evaluate LaPraDoR on the recently proposed BEIR benchmark, including 18 datasets of 9 zero-shot text retrieval tasks. Experimental results show that LaPraDoR achieves state-of-the-art performance compared with supervised dense retrieval models, and further analysis reveals the effectiveness of our training strategy and objectives. Compared to re-ranking, our lexicon-enhanced approach can be run in milliseconds (22.5x faster) while achieving superior performance.",
 }
 
 @inproceedings{Tran:2022:DRE,
@@ -1336,11 +1265,127 @@
 	series = {CIKM '22}
 }
 
+@inproceedings{rel,
+	author = {van Hulst, Johannes M. and Hasibi, Faegheh and Dercksen, Koen and Balog, Krisztian and de Vries, Arjen P.},
+	title = {{REL: An Entity Linker Standing on the Shoulders of Giants}},
+	year = {2020},
+	isbn = {9781450380164},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3397271.3401416},
+	booktitle = {Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {2197–2200},
+	numpages = {4},
+	keywords = {toolkit, entity linking, entity disambiguation, NER},
+	series = {SIGIR '20}
+}
+
+@inproceedings{BERT,
+	title = {{BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding}},
+	author = "Devlin, Jacob  and
+	Chang, Ming-Wei  and
+	Lee, Kenton  and
+	Toutanova, Kristina",
+	booktitle = "Proceedings of the 2019 Conference of the North {A}merican Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)",
+	series = {NAACL '19},
+	month = jun,
+	year = "2019",
+	address = "Minneapolis, Minnesota",
+	publisher = "Association for Computational Linguistics",
+	url = "https://aclanthology.org/N19-1423",
+	doi = "10.18653/v1/N19-1423",
+	pages = "4171--4186",
+	abstract = "We introduce a new language representation model called BERT, which stands for Bidirectional Encoder Representations from Transformers. Unlike recent language representation models (Peters et al., 2018a; Radford et al., 2018), BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications. BERT is conceptually simple and empirically powerful. It obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE score to 80.5 (7.7 point absolute improvement), MultiNLI accuracy to 86.7{\%} (4.6{\%} absolute improvement), SQuAD v1.1 question answering Test F1 to 93.2 (1.5 point absolute improvement) and SQuAD v2.0 Test F1 to 83.1 (5.1 point absolute improvement).",
+}
+
+@inproceedings{trec-dl,
+	author = {Craswell, Nick and Mitra, Bhaskar and Yilmaz, Emine and Campos, Daniel and Voorhees, Ellen M. and Soboroff, Ian},
+	title = {{TREC Deep Learning Track: Reusable Test Collections in the Large Data Regime}},
+	year = {2021},
+	isbn = {9781450380379},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3404835.3463249},
+	abstract = {The TREC Deep Learning (DL) Track studies ad hoc search in the large data regime, meaning that a large set of human-labeled training data is available. Results so far indicate that the best models with large data may be deep neural networks. This paper supports the reuse of the TREC DL test collections in three ways. First we describe the data sets in detail, documenting clearly and in one place some details that are otherwise scattered in track guidelines, overview papers and in our associated MS MARCO leaderboard pages. We intend this description to make it easy for newcomers to use the TREC DL data. Second, because there is some risk of iteration and selection bias when reusing a data set, we describe the best practices for writing a paper using TREC DL data, without overfitting. We provide some illustrative analysis. Finally we address a number of issues around the TREC DL data, including an analysis of reusability.},
+	booktitle = {Proceedings of the 44th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {2369–2375},
+	numpages = {7},
+	keywords = {reusable benchmark, IR evaluation, deep learning},
+	series = {SIGIR '21}
+}
+
 @inproceedings{blink,
-	title={{Zero-shot Entity Linking with Dense Entity Retrieval}},
-	author={Ledell Wu and Fabio Petroni and Martin Josifoski and Sebastian Riedel and Luke Zettlemoyer},
-	booktitle={EMNLP},
-	year={2020}
+	title = {{Scalable Zero-shot Entity Linking with Dense Entity Retrieval}},
+	author = "Wu, Ledell  and
+	Petroni, Fabio  and
+	Josifoski, Martin  and
+	Riedel, Sebastian  and
+	Zettlemoyer, Luke",
+	booktitle = "Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing",
+	series={EMNLP '20},
+	month = nov,
+	year = "2020",
+	address = "Online",
+	publisher = "Association for Computational Linguistics",
+	url = "https://aclanthology.org/2020.emnlp-main.519",
+	pages = "6397--6407",
+	abstract = "This paper introduces a conceptually simple, scalable, and highly effective BERT-based entity linking model, along with an extensive evaluation of its accuracy-speed trade-off. We present a two-stage zero-shot linking algorithm, where each entity is defined only by a short textual description. The first stage does retrieval in a dense space defined by a bi-encoder that independently embeds the mention context and the entity descriptions. Each candidate is then re-ranked with a cross-encoder, that concatenates the mention and entity text. Experiments demonstrate that this approach is state of the art on recent zero-shot benchmarks (6 point absolute gains) and also on more established non-zero-shot evaluations (e.g. TACKBP-2010), despite its relative simplicity (e.g. no explicit entity embeddings or manually engineered mention tables). We also show that bi-encoder linking is very fast with nearest neighbor search (e.g. linking with 5.9 million candidates in 2 milliseconds), and that much of the accuracy gain from the more expensive cross-encoder can be transferred to the bi-encoder via knowledge distillation. Our code and models are available at https://github.com/facebookresearch/BLINK.",
+}
+
+@inproceedings{flair,
+	title = {{FLAIR: An Easy-to-Use Framework for State-of-the-Art NLP}},
+	author = "Akbik, Alan  and
+	Bergmann, Tanja  and
+	Blythe, Duncan  and
+	Rasul, Kashif  and
+	Schweter, Stefan  and
+	Vollgraf, Roland",
+	booktitle = "Proceedings of the 2019 Conference of the North {A}merican Chapter of the Association for Computational Linguistics (Demonstrations)",
+	series = {NAACL '19},
+	month = jun,
+	year = "2019",
+	address = "Minneapolis, Minnesota",
+	publisher = "Association for Computational Linguistics",
+	url = "https://aclanthology.org/N19-4010",
+	doi = "10.18653/v1/N19-4010",
+	pages = "54--59",
+	abstract = "We present FLAIR, an NLP framework designed to facilitate training and distribution of state-of-the-art sequence labeling, text classification and language models. The core idea of the framework is to present a simple, unified interface for conceptually very different types of word and document embeddings. This effectively hides all embedding-specific engineering complexity and allows researchers to {``}mix and match{''} various embeddings with little effort. The framework also implements standard model training and hyperparameter selection routines, as well as a data fetching module that can download publicly available NLP datasets and convert them into data structures for quick set up of experiments. Finally, FLAIR also ships with a {``}model zoo{''} of pre-trained models to allow researchers to use state-of-the-art NLP models in their applications. This paper gives an overview of the framework and its functionality. The framework is available on GitHub at https://github.com/zalandoresearch/flair .",
+}
+
+@inproceedings{crosswiki,
+	title = {{A Cross-Lingual Dictionary for English Wikipedia Concepts}},
+	author = "Spitkovsky, Valentin I.  and
+	Chang, Angel X.",
+	booktitle = "Proceedings of the Eighth International Conference on Language Resources and Evaluation",
+	series = {LREC '12},
+	month = may,
+	year = "2012",
+	address = "Istanbul, Turkey",
+	publisher = "European Language Resources Association (ELRA)",
+	url = "http://www.lrec-conf.org/proceedings/lrec2012/pdf/266_Paper.pdf",
+	pages = "3168--3175",
+	abstract = "We present a resource for automatically associating strings of text with English Wikipedia concepts. Our machinery is bi-directional, in the sense that it uses the same fundamental probabilistic methods to map strings to empirical distributions over Wikipedia articles as it does to map article URLs to distributions over short, language-independent strings of natural language text. For maximal inter-operability, we release our resource as a set of flat line-based text files, lexicographically sorted and encoded with UTF-8. These files capture joint probability distributions underlying concepts (we use the terms article, concept and Wikipedia URL interchangeably) and associated snippets of text, as well as other features that can come in handy when working with Wikipedia articles and related information.",
+}
+
+@inproceedings{yago,
+	title = {{Robust Disambiguation of Named Entities in Text}},
+	author = {Hoffart, Johannes  and
+	Yosef, Mohamed Amir  and
+	Bordino, Ilaria  and
+	F{\"u}rstenau, Hagen  and
+	Pinkal, Manfred  and
+	Spaniol, Marc  and
+	Taneva, Bilyana  and
+	Thater, Stefan  and
+	Weikum, Gerhard},
+	booktitle = "Proceedings of the 2011 Conference on Empirical Methods in Natural Language Processing",
+	series = "EMNLP '11",
+	month = jul,
+	year = "2011",
+	address = "Edinburgh, Scotland, UK.",
+	publisher = "Association for Computational Linguistics",
+	url = "https://aclanthology.org/D11-1072",
+	pages = "782--792",
 }
 
 @inproceedings{wikipedia2vec,
@@ -1358,49 +1403,8 @@
 	pages = "250--259",
 }
 
-@inproceedings{yago,
-	title = {{Robust Disambiguation of Named Entities in Text}},
-	author = {Hoffart, Johannes  and
-	Yosef, Mohamed Amir  and
-	Bordino, Ilaria  and
-	F{\"u}rstenau, Hagen  and
-	Pinkal, Manfred  and
-	Spaniol, Marc  and
-	Taneva, Bilyana  and
-	Thater, Stefan  and
-	Weikum, Gerhard},
-	booktitle = "Proceedings of the 2011 Conference on Empirical Methods in Natural Language Processing",
-	month = jul,
-	year = "2011",
-	address = "Edinburgh, Scotland, UK.",
-	publisher = "Association for Computational Linguistics",
-	url = "https://aclanthology.org/D11-1072",
-	pages = "782--792",
-}
-
-@inproceedings{crosswiki,
-	title = {{A Cross-Lingual Dictionary for {E}nglish {W}ikipedia Concepts}},
-	author = "Spitkovsky, Valentin I.  and
-	Chang, Angel X.",
-	booktitle = "Proceedings of the Eighth International Conference on Language Resources and Evaluation ({LREC}'12)",
-	month = may,
-	year = "2012",
-	address = "Istanbul, Turkey",
-	publisher = "European Language Resources Association (ELRA)",
-	url = "http://www.lrec-conf.org/proceedings/lrec2012/pdf/266_Paper.pdf",
-	pages = "3168--3175",
-	abstract = "We present a resource for automatically associating strings of text with English Wikipedia concepts. Our machinery is bi-directional, in the sense that it uses the same fundamental probabilistic methods to map strings to empirical distributions over Wikipedia articles as it does to map article URLs to distributions over short, language-independent strings of natural language text. For maximal inter-operability, we release our resource as a set of flat line-based text files, lexicographically sorted and encoded with UTF-8. These files capture joint probability distributions underlying concepts (we use the terms article, concept and Wikipedia URL interchangeably) and associated snippets of text, as well as other features that can come in handy when working with Wikipedia articles and related information.",
-}
-
-@inproceedings{BERT,
-	title	= {{BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding}},
-	author	= {Jacob Devlin and Ming-Wei Chang and Kenton Lee and Kristina N. Toutanova},
-	year	= {2018},
-	URL	= {https://arxiv.org/abs/1810.04805}
-}
-
 @inproceedings{poly-encoders,
-	title={{Poly-encoders: Transformer architectures and pre-training strategies for fast and accurate multi-sentence scoring}},
+	title={{Poly-encoders: Transformer Architectures and Pre-training Strategies for Fast and Accurate Multi-sentence Scoring}},
 	author={Humeau, Samuel and Shuster, Kurt and Lachaux, Marie-Anne and Weston, Jason},
 	year={2019},
 	booktitle={Proceedings of the 7th  International Conference on Learning Representations},
@@ -1410,34 +1414,23 @@
 	series={ICLR'19}
 }
 
-
-@article{fuhr-mrr,
-	author = {Fuhr, Norbert},
-	title = {{Some Common Mistakes In IR Evaluation, And How They Can Be Avoided}},
-	year = {2018},
-	issue_date = {December 2017},
+@inproceedings{10.1145/3459637.3482159,
+	author = {Arabzadeh, Negar and Yan, Xinyi and Clarke, Charles L. A.},
+	title = {{Predicting Efficiency/Effectiveness Trade-Offs for Dense vs. Sparse Retrieval Strategy Selection}},
+	year = {2021},
+	isbn = {9781450384469},
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
-	volume = {51},
-	number = {3},
-	issn = {0163-5840},
-	url = {https://doi.org/10.1145/3190580.3190586},
-	abstract = {This paper points out some mistakes that can be frequently found in IR publications: MRR and ERR violate basic requirements for a metric, MAP is based on unrealistic assumptions, the numbers shown overstate the precision of the result, relative improvements of arithmetic means are inappropriate, the simple holdout method yields unreliable results, hypotheses are often formulated after the experiment, significance tests frequently ignore the multiple comparisons problem, effect sizes are ignored, reproducibility of the experiments might be nearly impossible, and sometimes authors claim proof by experimentation.},
-	journal = {SIGIR Forum},
-	month = {feb},
-	pages = {32–41},
-	numpages = {10}
+	url = {https://doi.org/10.1145/3459637.3482159},
+	abstract = {Over the last few years, contextualized pre-trained transformer models such as BERT have provided substantial improvements on information retrieval tasks. Traditional sparse retrieval methods such as BM25 rely on high-dimensional, sparse, bag-of-words query representations to retrieve documents. On the other hand, recent approaches based on pre-trained transformer models such as BERT, fine-tune dense low-dimensional contextualized representations of queries and documents in embedding space. While these dense retrievers enjoy substantial retrieval effectiveness improvements compared to sparse retrievers, they are computationally intensive, requiring substantial GPU resources, and dense retrievers are known to be more expensive from both time and resource perspectives. In addition, sparse retrievers have been shown to retrieve complementary information with respect to dense retrievers, leading to proposals for hybrid retrievers. These hybrid retrievers leverage low-cost, exact-matching based sparse retrievers along with dense retrievers to bridge the semantic gaps between query and documents. In this work, we address this trade-off between the cost and utility of sparse vs dense retrievers by proposing a classifier to select a suitable retrieval strategy (i.e., sparse vs. dense vs. hybrid) for individual queries. Leveraging sparse retrievers for queries which can be answered with sparse retrievers decreases the number of calls to GPUs. Consequently, while utility is maintained, query latency decreases. Although we use less computational resources and spend less time, we still achieve improved performance. Our classifier can select between sparse and dense retrieval strategies based on the query alone. We conduct experiments on the MS MARCO passage dataset demonstrating an improved range of efficiency/effectiveness trade-offs between purely sparse, purely dense or hybrid retrieval strategies, allowing an appropriate strategy to be selected based on a target latency and resource budget.},
+	booktitle = {Proceedings of the 30th ACM International Conference on Information and Knowledge Management},
+	pages = {2862–2866},
+	numpages = {5},
+	keywords = {efficiency, query latency, dense retriever, sparse retriever},
+	series = {CIKM '21}
 }
 
-@mastersthesis{Shehata,
-	author={{Dahlia Shehata}},
-	title={{Information Retrieval with Entity Linking}},
-	year={2022},
-	publisher="UWSpace",
-	url={http://hdl.handle.net/10012/18557}
-}
-
-@inproceedings{RFF,
+@inproceedings{10.1145/1571941.1572114,
 	author = {Cormack, Gordon V. and Clarke, Charles L A and Buettcher, Stefan},
 	title = {{Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods}},
 	year = {2009},
@@ -1451,6 +1444,50 @@
 	numpages = {2},
 	keywords = {aggregation, fusion, ranking},
 	series = {SIGIR '09}
+}
+
+@article{anserini,
+	author = {Yang, Peilin and Fang, Hui and Lin, Jimmy},
+	title = {{Anserini: Reproducible Ranking Baselines Using Lucene}},
+	year = {2018},
+	issue_date = {December 2018},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {10},
+	number = {4},
+	issn = {1936-1955},
+	url = {https://doi.org/10.1145/3239571},
+	abstract = {This work tackles the perennial problem of reproducible baselines in information retrieval research, focusing on bag-of-words ranking models. Although academic information retrieval researchers have a long history of building and sharing systems, they are primarily designed to facilitate the publication of research papers. As such, these systems are often incomplete, inflexible, poorly documented, difficult to use, and slow, particularly in the context of modern web-scale collections. Furthermore, the growing complexity of modern software ecosystems and the resource constraints most academic research groups operate under make maintaining open-source systems a constant struggle. However, except for a small number of companies (mostly commercial web search engines) that deploy custom infrastructure, Lucene has become the de facto platform in industry for building search applications. Lucene has an active developer base, a large audience of users, and diverse capabilities to work with heterogeneous collections at scale. However, it lacks systematic support for ad hoc experimentation using standard test collections. We describe Anserini, an information retrieval toolkit built on Lucene that fills this gap. Our goal is to simplify ad hoc experimentation and allow researchers to easily reproduce results with modern bag-of-words ranking models on diverse test collections. With Anserini, we demonstrate that Lucene provides a suitable framework for supporting information retrieval research. Experiments show that our system efficiently indexes large web collections, provides modern ranking models that are on par with research implementations in terms of effectiveness, and supports low-latency query evaluation to facilitate rapid experimentation},
+	journal = {Journal of Data and Information Quality},
+	month_ = {oct},
+	articleno = {16},
+	numpages = {20},
+	keywords = {Ad hoc retrieval, TREC}
+}
+
+@mastersthesis{Shehata,
+	author={Shehata, Dahlia},
+	title={{Information Retrieval with Entity Linking}},
+	school={University of Waterloo},
+	year={2022},
+	publisher="UWSpace",
+	url={http://hdl.handle.net/10012/18557}
+}
+
+@InProceedings{Kamphuis2020BM25,
+	author="Kamphuis, Chris
+	and de Vries, Arjen P.
+	and Boytsov, Leonid
+	and Lin, Jimmy",
+	title={{Which BM25 Do You Mean? A Large-Scale Reproducibility Study of Scoring Variants}},
+	booktitle="Advances in Information Retrieval",
+	year="2020",
+	publisher="Springer International Publishing",
+	address="Cham",
+	pages="28--34",
+	abstract="When researchers speak of BM25, it is not entirely clear which variant they mean, since many tweaks to Robertson et al.'s original formulation have been proposed. When practitioners speak of BM25, they most likely refer to the implementation in the Lucene open-source search library. Does this ambiguity ``matter''? We attempt to answer this question with a large-scale reproducibility study of BM25, considering eight variants. Experiments on three newswire collections show that there are no significant effectiveness differences between them, including Lucene's often maligned approximation of document length. As an added benefit, our empirical approach takes advantage of databases for rapid IR prototyping, which validates both the feasibility and methodological advantages claimed in previous work.",
+	isbn="978-3-030-45442-5",
+	series="ECIR '20"
 }
 
 @inproceedings{chameleons,
@@ -1467,6 +1504,24 @@
 	numpages = {10},
 	keywords = {query difficulty, query reformulation, information retrieval},
 	series = {CIKM '21}
+}
+
+@article{fuhr-mrr,
+	author = {Fuhr, Norbert},
+	title = {{Some Common Mistakes In IR Evaluation, And How They Can Be Avoided}},
+	year = {2018},
+	issue_date = {December 2017},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {51},
+	number = {3},
+	issn = {0163-5840},
+	url = {https://doi.org/10.1145/3190580.3190586},
+	abstract = {This paper points out some mistakes that can be frequently found in IR publications: MRR and ERR violate basic requirements for a metric, MAP is based on unrealistic assumptions, the numbers shown overstate the precision of the result, relative improvements of arithmetic means are inappropriate, the simple holdout method yields unreliable results, hypotheses are often formulated after the experiment, significance tests frequently ignore the multiple comparisons problem, effect sizes are ignored, reproducibility of the experiments might be nearly impossible, and sometimes authors claim proof by experimentation.},
+	journal = {SIGIR Forum},
+	month_ = {feb},
+	pages = {32–41},
+	numpages = {10}
 }
 
 @inproceedings{qlever,
@@ -1502,7 +1557,23 @@
 	institution = {Microsoft Research},
 	keywords = {LambdaMART LambdaRank RankNet learning ranking},
 	timestamp = {2013-01-12T16:27:53.000+0100},
-	title = {From {RankNet} to {LambdaRank} to {LambdaMART}: An Overview},
+	title = {{From RankNet to LambdaRank to LambdaMART: An Overview}},
 	url = {http://research.microsoft.com/en-us/um/people/cburges/tech\_reports/MSR-TR-2010-82.pdf},
 	year = 2010
+}
+
+@inproceedings{mmead,
+	author = {Kamphuis, Chris and Lin, Aileen and Yang, Siwen and Lin, Jimmy and de Vries, Arjen P. and Hasibi, Faegheh},
+	title = {{MMEAD: MS MARCO Entity Annotations and Disambiguations}},
+	year = {2023},
+	isbn = {978-1-4503-9408-6},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	doi = {10.1145/3539618.3591887},
+	abstract = {MMEAD, or MS MARCO Entity Annotations and Disambiguations, is a resource for entity links for the MS MARCO datasets. We specify a format to store and share links for both document and passage collections of MS MARCO. Following this specification, we release entity links to Wikipedia for documents and passages in both MS MARCO collections (v1 and v2). Entity links have been produced by the REL and BLINK systems. MMEAD is an easy-to-install Python package, allowing users to load the link data and entity embeddings effortlessly. Using MMEAD takes only a few lines of code. Finally, we show how MMEAD can be used for IR research that uses entity information. We show how to improve recall@1000 and MRR@10 on more complex queries on the MS MARCO v1 passage dataset by using this resource. We also demonstrate how entity expansions can be used for interactive search applications.},
+	booktitle = {Proceedings of the 46th International ACM SIGIR Conference on Research \& Development in Information Retrieval},
+	numpages = {9},
+	keywords = {Information Retrieval, Entity Linking},
+	location = {Taipei, Taiwan},
+	series = {SIGIR '23}
 }

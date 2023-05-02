@@ -3,9 +3,17 @@
 
 \begin{Abstract}
 	\begin{changemargin}{1cm}{1cm}
-		This is the abstract  
+		REBL is an extension of the Radboud Entity Linker (REL) for Batch Entity Linking. 
+		REBL is developed after encountering unforeseen issues when trying to link the large MS MARCO v2 web document collection with REL. In this paper we discuss the issues we ran into and our solutions to mitigate them. REBL makes it easier to isolate the GPU heavy operations from the CPU heavy operations, by separating the mention detection stage from the candidate selection and entity disambiguation stages. By improving the entity disambiguation module we were able to lower the time needed for linking documents by an order of magnitude.
 	\end{changemargin}
 \end{Abstract}
+
+%\begin{Abstract}
+%	\begin{changemargin}{1cm}{1cm}
+%		There have been many attempts to express information retrieval problems using relational databases. This chapter will highlight one of the latter attempts that revived the idea of expressing bag-of-words ranking functions using SQL. A prototype system that uses these expressions is presented, dubbed OldDog, after the work by \citeauthor{OldDog}. This system can be used for rapid IR prototyping and is especially helpful in the context of reproducible information retrieval research.
+%		Also, when researchers speak of BM25, it is not always clear which variant they mean since many tweaks to \citeauthor{bm25-robertson}'s original formulation have been proposed. Does this ambiguity ``matter''? We attempt to answer this question with a large-scale reproducibility study of BM25, considering eight variants implemented in the OldDog system. Experiments on three newswire collections show no significant effectiveness differences between them, not even for Lucene's (often maligned) approximation of document length.
+%	\end{changemargin}
+%\end{Abstract}
 
 \section{Introduction}
 
@@ -22,7 +30,7 @@ This chapter describes our experience optimizing the Radboud Entity Linking (REL
 \subsection{Mention Detection}
 This step aims to identify all possible text spans in a document that might refer to an entity. If a text span that refers to an entity is not appropriately identified in this stage, the system cannot correctly link the entity in later stages.
 
-\subsection{Candidate Selection} For every detected mention, REL considers up to $k_1 + k_2 (=7)$ candidate entities. $k_1 (=4)$ candidate entities are selected based on their prior occurrence probability $p(e|m)$ (for entity \textit{e} given mention \textit{m}). These priors are pre-calculated from Wikipedia hyperlinks and the CrossWiki~\cite{cross-wiki} corpus. The other $k_2 (=3)$ entities are chosen based on the similarity of their embeddings to the contextual embedding of the mention (considering a context of a maximum of 200-word tokens).
+\subsection{Candidate Selection} For every detected mention, REL considers up to $k_1 + k_2 (=7)$ candidate entities. $k_1 (=4)$ candidate entities are selected based on their prior occurrence probability $p(e|m)$ (for entity \textit{e} given mention \textit{m}). These priors are pre-calculated from Wikipedia hyperlinks and the CrossWiki~\cite{crosswiki} corpus. The other $k_2 (=3)$ entities are chosen based on the similarity of their embeddings to the contextual embedding of the mention (considering a context of a maximum of 200-word tokens).
 
 \subsection{Entity Disambiguation} This final step aims to map the mention to the correct entity in a knowledge base. The candidate entities for each mention are obtained from the previous stage, and REL implements the Ment-norm method proposed by Le and Titov~\cite{ED-paper}. 
 
