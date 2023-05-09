@@ -8,33 +8,38 @@
 	\end{changemargin}
 \end{Abstract}
 
-\section{Introduction}
+\section{Introduction} 
 The MS MARCO datasets~\citep{msmarco} have become the \emph{de facto} benchmark for evaluating deep learning methods for Information Retrieval (IR). The TREC deep learning track~\citep{trec-dl}, which has run since 2019, derives its datasets from the MS MARCO passage and document collections. The collections have been used in zero- and few-shot scenarios for diverse retrieval tasks and domains~\citep{thakur2021beir, thakur2022domain, xu2022laprador}. They also serve as primary resources for training deep learning models for downstream IR tasks such as conversational search~\citep{dalton2021cast} and search over knowledge graphs~\citep{Gerritse:2022:EMBERT} to achieve state-of-the-art results.
 
 Purely text-based neural IR models, trained using MS MARCO collections, can generally not reason over complex concepts in the social and physical world~\citep{bosselut2021dynamic, sciavolino:2021:simple}. In response, recently proposed neuro-symbolic methods aim to combine neural models and symbolic AI approaches, e.g., by using knowledge graphs, which map concepts to symbols and relations. An essential step in developing neuro-symbolic models is connecting text to entities that represent the world's concepts formally. This step is mainly done using \textit{Entity linking}, an intermediary between text and knowledge graphs, which detects entity mentions in the text and links them to the corresponding entries in a knowledge graph.
 
-Despite the proven effectiveness of neuro-symbolic AI -- and for IR models in particular~\citep{Tran:2022:DRE, Gerritse:2022:EMBERT, chatterjee2022bert} -- the IR community has made limited efforts to develop such models. A primary hindrance is the annotation of large-scale collections with entities; entity linking methods are computationally expensive. Running them over a large text corpus (e.g., MS MARCO v2 with 12M documents and 140M passages) requires extensive resources. This paper aims to fill this gap by making entity annotations of the MS MARCO ranking collections readily available and easy to use.
+Despite the proven effectiveness of neuro-symbolic AI -- and for IR models in particular~\citep{Tran:2022:DRE, Gerritse:2022:EMBERT, chatterjee2022bert} -- the IR community has made limited efforts to develop such models. A primary hindrance is the annotation of large-scale collections with entities; entity linking methods are computationally expensive. Running them over a large text corpus (e.g., MS MARCO v2 with 12M documents and 140M passages) requires extensive resources. This work aims to fill this gap by making entity annotations of the MS MARCO ranking collections readily available and easy to use.
 
-With this work, we publish MMEAD,\footnote{MMEAD is pronounced as the drink mead.} a resource that provides entity links for the MS MARCO document and passage ranking collections. Two state-of-the-art entity linking tools, namely REL~\citep{rel, rebl} and BLINK~\citep{blink}, are utilized for annotating the corpora. The annotations are stored in a DuckDB database, enabling efficient analytical operations and fast access to the entities. The resource is available as a Python package and can be installed from PyPI effortlessly. The resource also includes a sample demo, enabling queries with complex compositional structures about entities. 
+So, this chapter is a continuance of the previous chapter. In the previous chapter the batch extension for the Radboud Entity Linking system, REBL, is introduced. In this chapter MMEAD is presented, a resource that provides entity links for the MS MARCO document and passage ranking collections. Two state-of-the-art entity linking tools, namely REL~\citep{rel}, through REBL,~\citep{rebl} and BLINK~\citep{blink}, are utilized for annotating the corpora. The annotations are stored in a DuckDB database, enabling efficient analytical operations and fast access to the entities. The resource is available as a Python package and can be installed from PyPI effortlessly. The resource also includes a sample demo, enabling queries with complex compositional structures about entities. 
 
 We envision that MMEAD will foster research in neuro-symbolic IR research and can be used to further improve neural retrieval models. In our experiments, we show significant improvements on recall for neural re-ranking IR models when using MMEAD annotations as bag-of-word expansions for queries and passages. Our experiments reveal that the difference in effectiveness is even greater (in terms of both recall and MRR) for complex queries that require further reasoning over entities.
 
 To show the usefulness of our resource, we also present how to enrich interactive search applications. Specifically, we demonstrate how to obtain entities' geographical locations by relating the entities found in passages to their Wikidata entries. Plotting these entities on the world map shows that the MS MARCO passages can be geo-located all over the world.
-We can also move from location to web text by retrieving all passages associated with a geographical location that we present through an interactive demo.    
+We can also move from location to web text by retrieving all passages associated with a geographical location that we present through an interactive demo. 
 
+To return to our last research question; 
+\begin{itemize}
+	\item[\textbf{RQ3:}] When does information retrieval research benefits from graph data?
+\end{itemize}   
+In this chapter attempts to demonstrate that graph data, in this case a graph of entities, can help retrieval by including metadata that can be included through graph operations. Although we do not use GeeseDB, the work described in~\cref{from-tables-to-graphs}, to carry out the query expansion methods described, it would be a natural application of GeeseDB. 
 
-In summary, this paper makes the following contributions:
+In summary, this chapter makes the following contributions:
  \begin{itemize}
 	\item We annotate the documents of the MS MARCO passage and document collections and share these annotations. By sharing these annotations, we ease future research in neuro-symbolic retrieval, which extensively uses entity information. We also provide useful metadata such as Wikipedia2Vec~\citep{wikipedia2vec} entity embeddings. 
 	\item We provide a Python library that makes our data easy to use. All data is stored in DuckDB tables, which can be loaded and queried quickly. The library is easy to install through PyPI, and the entity annotations are available with only a few lines of code.
 	\item We experimentally show that retrieval effectiveness measured by recall significantly increases when using MMEAD. The improvement is even greater for hard queries, where we observe low retrieval effectiveness using text-only IR models.
-	\item We demonstrate how the data can be used in geographical applications. For example, we can plot on a static map all entities found in the MS MARCO v2 passage collection for which geographical data is available. Additionally, through an interactive demo, we can retrieve all passages associated with a geographical location.  
+	\item We demonstrate how the data can be used in geographical applications. For example, we can plot on a static map all entities found in the MS MARCO v2 passage collection for which geographical data is available. Additionally, through an interactive demo, one can retrieve all passages associated with a geographical location.  
 \end{itemize}
 
 MMEAD is publicly available at \url{https://github.com/informagi/mmead}.
 
 \section{Background}
-In this section, we describe systems that are used for creating entity annotations on the MS MARCO collections for MMEAD.  
+In this section, we describe systems that are used for creating entity annotations on the MS MARCO collections for MMEAD. Some information presented in this section is also already presented in the previous chapter, as it is also important for the context of this chapter, it is presented again. 
 
 \subsection{REL}
 REL (Radboud Entity Linker)~\citep{rel} is a state-of-the-art open-source entity linking tool designed for high throughput and precision. REL links entities to a knowledge graph (Wikipedia) using a three-stage approach: (1) mention detection, (2) candidate selection, and (3) entity disambiguation. We briefly explain these three steps:
@@ -47,13 +52,11 @@ REL (Radboud Entity Linker)~\citep{rel} is a state-of-the-art open-source entity
 	\item \emph{Entity Disambiguation.} The final stage tries to select the correct entity from the candidate entities and maps it to the corresponding entry in a knowledge graph (Wikipedia). For this, REL assumes a latent relation between entities in the text and utilizes the Ment-norm method proposed by~\citet{ED-paper}.
 \end{enumerate}
 
-REL is designed to be a modular system, making it easy to swap, for example, the NER system with another. All necessary scripts to train the REL system are available on GitHub,\footnote{\url{https://github.com/informagi/rel}, last accessed April 26th 2023} making it easy to update REL to a more recent Wikipedia dump. Recently, a batch extension of REL, REBL~\citep{rebl}, was released, which improves the efficiency of REL for large-scale annotations, particularly in the candidate selection and entity disambiguation stages.  
-
 \subsection{BLINK}
 BLINK~\citep{blink} is a BERT-based~\citep{BERT} model for candidate selection and entity disambiguation, which assumes that entity mentions are already given. When utilized in an end-to-end entity linking setup, BLINK achieves similar effectiveness scores as REL. Below we describe the three steps of mention detection, candidate selection, and entity disambiguation for end-to-end entity linking using BLINK.
 
 \begin{enumerate}
-    \item \emph{Mention Detection.} The mention detection stage can be done using an NER model. Like REL, we utilized Flair NER ~\citep{flair} for mention detection.
+    \item \emph{Mention Detection.} The mention detection stage can be done using an NER model. Like REL, we use Flair~\citep{flair} for mention detection.
 	\item \emph{Candidate Selection.} BLINK considers ten candidates for each mention. The candidates are selected through a bi-encoder (similar to~\citet{poly-encoders}) that embeds mention contexts and entity descriptions. The mention and the entity are encoded into separate vectors using the \texttt{[CLS]} token of BERT. The similarity score is then calculated using the dot-product of the two vectors representing the mention context and the entity.  
 	\item \emph{Entity Disambiguation.} For entity disambiguation, BLINK employs a cross-encoder to re-rank the top 10 candidates selected by the candidate selection stage. The cross-encoder usage is similar to the work by~\citet{poly-encoders}, which employs a cross-attention mechanism between the mention context and entity descriptions. The input is the concatenation of the mention text and the candidate entity description.    
 \end{enumerate}
@@ -195,20 +198,16 @@ We also provide word embeddings and entity embeddings generated by Wikipedia2Vec
 	\begin{minted}[linenos]{python}
 >>> from mmead import get_embeddings
 >>> e = get_embeddings(300, verbose=False)
->>> montreal_word = \
-e.load_word_embedding("Montreal")
->>> montreal_entity = \
-e.load_entity_embedding("Montreal")
->>> green_word = \
-e.load_word_embedding("green")
+>>> montreal_word = e.load_word_embedding("Montreal")
+>>> montreal_entity = e.load_entity_embedding("Montreal")
+>>> green_word = e.load_word_embedding("green")
 
 >>> montreal_word @ montreal_entity
 31.83191792
 >>> montreal_word @ green_word
 5.55568354
 
->>> toronto_word = \ 
-e.load_word_embedding("Toronto")
+>>> toronto_word = e.load_word_embedding("Toronto")
 >>> toronto_word
 array([-1.497e-01, -7.765e-01, -1.000e-02, ...])
 >>> montreal_word @ toronto_word
@@ -258,31 +257,69 @@ All data can be downloaded directly as well, and links to the data are provided 
 \end{figure}
 
 \section{Entity Expansion with MMEAD}
-% Following the idea of information retrieval with entity linking\citep{Shehata}, we extend the MS MARCO dataset for information retrieval by utilizing MMEAD entity-linked data. The identified entities are deduplicated and added to both the queries and passages in the original text. Two forms of expansion are performed: the text entity form and the MD5 hashed entity form. The use of MD5 hashing is to provide a consistent representation of the multi-word terms and avoid partial or incorrect matching between queries and non-relevant passages.
-% As a demonstration of the proposed text expansion method, an example shows how the query and document expansion is performed using explicit and hashed forms. The added entities provide a clearer context and help eliminate ambiguous terms. 
-
-% \begin{enumerate}
-	%     \item Text Entity Expand Example: 
-	%         \begin{itemize}
-		%             \item Expand Query: \emph{did sacajawea cross the pacific ocean with lewis and clark \textcolor{red}{\underline{Sacagawea}} \textcolor{red}{\underline{Clark}} \textcolor{red}{\underline{Pacific Ocean}} \textcolor{red}{\underline{C. S. Lewis}}}
-		%             \item Expand Document: \emph{Introduction. Sacagawea, as everyone knows, was the young Indian woman who, along with her baby, traveled with Lewis and Clark to the Pacific Ocean and back.She was a great help to the expedition and many organizations are preparing celebrations to commemorate the 200-year anniversary of the endeavor.y: M. R. Hansen. Sacagawea, as everyone knows, was the young Indian woman who, along with her baby, traveled with Lewis and Clark to the Pacific Ocean and back. \textcolor{red}{\underline{Indian Ocean}} \textcolor{red}{\underline{James Hansen}} \textcolor{red}{\underline{Sacagawea}} \textcolor{red}{\underline{India}} \textcolor{red}{\underline{Oceania}} \textcolor{red}{\underline{William Clark}} \textcolor{red}{\underline{Meriwether Lewis}} \textcolor{red}{\underline{Pacific Ocean}}}
-		%         \end{itemize}
-	%     \item Hash Entity Expand Example:
-	%         \begin{itemize}
-		%             \item Expand Query: \emph{did sacajawea cross the pacific ocean with lewis and clark \textcolor{red}{\underline{86032446b9eb5db42bd3fc05036328da}}\\ \textcolor{red}{\underline{a97fedbce30ecfbc5f77f23789b0ee00}}\\ \textcolor{red}{\underline{3e3b0e4c1d8d14efb313ca74f3ead4cb}}\\ \textcolor{red}{\underline{3fe9071265745ac244ec61666b919f7c}}}
-		%             \item Expand Document: \emph{Introduction. Sacagawea, as everyone knows, was the young Indian woman who, along with her baby, traveled with Lewis and Clark to the Pacific Ocean and back.She was a great help to the expedition and many organizations are preparing celebrations to commemorate the 200-year anniversary of the endeavor.y: M. R. Hansen. Sacagawea, as everyone knows, was the young Indian woman who, along with her baby, traveled with Lewis and Clark to the Pacific Ocean and back.  \textcolor{red}{\underline{fe6fc882219d15741f37646dfd14faad}} \textcolor{red}{\underline{86032446b9eb5db42bd3fc05036328da}}\\
-			%             \textcolor{red}{\underline{aa84e6e997c78c6468283208414d1613}}\\ \textcolor{red}{\underline{7847efb5fd23be69c91e11e83ae3d65f}}\\ \textcolor{red}{\underline{3e3b0e4c1d8d14efb313ca74f3ead4cb}}\\ \textcolor{red}{\underline{7d31e0da1ab99fe8b08a22118e2f402b}}\\ \textcolor{red}{\underline{2d8836190888267b97ce332cad2aa247}}\\ \textcolor{red}{\underline{e58bef7d334ec0db90b9bdac4e4b4c56}}}
-		%         \end{itemize}
-	% \end{enumerate}
-
-% Anserini~\citep{10.1145/3239571} was used to index the three versions of the MS MARCO passage dataset. For retrieval we used BM25 with $k_1 = 0.82$ and $b = 0.68$. 
-% To optimize the performance of the initial retrieval stage for subsequent re-ranking, we use recall@1000 as the evaluation metric. We use BM25 to create three distinct runs: one from the original, non-expanded corpus, another from the entity-expanded dataset, and a third from the hashed entity-expanded dataset. 
-
-% Additionally, we conduct further testing on the obstinate query sets of the MS MARCO Chameleons, which consist of challenging queries from the original MS MARCO passage dataset. In general, ranking methods show poor effectiveness in finding relevant matches for these queries, so our testing focuses on the bottom 50\% of the worst-performing queries from the subsets of Veiled Chameleon (Hard), Pygmy Chameleon (Harder), and Lesser Chameleon (Hardest), which represent increasing levels of difficulty. 
-
 To demonstrate the usefulness of MMEAD for (neural) retrieval models, we have conducted experiments that extend existing models with MMEAD annotations.
 These experiments serve a demonstrative purpose only, and the full potential of this resource is to be further explored in (neuro-)symbolic IR models~\citep{Gerritse:2022:EMBERT,Tran:2022:DRE}.
 
+\subsection{Methods}
+
+\paragraph{BM25 expansion.} We experimented with three retrieval methods to show the benefits of entity annotation for passage ranking: one baseline method and two methods that use query entity expansion~\citep{Shehata} using REL:
+
+\begin{itemize}
+	\item[\textbf{a}] \textbf{BM25 -- No Expansion.} As a baseline method, we used BM25 as implemented in Anserini~\cite{Kamphuis2020BM25} using hyper-parameters $k_1=0.82$ and $b=0.68$, shown to be optimal for the MS MARCO dataset. MS MARCO was indexed normally, and no expansion was considered for the queries or the passages. 
+	\item[\textbf{b}] \textbf{BM25 -- Entity Text Expansion.} In this method, passages and queries are expanded with the text representation of their annotated entities (from REL). Once the passages and queries have been expanded with entities, we run BM25 with the same hyper-parameter settings as described in \textbf{a}.
+	\item[\textbf{c}] \textbf{BM25 -- Entity Hash Expansion.} Instead of using the text representation of entities as an expansion, we expanded the passages and queries by the MD5 hash of the entity text (from REL). The use of MD5 hashing is to provide a consistent representation of multi-word terms and to avoid partial or incorrect matching between queries and non-relevant passages; e.g., passages that contain the word ``united'', do not benefit if the query contains ``United States'' as an entity. Again, after expansion, we run BM25 with the same hyper-parameter settings described in \textbf{a}.
+\end{itemize}
+In these experiments, the identified entities are deduplicated. As a demonstration of the proposed text expansion methods, Figure~\ref{fig:exp_queries} shows how the query expansion is performed using explicit and hashed forms. The added entities provide more precise context and help eliminate ambiguous terms. Figure~\ref{fig:exp_passage} shows the expansion methods on the relevant passage for this query. The relevant passage can be found through our expansion technique. The linking system recognizes that both the query and the passage contain a reference to the entity \emph{Sacagawea}, even though they are spelled differently in the query and the passage.
+
+\begin{figure}
+	\framedtext{
+		\begin{itemize}
+			\item[\textbf{a.}] did sacajawea cross the pacific ocean with lewis and clark
+			\item[\textbf{b.}] \underline{The same text as shown in \textbf{a.}} + \emph{Sacagawea} \emph{Clark} \emph{Pacific Ocean} \emph{C. S. Lewis}
+			\item[\textbf{c.}] \underline{The same text as shown in \textbf{a.}} + \texttt{860324} \texttt{a97fed} \texttt{3e3b0e} \texttt{3fe907}
+		\end{itemize}
+	}
+	\caption{Examples of queries for the three different experiments; (\textbf{a}) the non-expanded query, (\textbf{b}) the query with entity text expansion, and (\textbf{c}) the query with entity hash expansion. Text expansions are shown in italics. The MD5 hashes shown in (\textbf{c}) are shortened in this example for formatting.}
+	\label{fig:exp_queries}
+\end{figure}
+
+\begin{figure}
+	\framedtext{
+		\begin{itemize}
+			\item[\textbf{a.}] Introduction. Sacagawea, as everyone knows, was the young Indian woman who, along with her baby, traveled with Lewis and Clark to the Pacific Ocean and back.She was a great help to the expedition and many organizations are preparing celebrations to commemorate the 200-year anniversary of the endeavor.y: M. R. Hansen. Sacagawea, as everyone knows, was the young Indian woman who, along with her baby, traveled with Lewis and Clark to the Pacific Ocean and back.
+			\item[\textbf{b.}] \underline{The same text as shown in \textbf{a.}} + \emph{Indian Ocean} \emph{James Hansen} \emph{Sacagawea} \emph{India} \emph{Oceania} \emph{William Clark} \emph{Meriwether Lewis} \emph{Pacific Ocean}
+			\item[\textbf{c.}] \underline{The same text as shown in \textbf{a.}} + \texttt{fe6fc8} \texttt{860324} \texttt{aa84e6} \texttt{7847ef} \texttt{3e3b0e} \texttt{7d31e0} \texttt{2d8836} \texttt{e58bef}
+		\end{itemize}
+	}
+	\caption{The relevant passage for the query presented in Figure~\ref{fig:exp_queries}; (\textbf{a}) the non-expanded passage, (\textbf{b}) the passage with entity text expansion, and (\textbf{c}) the passage with entity hash expansion. Text expansions are in italics. The MD5 hashes shown in (\textbf{c}) are shortened in this example for formatting.}
+	\label{fig:exp_passage}
+\end{figure}
+
+
+\paragraph{Reciprocal Rank Fusion.} As a second series of experiments, we applied Reciprocal Rank Fusion (RRF)~\citep{10.1145/1571941.1572114} to the runs described above. RRF is a fusion technique that can combine rankings produced by different systems. RRF creates a new ranking by only considering the rank of a document in the input. Given a set of documents $D$ and a set of rankings $R$, RRF can be computed as: 
+\begin{equation}
+	\mathit{RRF}(d \in D) = \sum_{r\in R}\frac{1}{k + r(d)}
+\end{equation}
+Here $k$ is a hyperparameter that can be optimized, but we simply used a default value of $k=60$ for all settings.
+
+This provides us with four new rankings; the RRF of the pairwise combinations of the three rankings described above and the RRF of all three of these runs:
+\begin{itemize}
+	\item[\textbf{d.}] \textbf{RRF -- No Expansion + Entity Text.} RRF fusion of runs \textbf{a} and \textbf{b}. The run with no expansions and the run with entity text expansions are considered.
+	\item[\textbf{e.}] \textbf{RRF -- No Expansion + Entity Hash.} RRF fusion of runs \textbf{a} and \textbf{c}. The run with no expansions and the run with entity hash expansions are considered.
+	\item[\textbf{f.}] \textbf{RRF -- Entity Text + Entity Hash.}  RRF fusion of runs \textbf{b} and \textbf{c}. The run with entity text expansions and the run with entity hash expansions are considered.
+	\item[\textbf{g.}] \textbf{RRF -- No Expansion + Entity Text + Entity Hash.} RRF fusion of runs \textbf{a}, \textbf{b}, and \textbf{c}. All three runs are considered. 
+\end{itemize}
+
+\subsection{Experimental Setup}
+In our experiments, we use MMEAD as a resource to expand queries and passages with entities. The experiments are performed using the MS MARCO v1 passage ranking collection, where only queries containing at least one entity annotation are used. We do not expect meaningful differences for queries without any linked entities, as the expanded query is identical to the original query in that case (due to the simplicity of the method applied here). 
+
+As we expect the linked entities to provide additional semantic information about the queries and passages, we conduct further testing on the obstinate query sets of the MS MARCO Chameleons~\citep{chameleons}, which consist of challenging queries from the original MS MARCO passage dataset. In general, ranking methods show poor effectiveness in finding relevant matches for these queries. Our testing focuses on the bottom 50\% of the worst-performing queries from the subsets of Veiled Chameleon (Hard), Pygmy Chameleon (Harder), and Lesser Chameleon (Hardest), which represent increasing levels of difficulty. 
+
+This gives us four query sets on which we evaluate; (1) all queries that contain entity annotations (\emph{dev} -- 1984 queries), (2) all queries in the hard subset that contain entity annotations (\emph{hard} -- 680 queries), (3) all queries in the harder subset that contain entity annotations (\emph{harder} -- 493 queries), and lastly, (4) all queries in the hardest subset that have entity annotations (\emph{hardest} -- 322 queries).
+
+The experiments are evaluated using Mean Reciprocal Rank (MRR) at rank ten and Recall (R) at rank one thousand. MRR@10 is the official metric for the MS MARCO passage ranking task, while R@1000 gives an upper limit on how well re-ranking systems could perform. The Anserini~\citep{anserini} toolkit is used to generate our experiments. 
+
+\subsection{Results}
 \begin{sidewaystable}
 	\centering
 	\caption{Results on the MS MARCO v1 passage collection, using only the queries that have entity annotations. Bolded numbers are the highest achieved effectiveness. Scores with a dagger (\dag) are significantly better compared to BM25 with no expansion (run \emph{a}), following a paired t-test with Bonferroni correction. For MRR, we have not calculated significance scores due to its ordinal scale~\citep{fuhr-mrr}.}
@@ -311,40 +348,14 @@ These experiments serve a demonstrative purpose only, and the full potential of 
 	\label{tab:results-table}
 \end{sidewaystable}
 
-\subsection{Methods}
+Table~\ref{tab:results-table} presents the results of our experiments. If we first look at lines \textbf{a-c} in the results table, we can examine the effects of our expansion methods compared to the baseline run. Looking at R@1000, we can see that more relevant passages are found using entity expansion for the \emph{dev} collection and its harder subsets. We do not find additional relevant documents/passages on the \emph{dev} set when we use the entity hashes, and entity text seems to be the better approach. There is, however, no increase in MRR@10 when using this expansion method. Entity expansions help when evaluating using R@1000, especially when the queries are more complex. The difference in recall effectiveness becomes larger the more complex the queries get. MRR@10 only improves when using entity text expansion.
 
-\paragraph{BM25 expansion.} We experimented with three retrieval methods to show the benefits of entity annotation for passage ranking: one baseline method and two methods that use query entity expansion~\citep{Shehata} using REL:
+The reciprocal rank fusion methods are presented in lines \textbf{d-g}. When using these methods, the R@1000 increases more. Again, the subsets that contain more complex queries tend to benefit more. Regarding R@1000 effectiveness, the best RRF method uses a ranking from the normal, not expanded index, with the index that has been expanded with the entity text. Again, entity text expansion helps recall more than using hash expansion. Although the RRF methods improve recall, MRR@10 does not benefit from RRF when compared to using only one of the expansion techniques. 
 
-\begin{itemize}
-	\item[\textbf{a}] \textbf{BM25 -- No Expansion.} As a baseline method, we used BM25 as implemented in Anserini~\cite{Kamphuis2020BM25} using hyper-parameters $k_1=0.82$ and $b=0.68$, shown to be optimal for the MS MARCO dataset. MS MARCO was indexed normally, and no expansion was considered for the queries or the passages. 
-	\item[\textbf{b}] \textbf{BM25 -- Entity Text Expansion.} In this method, passages and queries are expanded with the text representation of their annotated entities (from REL). Once the passages and queries have been expanded with entities, we run BM25 with the same hyper-parameter settings as described in \textbf{a}.
-	\item[\textbf{c}] \textbf{BM25 -- Entity Hash Expansion.} Instead of using the text representation of entities as an expansion, we expanded the passages and queries by the MD5 hash of the entity text (from REL). The use of MD5 hashing is to provide a consistent representation of multi-word terms and to avoid partial or incorrect matching between queries and non-relevant passages; e.g., passages that contain the word ``united'', do not benefit if the query contains ``United States'' as an entity. Again, after expansion, we run BM25 with the same hyper-parameter settings described in \textbf{a}.
-\end{itemize}
-In these experiments, the identified entities are deduplicated. As a demonstration of the proposed text expansion methods, Figure~\ref{fig:exp_queries} shows how the query expansion is performed using explicit and hashed forms. The added entities provide more precise context and help eliminate ambiguous terms. Figure~\ref{fig:exp_passage} shows the expansion methods on the relevant passage for this query. The relevant passage can be found through our expansion technique. The linking system recognizes that both the query and the passage contain a reference to the entity \emph{Sacagawea}, even though they are spelled differently in the query and the passage.
-
-\paragraph{Reciprocal Rank Fusion.} As a second series of experiments, we applied Reciprocal Rank Fusion (RRF)~\citep{10.1145/1571941.1572114} to the runs described above. RRF is a fusion technique that can combine rankings produced by different systems. RRF creates a new ranking by only considering the rank of a document in the input. Given a set of documents $D$ and a set of rankings $R$, RRF can be computed as: 
-\begin{equation}
-	RRF(d \in D) = \sum_{r\in R}\frac{1}{k + r(d)}
-\end{equation}
-Here $k$ is a hyperparameter that can be optimized, but we simply used a default value of $k=60$ for all settings.
-
-This provides us with four new rankings; the RRF of the pairwise combinations of the three rankings described above and the RRF of all three of these runs:
-\begin{itemize}
-	\item[\textbf{d.}] \textbf{RRF -- No Expansion + Entity Text.} RRF fusion of runs \textbf{a} and \textbf{b}. The run with no expansions and the run with entity text expansions are considered.
-	\item[\textbf{e.}] \textbf{RRF -- No Expansion + Entity Hash.} RRF fusion of runs \textbf{a} and \textbf{c}. The run with no expansions and the run with entity hash expansions are considered.
-	\item[\textbf{f.}] \textbf{RRF -- Entity Text + Entity Hash.}  RRF fusion of runs \textbf{b} and \textbf{c}. The run with entity text expansions and the run with entity hash expansions are considered.
-	\item[\textbf{g.}] \textbf{RRF -- No Expansion + Entity Text + Entity Hash.} RRF fusion of runs \textbf{a}, \textbf{b}, and \textbf{c}. All three runs are considered. 
-\end{itemize}
-
-\subsection{Experimental Setup}
-
-In our experiments, we use MMEAD as a resource to expand queries and passages with entities. The experiments are performed using the MS MARCO v1 passage ranking collection, where only queries containing at least one entity annotation are used. We do not expect meaningful differences for queries without any linked entities, as the expanded query is identical to the original query in that case (due to the simplicity of the method applied here). 
-
-As we expect the linked entities to provide additional semantic information about the queries and passages, we conduct further testing on the obstinate query sets of the MS MARCO Chameleons~\citep{chameleons}, which consist of challenging queries from the original MS MARCO passage dataset. In general, ranking methods show poor effectiveness in finding relevant matches for these queries. Our testing focuses on the bottom 50\% of the worst-performing queries from the subsets of Veiled Chameleon (Hard), Pygmy Chameleon (Harder), and Lesser Chameleon (Hardest), which represent increasing levels of difficulty. 
-
-This gives us four query sets on which we evaluate; (1) all queries that contain entity annotations (\emph{dev} -- 1984 queries), (2) all queries in the hard subset that contain entity annotations (\emph{hard} -- 680 queries), (3) all queries in the harder subset that contain entity annotations (\emph{harder} -- 493 queries), and lastly, (4) all queries in the hardest subset that have entity annotations (\emph{hardest} -- 322 queries).
-
-The experiments are evaluated using Mean Reciprocal Rank (MRR) at rank ten and Recall (R) at rank one thousand. MRR@10 is the official metric for the MS MARCO passage ranking task, while R@1000 gives an upper limit on how well re-ranking systems could perform. The Anserini~\citep{anserini} toolkit is used to generate our experiments. 
+\section{Beyond Quantitative Results}
+In the previous section, we demonstrated the potential value of MMEAD using quantitative evaluations, where we leverage entities to improve retrieval effectiveness in standard benchmark datasets.
+Beyond these quantitative results, MMEAD can also help enrich interactive search applications in various ways.
+This section describes a few such examples.
 
 \begin{figure}
 	\centering
@@ -352,42 +363,6 @@ The experiments are evaluated using Mean Reciprocal Rank (MRR) at rank ten and R
 	\caption{Locations of entities found in the MS MARCO v2 passage collection.}
 	\label{fig:entity_map}
 \end{figure}
-
-\begin{figure}
-	\framedtext{
-		\begin{itemize}
-			\item[\textbf{a.}] did sacajawea cross the pacific ocean with lewis and clark
-			\item[\textbf{b.}] \underline{The same text as shown in \textbf{a.}} + \emph{Sacagawea} \emph{Clark} \emph{Pacific Ocean} \emph{C. S. Lewis}
-			\item[\textbf{c.}] \underline{The same text as shown in \textbf{a.}} + \texttt{860324} \texttt{a97fed} \texttt{3e3b0e} \texttt{3fe907}
-		\end{itemize}
-	}
-	\caption{Examples of queries for the three different experiments; (\textbf{a}) the non-expanded query, (\textbf{b}) the query with entity text expansion, and (\textbf{c}) the query with entity hash expansion. Text expansions are shown in italics. The MD5 hashes shown in (\textbf{c}) are shortened in this example for formatting.}
-	\label{fig:exp_queries}
-\end{figure}
-
-\begin{figure}
-	\framedtext{
-		\begin{itemize}
-			\item[\textbf{a.}] Introduction. Sacagawea, as everyone knows, was the young Indian woman who, along with her baby, traveled with Lewis and Clark to the Pacific Ocean and back.She was a great help to the expedition and many organizations are preparing celebrations to commemorate the 200-year anniversary of the endeavor.y: M. R. Hansen. Sacagawea, as everyone knows, was the young Indian woman who, along with her baby, traveled with Lewis and Clark to the Pacific Ocean and back.
-			\item[\textbf{b.}] \underline{The same text as shown in \textbf{a.}} + \emph{Indian Ocean} \emph{James Hansen} \emph{Sacagawea} \emph{India} \emph{Oceania} \emph{William Clark} \emph{Meriwether Lewis} \emph{Pacific Ocean}
-			\item[\textbf{c.}] \underline{The same text as shown in \textbf{a.}} + \texttt{fe6fc8} \texttt{860324} \texttt{aa84e6} \texttt{7847ef} \texttt{3e3b0e} \texttt{7d31e0} \texttt{2d8836} \texttt{e58bef}
-		\end{itemize}
-	}
-	\caption{The relevant passage for the query presented in Figure~\ref{fig:exp_queries}; (\textbf{a}) the non-expanded passage, (\textbf{b}) the passage with entity text expansion, and (\textbf{c}) the passage with entity hash expansion. Text expansions are in italics. The MD5 hashes shown in (\textbf{c}) are shortened in this example for formatting.}
-	\label{fig:exp_passage}
-\end{figure}
-
-
-\subsection{Results}
-Table~\ref{tab:results-table} presents the results of our experiments. If we first look at lines \textbf{a-c} in the results table, we can examine the effects of our expansion methods compared to the baseline run. Looking at R@1000, we can see that more relevant passages are found using entity expansion for the \emph{dev} collection and its harder subsets. We do not find additional relevant documents/passages on the \emph{dev} set when we use the entity hashes, and entity text seems to be the better approach. There is, however, no increase in MRR@10 when using this expansion method. Entity expansions help when evaluating using R@1000, especially when the queries are more complex. The difference in recall effectiveness becomes larger the more complex the queries get. MRR@10 only improves when using entity text expansion.
-
-The reciprocal rank fusion methods are presented in lines \textbf{d-g}. When using these methods, the R@1000 increases more. Again, the subsets that contain more complex queries tend to benefit more. Regarding R@1000 effectiveness, the best RRF method uses a ranking from the normal, not expanded index, with the index that has been expanded with the entity text. Again, entity text expansion helps recall more than using hash expansion. Although the RRF methods improve recall, MRR@10 does not benefit from RRF when compared to using only one of the expansion techniques. 
-
-\section{Beyond Quantitative Results}
-
-In the previous section, we demonstrated the potential value of MMEAD using quantitative evaluations, where we leverage entities to improve retrieval effectiveness in standard benchmark datasets.
-Beyond these quantitative results, MMEAD can also help enrich interactive search applications in various ways.
-This section describes a few such examples.
 
 Entity links to Wikidata provide an entr\'ee into the broader world of open-linked data, which enables integration with other existing resources.
 This allows us to build interesting ``mashups'' or support search beyond simple keyword queries.
@@ -438,8 +413,7 @@ WHERE {
 	\label{fig:france}
 \end{figure}
 
-
-The query is shown in Figure~\ref{fig:code_sparql}, which gives us 122,316 entities found in the collection that have a connection with France (most of them are located in France). Then we can automatically show the entities on a map, as presented in Figure~\ref{fig:france} (showing the first 1000 entities found). 
+The query is shown in Figure~\ref{fig:code_sparql}, which gives us $122,316$ entities found in the collection that have a connection with France (most of them are located in France). Then we can automatically show the entities on a map, as presented in Figure~\ref{fig:france} (showing the first 1000 entities found). 
 
 Not all linked entities are located in France, however. For example, some entities are related to France (entities for which France is mentioned in their Wikidata), but are located elsewhere in the world. One of the blue dots in Germany is the source of the river \emph{Moselle}. This river starts in Germany by splitting off from the \emph{Rhine}, and then goes through France. 
 Instead of querying for France, we can also query for different countries. Table~\ref{tab:country_entities} shows the number of entities found for a sample of countries.
@@ -467,7 +441,15 @@ Instead of querying for France, we can also query for different countries. Table
 \end{table}
 
 \section{Conclusion and Future Work}
-This research presents the resource MMEAD, or MS MARCO Entity Annotations and Disambiguations. MMEAD contains entity annotations for the passages and documents in MS MARCO v1 and v2. These annotations simplify entity-oriented research on the MS MARCO collections. Links have been provided using the REL and BLINK entity linking systems. Using DuckDB, the data can quickly be queried, making the resource easy to use. 
-We also demonstrated that our resource can enrich interactive search applications. In particular, we present an interactive demo where all entities related to geographical locations can be positioned on a map. We experimentally show that MMEAD improves recall effectiveness significantly when using entities for query and passage expansion. When using reciprocal rank fusion, the effectiveness difference becomes even more prominent and new relevant passages are found. The question remains whether these passages can be ranked higher by new retrieval models. With MMEAD, we support information retrieval research that combines deep learning and entity information. 
+This research presents the resource MMEAD, or MS MARCO Entity Annotations and Disambiguations. MMEAD contains entity annotations for the passages and documents in MS MARCO v1 and v2. These annotations simplify entity-oriented research on the MS MARCO collections. Links have been provided using the REL and BLINK entity linking systems. Using DuckDB, the data can quickly be queried, making the resource easy to use.
+ 
+To return to our third research question:
+\begin{itemize}
+	\item[\textbf{RQ3:}] When does information retrieval research benefits from graph data?
+\end{itemize}   
 
-In the future, we would like annotations from a more diverse group of linking systems. Using the MMEAD format, releasing entity links for collections beyond MS MARCO is also possible. We already showed that using entity links improves recall when using the linked entities for query expansion. What the effects are when training, e.g., DPR methods that include the entity links, is yet to be investigated -- an exciting research opportunity that lies ahead. 
+Entity links can be considered a bi-partite graph where entities and documents are nodes, that are connected when entities appear in documents. Using these entities for query and passage expansion, we showed experimentally a significant increase in recall effectiveness. Although in this chapter we used Anserini for our retrieval experiments, it is trivial to express the same problem using GeeseDB. When using reciprocal rank fusion, the effectiveness difference becomes even more prominent and new relevant passages are found. The question remains whether these passages can be ranked higher by new retrieval models. With MMEAD, we support information retrieval research that combines deep learning and entity graph information. 
+
+We also demonstrated that our resource can enrich interactive search applications. In particular, we present an interactive demo where all entities related to geographical locations can be positioned on a map. Specifically we queried the data as a RDF triple graph.
+
+Using the MMEAD format, releasing entity links for collections beyond MS MARCO is also possible. We already showed that using entity links improves recall when using the linked entities for query expansion. What the effects are when training, e.g., DPR methods that include the entity links, is yet to be investigated -- an exciting research opportunity that lies ahead. 

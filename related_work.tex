@@ -1,21 +1,59 @@
 \chapter{Related Work}
 \label{related-work}
 
-\section{Information Retrieval}
-Everything that is needed to process a query like, ``Can machines think?'', is subject to research by the field of information retrieval. 
+\epigraph{Machines take me by surprise with great frequency.}{Alan Turing - 1950}
 
+\section{Introduction}
+This chapter aims to provide the context in which this work is written. By introducing the related scientific fields, this chapter sketches a broader context wherein this research exists. 
+
+First, the field of information retrieval is introduced, the central area of the research described in this dissertation. Within the field of Information Retrieval, different approaches to \emph{retrieving information} have been used throughout the decades. Different approaches will be introduced such that the reader understands what works in the field.
+
+Secondly, techniques from different areas of research are also being used for this research, specifically the research described in this paper makes extensive use of research what is typically investigated by the \emph{data management} community. This field will also be introduced, especially the techniques used for the research described in this work. 
+
+Then, the concept of \emph{graphs} will be explained. Graphs themselves are just mathematical structures that model the relations between objects. The objects are modeled as \emph{nodes} and relations between them as \emph{edges}. Many different kinds of graphs exists, and some are very useful to model problems that can then be expressed formally through this framework. What different kind of graphs are will be explained, and examples on how to use them will be provided.
+
+Finally, we will describe the idea of \emph{reproducible science}. In general, it is important for scientific work to be reproducible. In our research we spend additional effort on reproducible science. What reproducibility exactly entails will be introduced.  
+
+\section{Information Retrieval}
+The research described in this thesis is subject to the field of \emph{Information Retrieval}. Colloquially, I would refer to this field as the science of everything related to search engines. This field encompasses all aspects: from user experiences with search engines to storage algorithms and fast retrieval of the information items users search. \Citet{modern-information-retrieval} introduce information retrieval as the following:
+
+\medskip
+\textbf{Information retrieval (IR) deals with the representation, storage, organization of, and access to information items.}
+
+\medskip
+Following this description, an information retrieval system, i.e.\ a search engine, is a system that allows users to access information items that they are looking for. How this works internally, is typically not of interest for the user, they just want to find the information they seek. Typically, and also in this thesis, the term \emph{document} is used to refer to information items, even though the item the user seeks would not be a document in the ``literal sense''. 
+
+Consider one wants to know whether it will rain in coming half hour, they might query a web search engine with the text \emph{weather}. In this case, the user does not care how the search engines works, but only about the result. In order to satisfy the user's information need, the search engine needs to (1) present the correct weather forecast, and (2) do this quickly. If the search engines presents the incorrect weather forecast, or cannot do this in a matter of seconds the user will be dissatisfied.
+
+In order to answer this inquiry for information correctly, the information retrieval system needs more context. It cannot correctly know what the weather will be if it is unknown where the user resides. Typically, when accessing search engines through a telephone or computer, this information is send along with the query as metadata. This way the search engine can correctly answer, even though the user did not explicitly give this information. 
+
+
+ 
 \subsection{Inverted Indexes}
+Inverted indexes have been used for decades in the field of information retrieval. 
 
 \subsection{Ranking methods}
 
 \subsubsection{Boolean Retrieval}
-\subsubsection{Vector Space Models}
-\subsubsection{Probabilistic ranking Models}
-\subsubsection{Language Models}
-\subsubsection{Learning to Rank}
-\subsubsection{Vector Space Models revisited}
+In the early days of information retrieval, boolean retrieval techniques were used. 
 
-\subsection{Similarity Search}
+\subsubsection{Vector Space Models}
+Later, Salton formulated the concept of the vector space model. 
+
+\subsubsection{Probabilistic ranking Models}
+Robertson and Sparck-Jones developed the probabilisitc ranking model ...
+
+Perhaps the most famous model developed within this framework is BM25. 
+
+\subsubsection{Language Models}
+Late in the 90's the concept of language models was proposed. 
+
+
+\subsubsection{Learning to Rank}
+With the increase of computing power, learning to rank became a popular approach to ranking.
+
+\subsubsection{Vector Space Models revisited}
+In the last couple of years the vector space model has been popularized again. 
 
 \section{Relational Databases}
 Relational databases are usually used to store structure data. 
