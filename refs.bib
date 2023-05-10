@@ -1588,3 +1588,48 @@
 	volume={60},
 	pages={493-502}
 }
+
+@inproceedings{croft_lm,
+	author = {Song, Fei and Croft, W. Bruce},
+	title = {A General Language Model for Information Retrieval},
+	year = {1999},
+	isbn = {1581131461},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/319950.320022},
+	doi = {10.1145/319950.320022},
+	abstract = {Statistical language modeling has been successfully used for speech recognition, part-of-speech tagging, and syntactic parsing. Recently, it has also been applied to information retrieval. According to this new paradigm, each document is viewed as a language sample, and a query as a generation process. The retrieved documents are ranked based on the probabilities of producing a query from the corresponding language models of these documents. In this paper, we will present a new language model for information retrieval, which is based on a range of data smoothing techniques, including the Good-Turning estimate, curve-fitting functions, and model combinations. Our model is conceptually simple and intuitive, and can be easily extended to incorporate probabilities of phrases such as word pairs and word triples. The experiments with the Wall Street Journal and TREC4 data sets showed that the performance of our model is comparable to that of INQUERY and better than that of another language model for information retrieval. In particular, word pairs are shown to be useful in improving the retrieval performance.},
+	booktitle = {Proceedings of the Eighth International Conference on Information and Knowledge Management},
+	pages = {316–321},
+	numpages = {6},
+	keywords = {good-turing estimate, statistical language modeling, curve-fitting functions, model combinations},
+	location = {Kansas City, Missouri, USA},
+	series = {CIKM '99}
+}
+
+@thesis{hiemstra_lm,
+	author = {Hiemstra, Djoerd},
+	title={{Using language models for information retrieval}},
+	type = {PhD thesis},
+	institution = {Universiteit Twente},
+	year = {2001}
+}
+
+@inproceedings{zhai_lm,
+	author = {Zhai, ChengXiang and Lafferty, John},
+	title = {{Two-Stage Language Models for Information Retrieval}},
+	year = {2002},
+	isbn = {1581135610},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/564376.564387},
+	doi = {10.1145/564376.564387},
+	abstract = {The optimal settings of retrieval parameters often depend on both the document collection and the query, and are usually found through empirical tuning. In this paper, we propose a family of two-stage language models for information retrieval that explicitly captures the different influences of the query and document collection on the optimal settings of retrieval parameters. As a special case, we present a two-stage smoothing method that allows us to estimate the smoothing parameters completely automatically. In the first stage, the document language model is smoothed using a Dirichlet prior with the collection language model as the reference model. In the second stage, the smoothed document language model is further interpolated with a query background language model. We propose a leave-one-out method for estimating the Dirichlet parameter of the first stage, and the use of document mixture models for estimating the interpolation parameter of the second stage. Evaluation on five different databases and four types of queries indicates that the two-stage smoothing method with the proposed parameter estimation methods consistently gives retrieval performance that is close to---or better than---the best results achieved using a single smoothing method and exhaustive parameter search on the test data.},
+	booktitle = {Proceedings of the 25th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {49–56},
+	numpages = {8},
+	keywords = {Dirichlet prior, two-stage smoothing, mixture model, risk minimization, parameter estimation, interpolation, two-stage language models, leave-one-out},
+	location = {Tampere, Finland},
+	series = {SIGIR '02}
+}
+
