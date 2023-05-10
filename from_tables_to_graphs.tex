@@ -243,10 +243,8 @@ LIMIT 5
 	\begin{minted}[linenos]{sql}
 SELECT term_dict.string
 FROM term_dict
-JOIN term_doc ON 
-    (term_dict.term_id = term_doc.term_id)
-JOIN docs ON 
-    (docs.doc_id = term_doc.doc_id)
+JOIN term_doc ON (term_dict.term_id = term_doc.term_id)
+JOIN docs ON (docs.doc_id = term_doc.doc_id)
 WHERE docs.collection_id = ?
 ORDER BY term_doc.tf * log(671945/term_dict.df
 DESC

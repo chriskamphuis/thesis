@@ -6,47 +6,131 @@
 \section{Introduction}
 This chapter aims to provide the context in which this work is written. By introducing the related scientific fields, this chapter sketches a broader context wherein this research exists. 
 
-First, the field of information retrieval is introduced, the central area of the research described in this dissertation. Within the field of Information Retrieval, different approaches to \emph{retrieving information} have been used throughout the decades. Different approaches will be introduced such that the reader understands what works in the field.
+First, the field of information retrieval is introduced, the central area of the research described in this dissertation. Within the field of information retrieval, different approaches to \emph{retrieving information} have been used throughout the decades. Different approaches will be introduced such that the reader understands what works in the field.
 
-Secondly, techniques from different areas of research are also being used for this research, specifically the research described in this paper makes extensive use of research what is typically investigated by the \emph{data management} community. This field will also be introduced, especially the techniques used for the research described in this work. 
+Secondly, techniques from different research areas are also used for this research. Specifically, the research described in this paper extensively uses techniques typically investigated by the \emph{data management} community. This field will also be introduced, especially the techniques used for the research described in this work. 
 
-Then, the concept of \emph{graphs} will be explained. Graphs themselves are just mathematical structures that model the relations between objects. The objects are modeled as \emph{nodes} and relations between them as \emph{edges}. Many different kinds of graphs exists, and some are very useful to model problems that can then be expressed formally through this framework. What different kind of graphs are will be explained, and examples on how to use them will be provided.
+Then, the concept of \emph{graphs} will be explained. Graphs themselves are just mathematical structures that model the relations between objects. The objects are modeled as \emph{nodes} and relations between them as \emph{edges}. Many kinds of graphs exist, and some are very useful for modeling problems that can be expressed formally through this framework. Different kinds of graphs will be explained, and examples of how to use them will be provided.
 
-Finally, we will describe the idea of \emph{reproducible science}. In general, it is important for scientific work to be reproducible. In our research we spend additional effort on reproducible science. What reproducibility exactly entails will be introduced.  
+Finally, we will describe the idea of \emph{reproducible science}. In general, scientific work must be reproducible. In our research, we spend additional effort on reproducible science. What reproducibility exactly entails will be introduced.  
 
 \section{Information Retrieval}
-The research described in this thesis is subject to the field of \emph{Information Retrieval}. Colloquially, I would refer to this field as the science of everything related to search engines. This field encompasses all aspects: from user experiences with search engines to storage algorithms and fast retrieval of the information items users search. \Citet{modern-information-retrieval} introduce information retrieval as the following:
+The research described in this thesis is subject to the \emph{information retrieval} field. Colloquially, I would refer to this field as the science of everything related to search engines. This field encompasses all aspects: from user experiences with search engines to storage algorithms and fast retrieval of the information items users search. \Citet{modern-information-retrieval} introduces information retrieval as the following:
 
 \medskip
 \textbf{Information retrieval (IR) deals with the representation, storage, organization of, and access to information items.}
 
 \medskip
-Following this description, an information retrieval system, i.e.\ a search engine, is a system that allows users to access information items that they are looking for. How this works internally, is typically not of interest for the user, they just want to find the information they seek. Typically, and also in this thesis, the term \emph{document} is used to refer to information items, even though the item the user seeks would not be a document in the ``literal sense''. 
+Following this description, an information retrieval system, i.e., a search engine, is a system that allows users to access information items that they are looking for. How this works internally is typically not interesting for the user, they want to find the information they seek. Typically, and also in this thesis, the term \emph{document} refers to information items, even though the item the user seeks would not be a document in the ``literal sense''. 
 
-Consider one wants to know whether it will rain in coming half hour, they might query a web search engine with the text \emph{weather}. In this case, the user does not care how the search engines works, but only about the result. In order to satisfy the user's information need, the search engine needs to (1) present the correct weather forecast, and (2) do this quickly. If the search engines presents the incorrect weather forecast, or cannot do this in a matter of seconds the user will be dissatisfied.
+Consider the following situation. If one wants to know whether it will rain in the coming half an hour, they might query a web search engine with the text \emph{weather}. In this case, the user does not care how the search engine works but only about the result. In order to satisfy the user's information need, the search engine needs to (1) present the correct weather forecast and (2) do this quickly. If the search engine presents the incorrect weather forecast or cannot do this in seconds, the user will be dissatisfied.
 
-In order to answer this inquiry for information correctly, the information retrieval system needs more context. It cannot correctly know what the weather will be if it is unknown where the user resides. Typically, when accessing search engines through a telephone or computer, this information is send along with the query as metadata. This way the search engine can correctly answer, even though the user did not explicitly give this information. 
+In order to answer this inquiry for information correctly, the information retrieval system needs more context. It can only correctly know the weather if it is known where the user resides. Typically, when accessing search engines through a telephone or computer, this information is sent along with the query as metadata. This way, the search engine can correctly answer even though the user did not explicitly give this information. 
 
+Then when the user's location is known, the search engine needs to find a webpage that correctly provides the weather for that particular location. As there are billions of web pages in the search engine's index, correctly identifying which one contains information about the weather at that particular location and time and then retrieving it in seconds is the next challenge.
 
- 
+Search engines must smartly organize the data because it is infeasible to iterate over all web pages to check if the correct information is available. Typically, the organization of documents within a search engine is done through a data structure called an inverted index.
+
 \subsection{Inverted Indexes}
-Inverted indexes have been used for decades in the field of information retrieval. 
+Inverted indexes have been used for decades in the field of information retrieval. They are designed to access documents quickly. Otherwise, the user would use a different system. Documents are typically structured through words that form sentences, which form paragraphs, and, eventually, stories. When considering a document in its standard form, it is not trivial to quickly know whether it contains a specific word. When searching for something, it is paramount that the search engines know what documents contain the keywords in the query. To store this information, the documents are \emph{inverted}. Instead of storing documents as is; a mapping from documents to words, the search engines store the inverted information; a mapping from words to documents. To provide an example, let us says we have three short documents:
 
-\subsection{Ranking methods}
+\begin{itemize}
+	\item[\textbf{1.}] Cats and dogs are animals.
+	\item[\textbf{2.}] Cats are smart animals.
+	\item[\textbf{3.}] Dogs are great at tricks. 
+\end{itemize}
+Then the inverted index looks something like this:
+
+\medskip
+\textbf{animal:} [1 2],
+\textbf{cat:} [1 2], 
+\textbf{dog:} [1 3],
+\textbf{great:} 3,
+\textbf{smart:} 2,
+\textbf{trick:} 3
+\medskip
+
+\noindent There are a couple of interesting observations that can be made here. Not all words appear in the inverted index. Typically words without ``meaning'', or so-called stop words, are dropped. These words tend to contain no information and can therefore be dropped. This process is called stopword removal or \emph{stopping}. Then, words are sometimes shortened to their \emph{stem}. Let us say we have a query only mentioning the word ``dog'', so not plural, then we still want to be able to find the documents that mention the plural form. This shortening to the word's stem is called \emph{stemming}. In this case, the words are ordered alphabetically. When the number of documents in a collection increases, the number of unique words also increases. By storing the words alphabetically, a computer can find the entries for that particular word easier. 
+
+When someone queries the search engine with following query: ``dog tricks'', then can directly find which documents contain these words, automatically discarding all documents that do not contains these words. This is done by retrieving the lists associated with these words. These lists are called \emph{posting lists} in the field of information retrieval. Entries in such lists are referred to as \emph{postings}. In this case the postings only contain the document identifiers as data. Generally, however, information like how often a word appears in a document, or its location in the document is also stored in the posting. In practice, posting lists are often compressed and instead of storing the direct identifiers, the gaps between them are stored such that the index becomes smaller. In literature these gaps are referred to as delta-gaps. 
+
+In this case the posting lists of the words ``dog'' and ``trick'' are retrieved, which are [1 3] and [3]. Then some scoring method can process these lists and assign a score to the documents present in these lists. As document 3 is the only document that contains both words, it makes sense to consider this document as the most relevant. However, when multiple documents contain both words with different frequencies, it is not as trivial to assess a relevance ordering. 
+To create such an ordering, different models for scoring documents have been proposed in the past. In the following sections these models are presented.
+
+\subsection{Ranking Models}
 
 \subsubsection{Boolean Retrieval}
-In the early days of information retrieval, boolean retrieval techniques were used. 
+In the early days of information retrieval, the boolean retrieval model was used. Boolean retrieval can be formulated as the following; let, 
+
+\begin{equation}
+	T = \{t_1, \ldots, t_n\}
+\end{equation}
+
+be the set of all index terms that appear in the collection. Let,
+
+\begin{equation}
+	D = \{d_1, \ldots, d_m\}
+\end{equation}
+
+be the set of all documents, where every document is a subset of $T$. Then a query can be any boolean expression over $T$. All documents that adhere to the boolean expression formed by the query are considered relevant. To give an example, consider the same three documents as before:
+
+\begin{itemize}
+	\item[\textbf{1.}] Cats and dogs are animals.
+	\item[\textbf{2.}] Cats are smart animals.
+	\item[\textbf{3.}] Dogs are great at tricks. 
+\end{itemize}
+Then, $D$ is formulated as $\{d_1, d_2, d_3\}$ with,
+\begin{align}
+d_1&: \{\mathit{cat}, \textit{dog}, \textit{animal}\} \\
+d_2&: \{\mathit{cat}, \textit{smart}, \textit{animal}\} \\
+d_3&: \{\mathit{dog}, \textit{great}, \textit{trick}\}
+\end{align}
+
+If would be interested in finding all documents that mention dogs, but not cats. Then we can formulate the following boolean query:
+
+\begin{equation}
+	Q = \mathit{dog} \land \neg \mathit{cat}
+\end{equation}
+
+Then if we find all subsets that adhere to the individual terms in this conjunction we the following set expression:
+\begin{equation}
+Q = \{d_1, d_3\}\ \cap \{d_3\} = \{d_3\}
+\end{equation}
+which shows that document $d_3$ is the only document that is about dogs, but not about cats. Although it is possible to express quite complicated expressions with boolean logic, a document either satisfies the expression or it does not. All documents that satisfy the expression are considered relevant; creating a ranking between them cannot be done with this approach alone. 
+
+With this approach there is no clear difference, yet, between data retrieval and information retrieval; there is only one correct solution, namely all documents that satisfy the restrictions imposed by the query. 
 
 \subsubsection{Vector Space Models}
-Later, Salton formulated the concept of the vector space model. 
+In 1975, the vector space model was introduced by~\citet{VectorSpaceModel}. The idea behind the vector space model is to represent documents and queries as vectors. Consider a collection that has $t$ unique terms, then we can represent a documents in the collection as a $t$ dimensional vector:
+\begin{equation}
+	D_j = (w_0, \ldots, w_t)
+\end{equation}
+where $D_j$ is the $j$-th document in the collection, and $w_i$ represents the weight associated with the $i$-th term. These weights can be binary, if one only wants to consider the presence of the term in the document, they can be the term frequency, or any weight that takes into account the ``general'' term importance. 
 
-\subsubsection{Probabilistic ranking Models}
-Robertson and Sparck-Jones developed the probabilisitc ranking model ...
+Then if we have a query $q$, we can represent it in the same way:
+\begin{equation}
+	q = (q_0, \ldots, q_t)
+\end{equation}
+where $q_i$ represents the weight of the $i$-th term in the collection. 
 
-Perhaps the most famous model developed within this framework is BM25. 
+Now it is possible to calculate a similarity score between the query and every document. This similarity is typically calculated by calculating the cosine similarity between the two vectors, which between a document $d$ and a query $q$ is defined as:
+
+\begin{equation}
+	\cos\left(d, q)\right) = \frac{\textbf{d} \cdot \textbf{q}}{||\textbf{d}||\ ||\textbf{q}||}
+\end{equation}
+
+Then, calculating this for the documents in the collection gives a relevance score value for all of them. Ordering them based on relevance, then produces a ranked list where the highest is presumed to be the most interesting for the user. As mentioned before, the weights represented in the document vector do not necessarily have to be binary or the term frequency of the terms in the document. \Citeauthor{VectorSpaceModel} showed that the product of the term frequency with a general term importance worked best. The measure they used for term importance was the inverse document frequency as proposed by \citet{idf} three years earlier, which worked well. 
+
+\subsubsection{Probabilistic Relevance Models}
+In 1976,~\citeauthor{RSJ} developed the probabilistic ranking framework. Within this framework, we assume that a document has a certain probability of being relevant given a query. Then, a search systems that implements models within this framework, rank documents where documents with the highest probability of being relevant are ranked the highest.
+
+Within this framework, with the assumption of binary independence, which is nicely explained by ~\citet{bm25-beyond}, the Robertson-Sp{\"a}rck Jones weight can be derived. Which, when assuming no relevance information is available, leads to an approximation of the classical idf function.
+
+Then by extending this function to include within-document term frequency information and document length normalization, the well known BM25 function can be derived.
+This model is the focus of \Cref{ir-using-relational-databases}, and additional information explaining this model will be presented there.
 
 \subsubsection{Language Models}
-Late in the 90's the concept of language models was proposed. 
+Later, language model were proposed. 
 
 
 \subsubsection{Learning to Rank}
@@ -56,9 +140,10 @@ With the increase of computing power, learning to rank became a popular approach
 In the last couple of years the vector space model has been popularized again. 
 
 \section{Relational Databases}
-Relational databases are usually used to store structure data. 
+Relational databases are usually used to store structured data. 
 
 \section{Graphs}
-Instead of using columnar data, it might be more attractive to model your data using graphs. 
+Instead of using columnar data, modeling your data using graphs might be more attractive. 
 
 \section{Reproducible Science}
+In order to establish experimental results, it is essential that results can be independently verified. 
