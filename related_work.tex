@@ -263,23 +263,83 @@ Here, $\psi$ and $\phi$ are learned function through the use of large language m
 
 \subsection{Evaluation}
 \label{sec:evaluation}
-\subsubsection{Precision.}
+In the previous section all kinds of ranking approaches have been introduced. When comparing different ranking methods to each other we need to be able to measure some kind of ranking quality. In order to measure the quality of rankings produced by systems many different metrics have been introduced. In this section the most common evaluation metrics are being introduced, among them all metrics used in this thesis. 
 
+All metrics introduced are $@k$ metrics, this means that we only evaluate the documents ranked up to rank $k$. If $k=30$, we only consider the first $30$ documents produced by the system.
+
+\subsubsection{Precision.}
+A straightforward approach of evaluating a ranking produced by a system is through precision. The precision metric counts the number of relevant documents found by the system, which is then divided by the total number of documents found by the system:
 \begin{equation}
-	\textit{P@k} = \frac{\sum_{i=0}^k(1-\delta_{\textit{rel}(d_i),0})}{k}
+	\textit{P}@k = \frac{\sum_{i=1}^k\text{rel}\left(d_i\right)}{k}
 \end{equation}
+In this case $\text{rel}(.)$ is a function that returns 1 if the document is relevant, otherwise 0.
+If $k=30$, then only the first $30$ documents are considered. If ten of these documents are relevant, then $P@30 = \frac{10}{30} = \frac{1}{3}$. Precision can however be somewhat limited in its use. In this example, the quality of ranking might not seem good. Only a third of the produced documents are relevant. However, when there are only 10 relevant documents present in the collection, the $P@30$ could not have been higher. 
 
 \subsubsection{Recall.}
+To prevent the issue that the precision is low when there are not many relevant documents in the collection. It is also possible to measure how many relevant documents were retrieved, compared to the total number of documents. This measure is called recall: 
+\begin{equation}
+	\textit{R}@k = \frac{\sum_{i=1}^k\text{rel}\left(d_i\right)}{\sum_{i=1}^N\text{rel}\left(d_i\right)}
+\end{equation}
+Here $N$ is the number of documents in the collection. If, again, $k=30$ and we found $10$ relevant documents, while there are $15$ relevant documents in the collection. Then $R@30 = \frac{10}{15} = \frac{2}{3}$.
 
-\subsubsection{F-score.}
+\subsubsection{$F_1$-measure.}
+Where precision measures the share of documents found that are relevant, recall measures the number of relevant documents found compared to the total number of relevant documents. For precision it makes sense to retrieve as few as possible documents; the probability of finding a relevant documents decreases the more documents are returned. For recall it makes sense to retrieve more documents, as when more documents are retrieved it can only increase.  
+
+To find the correct balance between precision and recall, it is possible to use the $F_1$-measure. It is defined as the harmonic mean between precision and recall:
+\begin{equation}
+	\textit{F}_1@\textit{k}  = 2\cdot\frac{P@k \cdot R@k}{P@k + R@k} 
+\end{equation}
+if either recall or precision is low, the $F_1$-measure suffers as well. To achieve a high $F_1$-measure, both recall and precision need to be high.
 
 \subsubsection{Average Precision.}
+Consider the situation where three documents are retrieved, two systems might produce rankings with following relevance labels: $\left[
+\begin{smallmatrix}
+	1, & 0, & 0
+\end{smallmatrix}
+\right]$ and $\left[
+\begin{smallmatrix}
+	0, & 0, & 1
+\end{smallmatrix}
+\right]$.
+Both rankings achieve the same $P@3$ and $R@3$ scores, and subsequently also the same $F_1@3$. In this situation the previously introduced metrics can not distinguish between ranking quality. In this situation it is however clear that the first ranking is better than the second ranking. 
+Instead of measuring the precision only at rank $k$, the average precision measure calculates it every time a relevant document is encountered. The sum of these values is divided by the number of relevant documents found up to $k$:
+\begin{equation}
+	\textit{AP}@k = \frac{1}{\sum_{i=1}^N\text{rel}\left(d_i\right)}\sum^k_{i=1} P\left(i\right) \cdot \text{rel}\left(d_i\right)
+\end{equation}
+Looking back at the two rankings, 
+$\left[
+\begin{smallmatrix}
+	1, & 0, & 0
+\end{smallmatrix}
+\right]$ and $\left[
+\begin{smallmatrix}
+	0, & 0, & 1
+\end{smallmatrix}
+\right]$, the rankings produce an $\textit{AP}@3$ of $1$ and $\frac{1}{3}$ respectively. 
 
 \subsubsection{Discounted Cumulative Gain.}
+It is also possible
+
+\begin{equation}
+	\textit{DCG}@k = \sum^p_{i=1} \frac{\text{rel}(d_i)}{\log_2(i+1)}
+\end{equation}
 
 \subsubsection{Normalized Discounted Cumulative Gain.}
+Discounted cumulative gain 
 
-\subsubsection{Mean Reciprocal Rank.} 
+\begin{equation}
+	\textit{nDCG}@k = \frac{\textit{DCG}@k}{\textit{IDCG}@k} 
+\end{equation}
+
+with $\textit{IDCG}@k$ being the $\textit{DCG}@k$ for a perfect ranking. 
+
+\subsubsection{Reciprocal Rank.} 
+As in many cases the user only cares about the first document, 
+
+\begin{equation}
+	\textit{RR} = \frac{1}{\text{minrank}(d)}
+\end{equation}
+
 
 \section{Relational Databases}
 Relational databases are usually used to store structured data. 
