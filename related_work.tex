@@ -176,9 +176,7 @@ This smoothing solves both problems. As the collection sample contains all terms
 \subsubsection{Learning to Rank}
 With the increase of computing power, learning to rank became a popular approach to ranking. The methods described in the previous sections, can all be considered unsupervised learning methods if we look at from a machine learning perspective. Learning to rank models would be considered supervised or reinforcement learning methods. 
 
-The goal is to learn a model, that given a query ranks documents that are relevant to that query higher than documents that are not relevant to that query. In general, there are three ways to achieve this, for all these methods it's assumed that relevance labels are available from which the function can be learned.
-
-In many cases it is still not possible to apply inference to all documents in the collection. In practice, often a non learning-to-rank approach tends to be used to create an initial ranking. Then it is assumed that the top-$k$ documents probably contain all relevant documents. Then the learned method only has to reorder the top-$k$ documents to present to the user. Learning-to-rank methods are usually categorized in the following three categories: 
+The goal is to learn a model, that given a query ranks documents that are relevant to that query higher than documents that are not relevant to that query. In general, there are three ways to achieve this, for all these methods it's assumed that relevance labels are available from which the function can be learned. Learning-to-rank methods are usually categorized in the following three categories: 
 
 \paragraph{Pointwise.} Pointwise methods are most comparable to standard regression methods. The idea here is to learn a function that tries to predict the relevance label of a document directly. Consider that we have $n$ query-document pairs for which relevance labels are available, with $m$ independent variables per pair. Then the relevance labels for these pairs can be expressed as a vector $\mathbf{y}$, and the independent variables as a matrix $\mathbf{X}$;
 \begin{multicols}{2}
@@ -251,6 +249,11 @@ A disadvantage of pairwise methods is that every pair is treated equally when tr
 \paragraph{Listwise.} Instead of only looking at pairs of documents, the listwise approach tries to take the whole ranking as a whole into account. This way, the top of the ranking can effect the learning of the function more than the bottom of the ranking.
 Generally, when learning a listwise learning-to-rank method, the goal is to optimize some quality of ranking metric directly. Examples of such quality of ranking methods will be introduced in~\cref{sec:evaluation}.
 
+\paragraph{Multistage Ranking}
+In many cases it is still not possible to apply inference to all documents in the collection. In practice, often a non learning-to-rank approach tends to be used to create an initial ranking. Then it is assumed that the top-$k$ documents probably contain all relevant documents. Then the learned method only has to reorder the top-$k$ documents to present to the user. 
+
+In these cases it can make sense rank the top-$k$ documents using an inverted index, while the reranking is done with another computer program.
+ 
 \subsubsection{Vector Space Models revisited}
 In the last couple of years the vector space model has become more popular again. With the rise of large language models, the vector space model became more popular again due what is called \emph{dense} retrieval.  
 
@@ -259,15 +262,17 @@ The basic idea is to predict the relevance of a document $d$ for a query $q$:
 	\mathit{rel}(q, d) = \omega\left(\phi\left(q\right),
 	\psi\left(d\right)\right)
 \end{equation}
-Here, $\psi$ and $\phi$ are learned function through the use of large language models that map the query and the document to vectors with a low dimensionality. These functions map the query and the document to the same space. When documents are relevant to the query, the resulting vectors should be similar, while if the document is not relevant they should be dissimilar. This similarity is measured through the function $\omega$, which in many cases is either the dot-product or cosine similarity. 
+Here, $\psi$ and $\phi$ are learned function through the use of large language models that map the query and the document to vectors with a low dimensionality. These functions map the query and the document to the same space. When documents are relevant to the query, the resulting vectors should be similar, while if the document is not relevant they should be dissimilar. This similarity is measured through the function $\omega$, which in many cases is either the dot-product or cosine similarity.
+
+The process of finding the vectors that are the most close to a query vectors is the same as nearest neighbor search. In the case of dense retrieval dedicated dense retrieval systems tend to be used, instead of an inverted index. 
 
 \subsection{Evaluation}
 \label{sec:evaluation}
 In the previous section all kinds of ranking approaches have been introduced. When comparing different ranking methods to each other we need to be able to measure some kind of ranking quality. In order to measure the quality of rankings produced by systems many different metrics have been introduced. In this section the most common evaluation metrics are being introduced, among them all metrics used in this thesis. 
 
-All metrics introduced are $@k$ metrics, this means that we only evaluate the documents ranked up to rank $k$. If $k=30$, we only consider the first $30$ documents produced by the system.
+All metrics introduced are $@k$ metrics. We only evaluate the documents ranked up to rank $k$, i.e.\ if $k=30$, we only consider the first $30$ documents produced by the system.
 
-\subsubsection{Precision.}
+\subsubsection{Precision}
 A straightforward approach of evaluating a ranking produced by a system is through precision. The precision metric counts the number of relevant documents found by the system, which is then divided by the total number of documents found by the system:
 \begin{equation}
 	\textit{P}@k = \frac{\sum_{i=1}^k\text{rel}\left(d_i\right)}{k}
@@ -275,14 +280,14 @@ A straightforward approach of evaluating a ranking produced by a system is throu
 In this case $\text{rel}(.)$ is a function that returns 1 if the document is relevant, otherwise 0.
 If $k=30$, then only the first $30$ documents are considered. If ten of these documents are relevant, then $P@30 = \frac{10}{30} = \frac{1}{3}$. Precision can however be somewhat limited in its use. In this example, the quality of ranking might not seem good. Only a third of the produced documents are relevant. However, when there are only 10 relevant documents present in the collection, the $P@30$ could not have been higher. 
 
-\subsubsection{Recall.}
+\subsubsection{Recall}
 To prevent the issue that the precision is low when there are not many relevant documents in the collection. It is also possible to measure how many relevant documents were retrieved, compared to the total number of documents. This measure is called recall: 
 \begin{equation}
 	\textit{R}@k = \frac{\sum_{i=1}^k\text{rel}\left(d_i\right)}{\sum_{i=1}^N\text{rel}\left(d_i\right)}
 \end{equation}
 Here $N$ is the number of documents in the collection. If, again, $k=30$ and we found $10$ relevant documents, while there are $15$ relevant documents in the collection. Then $R@30 = \frac{10}{15} = \frac{2}{3}$.
 
-\subsubsection{$F_1$-measure.}
+\subsubsection{$F_1$-measure}
 Where precision measures the share of documents found that are relevant, recall measures the number of relevant documents found compared to the total number of relevant documents. For precision it makes sense to retrieve as few as possible documents; the probability of finding a relevant documents decreases the more documents are returned. For recall it makes sense to retrieve more documents, as when more documents are retrieved it can only increase.  
 
 To find the correct balance between precision and recall, it is possible to use the $F_1$-measure. It is defined as the harmonic mean between precision and recall:
@@ -291,7 +296,7 @@ To find the correct balance between precision and recall, it is possible to use 
 \end{equation}
 if either recall or precision is low, the $F_1$-measure suffers as well. To achieve a high $F_1$-measure, both recall and precision need to be high.
 
-\subsubsection{Average Precision.}
+\subsubsection{Average Precision}
 Consider the situation where three documents are retrieved, two systems might produce rankings with following relevance labels: $\left[
 \begin{smallmatrix}
 	1, & 0, & 0
@@ -315,34 +320,74 @@ $\left[
 \begin{smallmatrix}
 	0, & 0, & 1
 \end{smallmatrix}
-\right]$, the rankings produce an $\textit{AP}@3$ of $1$ and $\frac{1}{3}$ respectively. 
+\right]$, the rankings produce an $\textit{AP}@3$ of $1$ and $\frac{1}{3}$ respectively.
 
-\subsubsection{Discounted Cumulative Gain.}
-It is also possible
-
+\subsubsection{Discounted Cumulative Gain}
+Discounted cumulative gain is an evaluation metric developed after the observation that users often only look at the highest ranked documents, and that documents might not have binary relevance labels.
+If a document is ranked at, say rank 5, it might already be possible that it is not considered by the user anymore and that they already reformulated the query. Plus, the metrics described before would rank the following two rankings to be of equal quality: 
+$\left[
+\begin{smallmatrix}
+	2, & 1, & 0
+\end{smallmatrix}
+\right]$ and $\left[
+\begin{smallmatrix}
+	1, & 2, & 0
+\end{smallmatrix}
+\right]$
+So discounted cumulative gain was developed with the intention that there should be a discounted gain every time a new relevant document is found, plus non binary relevance labels can be taken into account. This discount is applied by dividing by the logarithm of the rank plus one: 
 \begin{equation}
-	\textit{DCG}@k = \sum^p_{i=1} \frac{\text{rel}(d_i)}{\log_2(i+1)}
+	\textit{DCG}@k = \sum^k_{i=1} \frac{\text{rel}(d_i)}{\log_2(i+1)}
 \end{equation}
+In this case $\text{rel}(.)$ does not return a binary value, but the actual relevance assessment.
 
-\subsubsection{Normalized Discounted Cumulative Gain.}
-Discounted cumulative gain 
-
+\subsubsection{Normalized Discounted Cumulative Gain}
+A disadvantage of $\textit{DCG}$ is that the scores produced by this metric can vary a lot between rankings. If there are many relevant documents present for a query the values $\textit{DCG}$ can take are much higher than if there is only one relevant label available. Normalized discounted cumulative gain takes care of this by dividing by the highest possible $\textit{DCG}$ that can be achieved. So normalized discounted cumulative gain is calculated by dividing the $\textit{DCG}$ of the ranking, by the $\textit{DCG}$ of the ideal ranking:  
 \begin{equation}
-	\textit{nDCG}@k = \frac{\textit{DCG}@k}{\textit{IDCG}@k} 
+	\textit{NDCG}@k = \frac{\textit{DCG}@k}{\textit{IDCG}@k} 
 \end{equation}
-
 with $\textit{IDCG}@k$ being the $\textit{DCG}@k$ for a perfect ranking. 
 
-\subsubsection{Reciprocal Rank.} 
-As in many cases the user only cares about the first document, 
-
+\subsubsection{Reciprocal Rank} 
+The metrics described before, score the whole ranking up to rank $k$. This might be unnecessary, if a document found is relevant, it should not matter anymore what the relevance assessment is of all documents after it. After all, the user would stop looking after document $k$, as the relevant information is found. The reciprocal rank only takes the first found relevant document in to account. It divides $1$ by the index of the first found document:
 \begin{equation}
-	\textit{RR} = \frac{1}{\text{minrank}(d)}
+	\textit{RR@k} = \frac{1}{\text{minrank}(d)}
 \end{equation}
+where only the first $k$ documents are considered. If the index of the first relevant is greater than $k$, the resulting score is $0$.
 
+\subsubsection{Significance Testing}
+For some of the measures described above, it can still be problematic when they are used to compare different systems. \Citet{fuhr-mrr} describes common mistakes when evaluating IR systems, and how to avoid them.
 
-\section{Relational Databases}
-Relational databases are usually used to store structured data. 
+\section{Data Retrieval}
+In the case of information retrieval the concept of \emph{relevance} is very important. When someone issues a query, it does not necessary have to be the case that words in the query have to be present in order for the document to be relevant. Information retrieval has do deal with some uncertainty, and if not all all relevant documents are found this does not necessary have to be a problem. If we would think about a search engine from the perspective of an user, a document is only relevant if it contains the information they are looking for. In order to find this information, the user has to express their information need in a query, which the systems then has to interpret somehow in order to present the user (hopefully) the correction information. 
+It might however be possible that two different users issue the same query, e.g.\ \emph{the weather}, but one user is interested in the weather of today, while the other user is interested in what the weather will be tomorrow. In these cases, different documents will be relevant for the user. The concept of relevancy is directly tight to the expectations of the user.
+
+This is not the case in the field of \emph{data retrieval}. When we speak about data retrieval, we are interested in retrieving all data that fulfills some predicate. It assumes that there is no ambiguity in the data. An example could be; give me an list of all dog breeds. In this case, the system should return a list of all breeds of dog, known by the system. If it would accidentally forgot to return one dog breed, or includes an answer that is not correct, the system would work incorrectly. 
+The most common used data retrieval systems are relational database management systems (RDBMS), or relational databases. Relational databases are used to represent tabular data as relations. The concept of a relation comes from relational algebra, where a relational is defined as a set of tuples. In a relational database, a table corresponds to the relation, a row is one of tuples, and a column can be considered a attribute in the tuple. There are differences between the theoretic framework of relational algebra, and its implementation in relational databases. For example, in practice its often possible to have duplicate rows in a relational database, which is not possible in a set. 
+
+Relational databases implement the operators as proposed by relational algebra, which means users can select columns from a table (projection), filter rows that fulfill certain predicates (selection), and combine tables (join). Typically, this is done through a structured query language (SQL).  
+SQL is a declarative language; in it someone can express which data needs to be retrieved, but not how. So depending on what a user expects from the program, it makes sense to choose different database management systems for different applications. In the case of storing employee records for a company, it makes sense to store this data in a database that is focused on transactions. While if you need to analyze your data for scientistic studies, it makes more sense to store your data in a database system that is built focused on analytics.
+
+\subsection{Physical vs Logical models}
+As SQL is a declarative language, the physical and logical models of data management systems are strongly separated. Although many dialects of SQL exists, basic SQL queries are system agnostic. The logical model of data management systems are the SQL queries; what should be done. The physical model is how this should be done, depending on which system is used, things like join ordering and how the data is processed can be very different. The logical model does not ``mind'' how the query is resolved, as long as it is done correctly. 
+
+In the case of information retrieval, the physical and logical models are often more entangled. Model specification and query processing often co-exist, and shortcuts are sometimes taken when these systems are built. When this is the case, it can be harder to detect why systems might differ whey they implement the same models. \Cref{ir-using-relational-databases} will discuss this is in more detail. 
+
+\citet{seperation-logical-physical} discusses how information retrieval might benefit from a separation between physical and logical models in the context of dense retrieval models. \Cref{from-tables-to-graphs} will discuss his proposal in more detail.
+
+\subsection{Columns vs Rows}
+Earlier database management systems where row oriented. This means that when we look at how data is physically stored on the computer, all data within a tuple is represented near each other in memory. This orientation is especially well suited when a database needs to process many transactions. Some IR systems have been built on top of such databases, these were however not efficient compared to when inverted indexes where used. Later, column oriented databases were developed. These kinds of databases are more suited for analytical queries, transactions tend however to be more costly. As these databases are more suited for analytics, they are also more suited for information retrieval systems. These systems are more suited for the development IR systems; this is done throughout this thesis. 
+
+\subsection{NoSQL and Graphs}
+In recent years there has been some interest in database systems that approach data retrieval differently compared to traditional relational database systems. These systems approach data retrieval not using the relational model. This could for example mean that joins are not possible within the system. This might seem limiting, but if certain operations are not supported it might be possible to increase the efficiency of other operations. This can for example be a very efficient key-value store. 
+
+In particular, graph database systems are NoSQL database management systems that have been of interest in the database community in the last years. The work in~\cref{from-tables-to-graphs} works with these databases.
+
+\subsection{Embedded Database}
+Typically, databases are running on dedicated database servers. It is however also possible to built so-called embedded database systems.  
+
+MonetDB~\cite{monet}
+
+DuckDB~\cite{duckdb}
 
 \section{Graphs}
 Instead of using columnar data, modeling your data using graphs might be more attractive. 
