@@ -394,6 +394,16 @@ As databases are designed for the purpose of data retrieval, they are suited for
 \label{sec:graphs}
 As mentioned in~\cref{sec:nosqlgraph}, in this thesis we present work where we want to think about information retrieval using the concept of graphs. What a graph exactly is, will be presented in this section. 
 
+\subsection{Basic Graphs}
+A graph is a structure consisting of a set of objects where pairs of these objects can be related. Typically, these objects are referred to as nodes or vertices, and the relation between a pair of objects is referred to a as an edge. So more formally, a graph $G$ is a pair of vertices $V$ and edges $E$;
+\begin{equation}
+	G = (V, E)
+\end{equation}
+where $V$ is the set of vertices in the graph, and $E$ a set of pairs of vertices:
+\begin{equation}
+	E = \left\{\left(v_1, v_2\right) \in V^2\text{ and } v_1 \neq v_2 \right\}
+\end{equation}
+
 \section{Reproducible Science}
 In order to establish experimental results in science, it is essential that results can be independently verified. Many different fields have had problems where the reproducibly of scientific studies was lacking. In field of psychology, a large reproducibility study was carried out~\citep{psychology-reproduciblity}. In this study a selection of 100 published studies in 2008 were taken, the goal was to reproduce the findings of all these studies to determine how many were holding up. Of the original 100 studies, 97 presented significant results. When trying to reproduce these results, for only 35 out of 97 these studies, it was possible to reproduce significant results. 
 
