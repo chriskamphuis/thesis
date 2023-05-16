@@ -1,4 +1,4 @@
-\chapter{Related Work}
+\chapter{Background}
 \label{related-work}
 
 \epigraph{Machines take me by surprise with great frequency.}{Alan Turing - 1950}
@@ -355,7 +355,7 @@ The metrics described before, score the whole ranking up to rank $k$. This might
 \end{equation}
 where only the first $k$ documents are considered. If the index of the first relevant is greater than $k$, the resulting score is $0$.
 
-\subsubsection{Significance Testing}
+\subsection{Significance Testing}
 For some of the measures described above, it can still be problematic when they are used to compare different systems. \Citet{fuhr-mrr} describes common mistakes when evaluating IR systems, and how to avoid them.
 
 \section{Data Retrieval}
@@ -392,17 +392,89 @@ As databases are designed for the purpose of data retrieval, they are suited for
 
 \section{Graphs}
 \label{sec:graphs}
-As mentioned in~\cref{sec:nosqlgraph}, in this thesis we present work where we want to think about information retrieval using the concept of graphs. What a graph exactly is, will be presented in this section. 
+As mentioned in~\cref{sec:nosqlgraph}, in this thesis we present work where we want to think about information retrieval using the concept of graphs.
 
-\subsection{Basic Graphs}
+\paragraph{Basic Graphs}
 A graph is a structure consisting of a set of objects where pairs of these objects can be related. Typically, these objects are referred to as nodes or vertices, and the relation between a pair of objects is referred to a as an edge. So more formally, a graph $G$ is a pair of vertices $V$ and edges $E$;
 \begin{equation}
 	G = (V, E)
 \end{equation}
-where $V$ is the set of vertices in the graph, and $E$ a set of pairs of vertices:
+where $V$ is the set of vertices in the graph, and $E$ a set of pairs (sets with two elements) of vertices:
 \begin{equation}
-	E = \left\{\left(v_1, v_2\right) \in V^2\text{ and } v_1 \neq v_2 \right\}
+	E = \left\{\left\{v_1, v_2\right\} | \left\{v_1, v_2\right\} \in V^2\text{ and } v_1 \neq v_2 \right\}
+	\label{undirected-edges}
 \end{equation}
+Typically, graphs are graphically illustrated as a set of circles, where every circle represents a vertex. If there exists an edge between two vertices, a line is drawn between the two circles. Consider for example \cref{basic-graph}, the graph illustrates a graph with $V = \left\{x_1, x_2, x_3\right\}$ and $E = \left\{\left\{x_1, x_2\right\}, \left\{x_2, x_3\right\}\right\}$. It does not necessarily have to be the case that every vertex is included in at least one edge.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\begin{tikzpicture}[thick, node distance = {20mm}, main/.style = {draw, circle}] 
+			\node[main] (1) {$x_1$}; 
+			\node[main] (2) [above right of=1] {$x_2$};
+			\node[main] (3) [below right of=2] {$x_3$};
+			
+			\draw (1) -- (2);
+			\draw (2) -- (3);
+		\end{tikzpicture}
+		\caption{Basic Graph}
+		\label{basic-graph}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\begin{tikzpicture}[thick, node distance = {20mm}, main/.style = {draw, circle}] 
+			\node[main] (1) {$x_1$}; 
+			\node[main] (2) [above right of=1] {$x_2$};
+			\node[main] (3) [below right of=2] {$x_3$};
+			
+			\draw[->] (1) -- (2);
+			\draw[->] (2) -- (3);
+		\end{tikzpicture}
+		\caption{Directed Graph}
+		\label{directed-graph}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\begin{tikzpicture}[thick, node distance = {20mm}, main/.style = {draw, circle}] 
+			\node[main] (1) {$x_1$}; 
+			\node[main] (2) [above right of=1] {$x_2$};
+			\node[main] (3) [below right of=2] {$x_3$};
+			
+			\draw[->] (1) -- (2);
+			\draw (2) -- (3);
+		\end{tikzpicture}
+		\caption{Mixed Graph}
+		\label{mixed-graph}
+	\end{subfigure}
+
+	\caption{Example of (\textbf{a}) a simple graph, (\textbf{b}) a directed graph, and (\textbf{c}) a mixed graph.}  
+\end{figure}
+
+A graph is called \emph{bi-partite} if it possible to separate the set of vertices in two separate sets, such there exists only edges between vertices that are in the two separate sets. The structure of the graph can be used to analyze how things relate to each other. 
+Consider the situation of geographical maps, we can model countries as vertices and create an edge between two countries if they are neighboring. Then, we can use the graph structure to analyze how many possible paths there are from one country to another where only a maximum of two other countries are crossed. For many use cases, however, it is useful to let graph contain data or have less restrictive rules on how a graph might be formed.
+
+\paragraph{Directed Edges} The most basic extension of graphs is that they are allowed directed edges. This means that there exists an edges from one node to another, but that this connection does not exists in the opposite direction. In the case of countries and their neighbors, this does not make sense; if one country borders another, the opposite is true as well. However in the case of the internet, one website might contain a hyperlink to another, while the opposite does not have to be the case. We need directed graphs to properly model the situation. Again, we can use this model to see how many paths there are from one website to another, with the restriction of visiting 2 other websites in between. In this case the $E$ is a set of ordered pairs of vertexes:
+\begin{equation}
+	E = \left\{\left(v_1, v_2\right) | \left(v_1, v_2\right) \in V^2\text{ and } v_1 \neq v_2 \right\}
+	\label{directed-edges}
+\end{equation}
+\Cref{directed-graph} shows an illustration of the following directed graph:
+$V = \left\{x_1, x_2, x_3\right\}$ and $E = \left\{\left(x_1, x_2\right), \left(x_2, x_3\right)\right\}$
+
+\paragraph{Mixed Graphs}
+Mixed graphs are graphs that accepted both undirected and directed edges. In that case a graph is defined with two sets of edges; where one set describes the undirected edges and the other the directed edges:
+\begin{equation}
+	G = \left\{V, E_1, E_2\right\}
+\end{equation}
+with $E_1$ and $E_2$ being defined as edges as presented in \cref{undirected-edges,directed-edges} respectively. \cref{mixed-graph} shows the illustration of a mixed graph:
+$V = \left\{x_1, x_2, x_3\right\}$, $E_1 = \left\{\left\{x_1, x_2\right\}\right\}$, and $E_2 = \left\{\left(x_2, x_3\right)\right\}$.
+Mixed graphs are sometimes used in applications where the direction of an edge is unclear, but where you know a relation exists. Types of these graphs appear, for example, in causality research. 
+
+\subsection{Graphs + Data}
+The types of graphs we described are all graphs that do not contain data themselves, we can only reason about the structure of the graphs themselves. 
 
 \section{Reproducible Science}
 In order to establish experimental results in science, it is essential that results can be independently verified. Many different fields have had problems where the reproducibly of scientific studies was lacking. In field of psychology, a large reproducibility study was carried out~\citep{psychology-reproduciblity}. In this study a selection of 100 published studies in 2008 were taken, the goal was to reproduce the findings of all these studies to determine how many were holding up. Of the original 100 studies, 97 presented significant results. When trying to reproduce these results, for only 35 out of 97 these studies, it was possible to reproduce significant results. 
