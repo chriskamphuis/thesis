@@ -392,7 +392,7 @@ As databases are designed for the purpose of data retrieval, they are suited for
 
 \section{Graphs}
 \label{sec:graphs}
-As mentioned in~\cref{sec:nosqlgraph}, in this thesis we present work where we want to think about information retrieval using the concept of graphs.
+As mentioned in~\cref{sec:nosqlgraph}, in this thesis we present work where we want to think about information retrieval using the concept of graphs, and which different kinds of graph exists. The graphs described follow the definitions as described by \citet{big-graphs}.
 
 \paragraph{Basic Graphs}
 A graph is a structure consisting of a set of objects where pairs of these objects can be related. Typically, these objects are referred to as nodes or vertices, and the relation between a pair of objects is referred to a as an edge. So more formally, a graph $G$ is a pair of vertices $V$ and edges $E$;
@@ -401,7 +401,7 @@ A graph is a structure consisting of a set of objects where pairs of these objec
 \end{equation}
 where $V$ is the set of vertices in the graph, and $E$ a set of pairs (sets with two elements) of vertices:
 \begin{equation}
-	E = \left\{\left\{v_1, v_2\right\} | \left\{v_1, v_2\right\} \in V^2\text{ and } v_1 \neq v_2 \right\}
+	E = \left\{\left\{v_1, v_2\right\} | \left\{v_1, v_2\right\} \in V^2\right\}
 	\label{undirected-edges}
 \end{equation}
 Typically, graphs are graphically illustrated as a set of circles, where every circle represents a vertex. If there exists an edge between two vertices, a line is drawn between the two circles. Consider for example \cref{basic-graph}, the graph illustrates a graph with $V = \left\{x_1, x_2, x_3\right\}$ and $E = \left\{\left\{x_1, x_2\right\}, \left\{x_2, x_3\right\}\right\}$. It does not necessarily have to be the case that every vertex is included in at least one edge.
@@ -458,7 +458,7 @@ Consider the situation of geographical maps, we can model countries as vertices 
 
 \paragraph{Directed Edges} The most basic extension of graphs is that they are allowed directed edges. This means that there exists an edges from one node to another, but that this connection does not exists in the opposite direction. In the case of countries and their neighbors, this does not make sense; if one country borders another, the opposite is true as well. However in the case of the internet, one website might contain a hyperlink to another, while the opposite does not have to be the case. We need directed graphs to properly model the situation. Again, we can use this model to see how many paths there are from one website to another, with the restriction of visiting 2 other websites in between. In this case the $E$ is a set of ordered pairs of vertexes:
 \begin{equation}
-	E = \left\{\left(v_1, v_2\right) | \left(v_1, v_2\right) \in V^2\text{ and } v_1 \neq v_2 \right\}
+	E = \left\{\left(v_1, v_2\right) | \left(v_1, v_2\right) \in V^2\right\}
 	\label{directed-edges}
 \end{equation}
 \Cref{directed-graph} shows an illustration of the following directed graph:
@@ -473,8 +473,89 @@ with $E_1$ and $E_2$ being defined as edges as presented in \cref{undirected-edg
 $V = \left\{x_1, x_2, x_3\right\}$, $E_1 = \left\{\left\{x_1, x_2\right\}\right\}$, and $E_2 = \left\{\left(x_2, x_3\right)\right\}$.
 Mixed graphs are sometimes used in applications where the direction of an edge is unclear, but where you know a relation exists. Types of these graphs appear, for example, in causality research. 
 
-\subsection{Graphs + Data}
-The types of graphs we described are all graphs that do not contain data themselves, we can only reason about the structure of the graphs themselves. 
+\subsection{Labeled Graphs}
+The types of graphs we described are all graphs that do not contain data themselves, we can only reason about the structure of the graphs. Even though this already has many useful applications, for the applications we are interested, graphs are interesting when they are allowed to contain data. There are two ways to add data to graphs; it is possible to add data to either the vertices or the edges.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\begin{tikzpicture}[thick, node distance = {20mm}, main/.style = {draw, ellipse}] 
+			\node[main] (1) {$x_1 : 2$}; 
+			\node[main] (2) [above right of=1] {$x_2: 2$};
+			\node[main] (3) [below right of=2] {$x_3: 2$};
+			\node[main] (4) [above right of=3] {$x_4: 1$};
+			
+			\draw[->] (1) -- (2);
+			\draw[->] (2) -- (3);
+			\draw[->] (3) -- (1);
+			\draw[->] (4) -- (3);
+		\end{tikzpicture}
+		\caption{Data Graph}
+		\label{data-graph}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\begin{tikzpicture}[thick, node distance = {20mm}, main/.style = {draw, circle}] 
+			\node[main] (1) {$x_1$}; 
+			\node[main] (2) [above right of=1] {$x_2$};
+			\node[main] (3) [below right of=2] {$x_3$};
+			
+			\draw[->] (1) --node[left, sloped, above]{3} (2);
+			\draw[->] (2) --node[right, sloped, above]{2} (3);
+			\draw[->] (1) --node[right, sloped, above]{4} (3);
+		\end{tikzpicture}
+		\caption{Weighted Graph}
+		\label{weighted-graph}
+	\end{subfigure} 
+	\caption{Example of (\textbf{a}) a data graph, and (\textbf{b}) a weighted graph.}  
+\end{figure}
+
+\paragraph{Data Graph}
+A data graph is a type of graph where vertices have data. \Cref{data-graph} shows an example of a (directed) graph where every vertex is labeled with a number. These graphs are for example used in the famous PageRank algorithm~\citep{pagerank}. In this algorithm every vertex represents a webpage, and a directed edge exists between a node $a$ to $b$, if there is a link on website $a$ that points to website $b$. Then by randomly walking over this graph, or visiting a new website at random it is possible to count how often a node has been visited. The number of visits corresponds to the PageRank score. The PageRank scores in a graph correspond to the probabilities found in a Markov process in equilibrium.  
+
+\paragraph{Weighed Graph}
+A weighted graph is a type of graph where edges have data. \Cref{weighted-graph} shows an example of a (directed) graph where every edge is labeled with a number. These kinds of graphs are for example used to calculate the shortest distance between nodes. These kinds of graphs are, for example, useful for navigation systems. If we need to travel from location $x_1$ to location $x_3$ there are two possible paths. The path that goes from $x_1$ directly to $x_3$ is shorter compared to going from $x_1$ to $x_3$ via $x_2$. When graphs are larger, algorithms like Dijkstra's algorithm can find the shortest path over weighted graphs efficiently.
+
+\paragraph{Pregel/Giraph Graph}
+A obvious extension is, of course, adding data to both the vertices and edges. In the context we refer to them as Pregel/Giraph graphs, as these systems implement these kinds of graphs. There are some algorithms that need graphs to have both edge and vertex data. An example is the node2vec algorithm, which generates vector representations of the vertices of the graph. These graphs are used for various machine learning applications. 
+
+\subsection{RDF graphs}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[thick, node distance = {45mm}, main/.style = {draw, ellipse}] 
+		\node[main] (1) {Chris}; 
+		\node[main] (2) [right of=1] {Arjen};
+		\node[main] (3) [left of=1] {Kamphuis};
+		
+		\draw[->] (1) edge[] node[left, below] {:knows} (2);
+		\draw[->] (1) edge[bend right=45] node[left, below] {:learnsFrom} (2);
+		\draw[->] (1) edge[] node[left, below] {:lastName} (3);
+	\end{tikzpicture}
+	\caption{Example of a W3C RDF graph.} 
+	\label{rdf-graph} 
+\end{figure}
+
+Research Description Framework (RDF) graphs are directed graphs where edges have labels, and where multiple edges may exists between a pair of nodes. Graphs that allow multiple edges to exists between a pair of nodes are also called \emph{multi-graphs}.
+They are a standard by the World Wide Web Consortium (W3C). The idea behind the RDF graphs is they the are a collection of so called triples, these triples contain a \emph{subject}, \emph{predicate}, and \emph{object}. The predicate describes the relation (edge) from the subject (node) to the object (node): a collection of triples forms a graph. RDF graphs are used a lot to represent knowledge graphs, which have many applications in information retrieval. It is, for example, possible to generate entity cards on top of search engine result pages using knowledge graphs. \Cref{rdf-graph} shows an example of a small RDF graph. 
+
+\subsection{Property Graphs}
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[thick, node distance = {65mm}, main/.style = {draw, ellipse}] 
+		\node[main, align=center] (1) {\underline{Chris} \\ \textit{lastName:} Kamphuis \\ \textit{born:} 1993 }; 
+		\node[main] (2) [right of=1] {\underline{Arjen}};
+		
+		\draw[->] (1) edge[align=center, bend right=45] node[left, below] {knows \\ \textit{since:} 2014} (2);
+		\draw[->] (1) edge[] node[left, below] {learnsFrom} (2);
+	\end{tikzpicture}
+	\caption{Example of a Property Graph.} 
+	\label{property-graph} 
+\end{figure}
+
+Then finally, we will discuss property graphs. Property graphs allow everything we described before, vertices might also have labels, and vertices and properties can have properties. A property is a key-value pair that represents some data for a vertex or an edge. For example, if a node represents a person, the age of the person can be a property of the node. Depending on the type of property graph, the graph might also contain multiple vertex labels or edge labels. \cref{property-graph} shows an example of a property graph. The node with label \emph{Chris} has the last name and birth year as properties. The edge with label \emph{knows} from the node \emph{Chris} to the node \emph{Arjen} has a timestamp as a property. Property graphs are the graphs with the most expressive power, they are used as the data model for graph databases. 
 
 \section{Reproducible Science}
 In order to establish experimental results in science, it is essential that results can be independently verified. Many different fields have had problems where the reproducibly of scientific studies was lacking. In field of psychology, a large reproducibility study was carried out~\citep{psychology-reproduciblity}. In this study a selection of 100 published studies in 2008 were taken, the goal was to reproduce the findings of all these studies to determine how many were holding up. Of the original 100 studies, 97 presented significant results. When trying to reproduce these results, for only 35 out of 97 these studies, it was possible to reproduce significant results. 
