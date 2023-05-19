@@ -130,6 +130,26 @@ A small example of a graph represented by this schema is shown in~\cref{example-
 	\caption{Example term-document graph that maps to relational database schema}
 	\label{example-olddog-graph}
 \end{figure}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[thick, node distance = {60mm}, main/.style = {draw, ellipse}] 
+		\node[main, align=center, shape=ellipse] (1) {\underline{doc 1} \\ \textit{collection id:} "a" \\ \textit{len:} 2}; 
+		\node[main, align=center] (2) [right of=1] {\underline{term 1} \\ \textit{doc freq:} 1 \\ \textit{string:} "dog"};
+		
+		\node[main, align=center, shape=ellipse, node distance=25mm] (3) [below of=1] {\underline{doc 2} \\ \textit{collection id:} "b" \\ \textit{len:} 2}; 
+		\node[main, align=center, node distance=25mm] (4) [below of=2] {\underline{term 2} \\ \textit{doc freq:} 2 \\ \textit{string:} "cat"};
+		
+		\node[main, align=center, shape=ellipse, node distance=25mm] (5) [below of=3] {\underline{doc 3} \\ \textit{collection id:} "c" \\ \textit{len:} 2}; 
+		\node[main, align=center, node distance=25mm] (6) [below of=4] {\underline{term 3} \\ \textit{doc freq:} 5 \\ \textit{string:} "music"};
+		
+		\draw (1) edge[align=center] node[above] {\textit{TF:} 1} (2);
+		
+	\end{tikzpicture}
+	\caption{Example term-document graph that maps to relational database schema}
+	\label{example-olddog-graph}
+\end{figure}
+
 If one wants to, for example, also store position data, this graph can easily be changed to a graph where the edges store the position of a term. If a term appears multiple times in a document, the property graph model will allow multiple edges between two nodes. The graph schema that we described by~\cref{olddog-graph-schema} maps one-to-one to the relational database schema described by~\cref{olddog_schema}, so nodes are represented by standard relational tables that represent specific data units (terms, documents), while many-to-many join tables represent edges. So even though we think of the data as graphs, they are represented as relational tables in the backend. When using GeeseDB for search, we at least expect the document-term graph to be present. Of course, new node types can be introduced to explore new search strategies. 
 
 \subsection{Backend}
@@ -187,7 +207,31 @@ As an example, we will show how to use GeeseDB for the background linking task o
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\linewidth]{./imgs/example_full_graph.pdf}
+	\begin{tikzpicture}[thick, node distance = {40mm}, main/.style = {draw, rectangle}] 
+		\node[main, align=center, shape=ellipse] (1) {\underline{Documents} \\ \textit{len:} 3  \\ \textit{collection id:} "abc"}; 
+		\node[main, align=center] (2) [above right of=1] {\underline{Authors} \\ \textit{Name:} "Arjen"};
+		\node[main, align=center, shape=ellipse] (3) [below right of=2] {\underline{Documents} \\ \textit{len:} 2 \\ \textit{collection id:} "def"};
+		\node[main, align=center] (4) [above right of=3] {\underline{Authors} \\ \textit{Chris:} "Chris"};
+		
+		\node[main, align=center, shape=rectangle] (5) [below of=1] {\underline{Terms} \\ \textit{string:} "dog" \\ \textit{df:} 1};
+		\node[main, align=center, shape=rectangle] (6) [right of=5] {\underline{Terms} \\ \textit{string:} "cat" \\ \textit{df:} 2};
+		\node[main, align=center, shape=rectangle] (7) [right of=6] {\underline{Terms} \\ \textit{string:} "music" \\ \textit{df:} 1};
+		
+		\node[main, align=center, shape=ellipse] (8) [above right of=2] {\underline{Entities} \\ \textit{entity:} "dog" \\ \textit{df:} 1};
+		
+		
+		\draw (1) -- (2);
+		\draw (2) -- (3);
+		\draw (3) -- (4);
+		
+		\draw (5) edge[align=center] node[left] {\textit{TF:} 1} (1);
+		\draw (6) edge[align=center, bend left=10] node[right] {\ \textit{TF:} 2} (1);
+		\draw (6) edge[align=center] node[left] {\textit{TF:} 1} (3);
+		\draw (7) edge[align=center] node[left] {\textit{TF:} 1} (3);
+		
+		\draw (1) edge[align=center, bend left=45] node[above, left] 
+		{\textit{mention:} "dog"\\\textit{ner\_tag:} "misc"\\\textit{start:} 0\\\textit{len:} 1} (8);
+	\end{tikzpicture}
 	\caption{Example property graph for the TREC News Track's background linking task. The node types are authors, entities, terms, and documents. Edges connect document nodes to other types of nodes. Both edges and nodes can have properties (following the property graph model). Multiple edges may exist between one entity node and one document node, as one entity can be linked multiple times to one document.}
 	\label{fig:geesedb-graph}
 \end{figure}
