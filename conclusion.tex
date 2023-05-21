@@ -2,14 +2,22 @@
 \label{conclusion}
 \epigraph{We can only see a short distance ahead, but we can see plenty there that needs to be done.}{Alan Turing - 1950}
 
+To conclude I would like to summarize the work described in the chapters following the research questions of this thesis. We will look one time more to the work in the individual chapters, and then try to tie it together following the main research question. Then finally, I want to reflect on the work described in this thesis and present research opportunities that follow the work described. 
+
 \section{Results}
 Recall the main research question, and its subquestions:
 \begin{itemize}
-	\item \textbf{RQ: How can information retrieval benefit from graph databases and graph query languages?}
-	
-	\item \emph{RQ1: What are the benefits of using relational databases for information retrieval?} 
-	\item \emph{RQ2: Can we extend the benefits from using relational databases for information retrieval to using graph databases, while being able to express graph related problems easier?} 
-	\item \emph{RQ3: When does information retrieval research benefits from graph data?} 
+	\item \textbf{Research Question: How can information retrieval benefit from graph databases and graph query languages?}
+	\item \emph{Research Question 1: What are the benefits of using relational databases for information retrieval?} 
+	\item \emph{Research Question 2: Can we extend the benefits from using relational databases for information retrieval to using graph databases, while being able to express graph related problems easier?} 
+	\item \emph{Research Question 3: When does information retrieval research benefits from graph data?} 
 \end{itemize}
 
-\section{Future Work}
+\cref{ir-using-relational-databases} introduces the history of using relational databases for information retrieval, one of the latter attempts, using columnar databases for retrieval is highlighted. This approach is re-implemented as a prototype system; ``OldDog''. OldDog is used for a reproduction experiments, where many implementations of BM25 are compared against each other. Because OldDog was built using a relational database, we were able to express the logical model of the ranking functions separately from their physical models. This way we could exactly find what the difference were between the models, while keeping the data exactly the same. The work in the chapter demonstrates the usefulness of using relational databases for reproduction experiments in information retrieval. Looking at research question 1: \emph{What are the benefits of using relational databases for information retrieval?}, we have demonstrated that relational databases provide a framework for easily comparing different ranking methods, as shown in the reproduction study. The systems is reasonably efficient, making it easy to set up for new experiments. 
+
+\cref{from-tables-to-graphs} takes the data model for information retrieval using relational databases, as presented in~\cref{ir-using-relational-databases}, and extends this model to a graph data model. This model is implemented in the prototype system GeeseDB, a graph query language method for information retrieval. GeeseDB is built on top of DuckDB, and makes use of its column oriented tables and the fact that it can be ran in-process. By having a powerful backend, we are able to express graph queries for information retrieval and run them on GeeseDB. GeeseDB supports all functionalities that were already supported by OldDog, plus it makes the expression of more complicated problems, through the graph framework easier. Considering research question 2: \emph{Can we extend the benefits from using relational databases for information retrieval to using graph databases, while being able to express graph related problems easier?}, we find that, with GeeseDB, it is possible to take all the benefits from using relational databases for information retrieval, while making it possible to express more complex problems through a graph query language.
+
+\cref{ch:mmead}
+
+
+\section{Limitations and Future Work}
