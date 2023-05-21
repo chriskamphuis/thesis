@@ -124,26 +124,33 @@ Instead of seeing the document data and term data as tables that relate to each 
 	\label{olddog-graph-schema}
 \end{figure}
 A small example of a graph represented by this schema is shown in~\cref{example-olddog-graph}. Document nodes contain document-specific information (i.e., document length and the collection identifier), term nodes contain information relevant to the term (i.e., the term string and the term's document frequency), and the edges between document and terms nodes contain term frequency information (i.e., how often is the term mentioned in the document represented the respective nodes it connects).
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{./imgs/example_olddog_graph.pdf}
-	\caption{Example term-document graph that maps to relational database schema}
-	\label{example-olddog-graph}
-\end{figure}
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=\linewidth]{./imgs/example_olddog_graph.pdf}
+%	\caption{Example term-document graph that maps to relational database schema}
+%	\label{example-olddog-graph}
+%\end{figure}
 
 \begin{figure}
 	\centering
 	\begin{tikzpicture}[thick, node distance = {60mm}, main/.style = {draw, ellipse}] 
 		\node[main, align=center, shape=ellipse] (1) {\underline{doc 1} \\ \textit{collection id:} "a" \\ \textit{len:} 2}; 
-		\node[main, align=center] (2) [right of=1] {\underline{term 1} \\ \textit{doc freq:} 1 \\ \textit{string:} "dog"};
+		\node[main, align=center] (2) [right of=1] {\underline{term 1} 
+		\\ \textit{doc frequency:} 1 \\ \textit{string:} "dog"};
 		
 		\node[main, align=center, shape=ellipse, node distance=25mm] (3) [below of=1] {\underline{doc 2} \\ \textit{collection id:} "b" \\ \textit{len:} 2}; 
-		\node[main, align=center, node distance=25mm] (4) [below of=2] {\underline{term 2} \\ \textit{doc freq:} 2 \\ \textit{string:} "cat"};
+		\node[main, align=center, node distance=25mm] (4) [below of=2] {\underline{term 2} \\ \textit{doc frequency:} 2 \\ \textit{string:} "cat"};
 		
 		\node[main, align=center, shape=ellipse, node distance=25mm] (5) [below of=3] {\underline{doc 3} \\ \textit{collection id:} "c" \\ \textit{len:} 2}; 
-		\node[main, align=center, node distance=25mm] (6) [below of=4] {\underline{term 3} \\ \textit{doc freq:} 5 \\ \textit{string:} "music"};
+		\node[main, align=center, node distance=25mm] (6) [below of=4] {\underline{term 3} \\ \textit{doc frequency:} 5 \\ \textit{string:} "music"};
 		
-		\draw (1) edge[align=center] node[above] {\textit{TF:} 1} (2);
+		\draw (1) edge[align=center, bend left=10] node[above] {\textit{TF:} 1} (2);
+		\draw (1) edge[align=center] node[yshift=1mm, above] {\textit{TF:} 1} (4);
+		\draw (3) edge[align=center, bend left=10] node[above] {\textit{TF:} 1} (4);
+		\draw (3) edge[align=center, bend left=20] node[yshift=-1mm, left] {\textit{TF:} 1} (6);
+		\draw (5) edge[align=center, bend right=20] node[yshift=1mm, left] {\textit{TF:} 2} (4);
+		\draw (5) edge[align=center, bend right=10] node[below] {\textit{TF:} 3} (6);
+		
 		
 	\end{tikzpicture}
 	\caption{Example term-document graph that maps to relational database schema}

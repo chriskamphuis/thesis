@@ -2,7 +2,7 @@
 \label{chp:introduction}
 \epigraph{I \textit{propose} to consider the question, ``Can machines think?''}{Alan Turing - 1950}
 
-I also propose to consider the question, ``Can machines think?'' Instead of approaching this through a thought experiment as Turing did, nowadays, one can approach this question by asking it to a search engine. When issuing this query to popular web search systems, we get varying results: the first result on Google is a passage generated from the article written by Turing, while the first result on Bing is a passage generated from a website that concludes machines can not think\footnote{However, if a machine can not think, can we trust the result presented by this algorithm?}\footnote{These results were retrieved in October of 2022}.
+I also propose to consider the question, ``Can machines think?'' Instead of approaching this through a thought experiment as Turing did, nowadays, one can approach this question by asking it to a search engine. When issuing this query to popular web search systems, we get varying results: the first result on Google is a passage generated from the article written by Turing, while the first result on Bing is a passage generated from a website that concludes machines cannot think\footnote{However, if a machine cannot think, can we trust the result presented by this algorithm?}\footnote{These results were retrieved in October of 2022}.
 
 We use systems that process queries daily when looking for \textit{information}. While Google and Bing are all-purpose web engines that mainly focus on finding and retrieving information from the internet, people also use specialized search systems in their day-to-day lives: Amazon and eBay when we are looking for a product to buy, Scholar and ResearchGate for scientific resources, Youtube and TikTok for Videos, or Facebook and LinkedIn when we are searching for people. It might even be possible that you are reading this text after you found this document through search. 
 
@@ -25,12 +25,17 @@ Three sub-research questions are defined to guide us in answering the main resea
 	\item \emph{RQ3: When does information retrieval research benefits from graph data?} 
 \end{enumerate}
 
+\cref{ir-using-relational-databases,from-tables-to-graphs,ch:mmead} will take these research questions and try to answer them. Then in~\cref{conclusion}, we will try to take the answers to these questions and use them to answers the main research question. 
+
 \section{Thesis Contributions and Structure}
 
 \begin{itemize}
 \item Chapter~\ref{related-work} will describe all necessary background information to provide context to the other chapters. The background that is described in this chapter concerns the ``general'' background knowledge for this thesis. Individual chapters will also have related work sections that concerns the background knowledge concerning those chapters. The information described in those related work sections might contain overlapping information; i.e. knowledge that is needed to understand the context of those chapters. This is done to make it possible to understanding a chapter without first reading the chapters that become before it. 
 
-\item Chapter~\ref{ir-using-relational-databases} will present ..., we will discuss content based on the following published works: 
+\item Chapter~\ref{ir-using-relational-databases} concerns information retrieval research through the usage of relational databases. 
+Although, traditionally, inverted indexes are used for information retrieval, we show that by employing relational databases some advantages are gained. 
+First, attempts of using relational databases for information retrieval through the years will be described. One of the latter attempts used a column-oriented relational database system for information retrieval, achieving competitive efficiency compared to traditional system built using inverted indexes. This approach is re-implemented as a prototype system used, which is then used for a reproduction study. This chapter establishes the usefulness of using relational databases for information retrieval by clearly demonstrating its benefits. The content in this chapter is based on the following published works: 
+
 {
 	\scriptsize
 	\begin{itemize}
@@ -39,7 +44,8 @@ Three sub-research questions are defined to guide us in answering the main resea
 	\end{itemize}
 }
 
-\item Chapter~\ref{from-tables-to-graphs} will present ..., we will discuss content which has been previously described in the following published works:
+\item Chapter~\ref{from-tables-to-graphs} takes the concept of employing relational databases for information retrieval, and extends the relational model to the graph model. GeeseDB is introduced, a graph database prototype system built on top of a embedded column-oriented relational engine. By using the graph model it is possible to express more complex information retrieval problems, compared to when the relational model is used. These more complex models often use multi-stage retrieval approaches. As GeeseDB is built on top of an embedded database system, moving data between ranking stages can be done efficiently. The content of this chapter has previously been described in the following published works:
+
 {
 	\scriptsize
 	\begin{itemize}
@@ -48,7 +54,8 @@ Three sub-research questions are defined to guide us in answering the main resea
 	\end{itemize}
 }
 
-\item Chapter~\ref{a-graph-of-entities} will present ..., we will discuss content which has been previously described in the following published work: 
+\item Chapter~\ref{a-graph-of-entities} introduces the concept of entity linking. Specifically, the Radboud Entity Linker~\citep{rel} system is discussed. When trying to utilize REL in order to annotate a large corpus with entity linking, issues were found that prohibited the annotations process in such an extend that it was not possible to do within a reasonable time. In order to be able to annotate the corpus, the REL toolkit internals were upgraded, and a batch extension was developed. Altogether this led to more efficiency software such that REL can be used to annotate larger corpora. The content in this chapter has previously been described in the following published work: 
+
 {
 	\scriptsize
 	\begin{itemize}
@@ -56,20 +63,21 @@ Three sub-research questions are defined to guide us in answering the main resea
 	\end{itemize}
 }
 
-\item Chapter~\ref{mmead} will present ..., we will discuss content which has been previously described in the following published work: {
+\item Chapter~\ref{ch:mmead} will employ the software described in the chapter before it, and uses it to annotate a large web corpus. For these annotations we developed a specification how entity link annotations can be shared. Following this specification, we made the annotations for the MS MARCO~\citep{msmarco} corpora publicly available. Using these annotations we show that, through query expansion, we can increase recall effectiveness for first stage rankers on this dataset. Next to this, a demonstration shows how entity links can also be used for applications that use geographical information. 
+This content has been described in the following work, accepted for publication; 
+
+{
 \scriptsize
 	\begin{itemize}
 		\item \bibentry{mmead}
 	\end{itemize}
 }
 
-
 \item Chapter~\ref{conclusion} will serve as a conclusion and tries to summarize the content discussed in the book. Here we will reflect on the research question, and discuss what future research is needed.
 \end{itemize}
 
-
-
 \section{Other Publications}
+During the employment at Radboud University the following work was also accepted for publication: 
 
 {\scriptsize
 \begin{itemize}	
@@ -80,3 +88,5 @@ Three sub-research questions are defined to guide us in answering the main resea
 	\item \bibentry{graphdb-for-ir}
 \end{itemize}
 }
+
+Although this work relates to the main subject of the thesis, is not used as source material for the work described in this thesis. 

@@ -307,7 +307,7 @@ Consider the situation where three documents are retrieved, and two systems migh
 	0, & 0, & 1
 \end{smallmatrix}
 \right]$.
-Both rankings achieve the same $P@3$ and $R@3$ scores, and subsequently also the same $F_1@3$. The previously introduced metrics can not distinguish between ranking quality in this situation. It is, however, clear that the first ranking is better than the second ranking. 
+Both rankings achieve the same $P@3$ and $R@3$ scores, and subsequently also the same $F_1@3$. The previously introduced metrics cannot distinguish between ranking quality in this situation. It is, however, clear that the first ranking is better than the second ranking. 
 Instead of measuring the precision only at rank $k$, the average precision measure calculates it every time a relevant document is encountered. The sum of these values is divided by the number of relevant documents found up to $k$:
 \begin{equation}
 	\textit{AP}@k = \frac{1}{\sum_{i=1}^N\text{rel}\left(d_i\right)}\sum^k_{i=1} P\left(i\right) \cdot \text{rel}\left(d_i\right)
@@ -530,9 +530,9 @@ An obvious extension is, of course, adding data to both the vertices and edges. 
 		\node[main] (2) [right of=1] {Arjen};
 		\node[main] (3) [left of=1] {Kamphuis};
 		
-		\draw[->] (1) edge[] node[left, below] {:knows} (2);
-		\draw[->] (1) edge[bend right=45] node[left, below] {:learnsFrom} (2);
-		\draw[->] (1) edge[] node[left, below] {:lastName} (3);
+		\draw[->] (1) edge[] node[left, below] {knows} (2);
+		\draw[->] (1) edge[bend right=45] node[left, below] {learnsFrom} (2);
+		\draw[->] (1) edge[] node[left, below] {lastName} (3);
 	\end{tikzpicture}
 	\caption{Example of a W3C RDF graph.} 
 	\label{rdf-graph} 
