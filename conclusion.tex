@@ -9,8 +9,8 @@ Recall the main research question, and its subquestions:
 \begin{itemize}
 	\item \textbf{Research Question: How can information retrieval benefit from graph databases and graph query languages?}
 	\item \emph{Research Question 1: What are the benefits of using relational databases for information retrieval?} 
-	\item \emph{Research Question 2: Can we extend the benefits from using relational databases for information retrieval to using graph databases, while being able to express graph related problems easier?} 
-	\item \emph{Research Question 3: When does information retrieval research benefits from graph data?} 
+	\item \emph{Research Question 2: Can we extend the benefits from using relational databases for information retrieval to using graph-databases while being able to express graph related problems easier?} 
+	\item \emph{Research Question 3: When does information retrieval research benefit from graph data?} 
 \end{itemize}
 
 \cref{ir-using-relational-databases} introduces the history of using relational databases for information retrieval, one of the latter attempts, using columnar databases for retrieval is highlighted. This approach is re-implemented as a prototype system; ``OldDog''. OldDog is used for a reproduction experiments, where many implementations of BM25 are compared against each other. Because OldDog was built using a relational database, we were able to express the logical model of the ranking functions separately from their physical models. This way we could exactly find what the difference were between the models, while keeping the data exactly the same. The work in the chapter demonstrates the usefulness of using relational databases for reproduction experiments in information retrieval. Looking at research question 1: \emph{What are the benefits of using relational databases for information retrieval?}, we have demonstrated that relational databases provide a framework for easily comparing different ranking methods, as shown in the reproduction study. The systems is reasonably efficient, making it easy to set up for new experiments. 

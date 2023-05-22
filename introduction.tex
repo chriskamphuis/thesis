@@ -6,87 +6,87 @@ I also propose to consider the question, ``Can machines think?'' Instead of appr
 
 We use systems that process queries daily when looking for \textit{information}. While Google and Bing are all-purpose web engines that mainly focus on finding and retrieving information from the internet, people also use specialized search systems in their day-to-day lives: Amazon and eBay when we are looking for a product to buy, Scholar and ResearchGate for scientific resources, Youtube and TikTok for Videos, or Facebook and LinkedIn when we are searching for people. It might even be possible that you are reading this text after you found this document through search. 
 
-When searching for the query ``Can machines think?'', searching through text documents only might be sufficient for the person who searches. However, more than considering the text is needed when searching today. For example, when one wants to buy a product on Amazon, aspects other than text also need to be considered. Let's say you want to buy an iPhone; information on the price, which edition is the most recent, or which color it has are all essential to determine which one you want. You may also want to consider the rating provided by people that previously bought an iPhone.
+When searching for the query, ``Can machines think?'', searching through text documents only might be sufficient for the person who searches. However, more than considering the text is needed when searching today. For example, when one wants to buy a product on Amazon, aspects other than text also need to be considered. Let us say you want to buy an iPhone; information on the price, which edition is the most recent, or which color it has are all essential to determine which one you want. You may also want to consider the rating provided by people that previously bought an iPhone.
 
-If someone searches for people on LinkedIn, they are generally more interested in persons that have connections in common compared to strangers. If you are looking for someone to do a job, it is ideal that a shared connection can vouch for them. In this case, how people relate to each other in their network might indicate \textit{relevance}. Not only the structure of how people relate to each other determines relevance; other examples are their experience, where they work, or reviews of their previous work might matter.
+If someone searches for people on LinkedIn, they are generally more interested in persons they are connected to than strangers. If you are looking for someone to do a job, it is ideal that a shared connection can vouch for them. In this case, how people relate to each other in their network might indicate \textit{relevance}. Not only the structure of how people relate to each other determines relevance; other examples are their experience, where they work, or reviews of their previous work might matter.
 
-Although it might be possible to encode all this information as written text, often, it is more convenient to save this information in a more structured approach. Where information retrieval researchers research the retrieval of information through text data, the retrieval of structured data is researched by data management researchers. In this thesis, both methods are considered simultaneously: systems that can work with structured and unstructured information are investigated.
+Although it might be possible to encode all this information as written text, often, it is more convenient to save this information in a more structured approach. Where information retrieval researchers research the retrieval of ``information'' through text data, data management researchers research the retrieval of structured data. This thesis considers both methods simultaneously: systems that can work with structured and unstructured information are investigated.
 
 \section{Problem Description and Research Questions}
-Although information retrieval and data retrieval are research fields investigated by different disciplines, they are closely related, and systems that use both have been researched and developed in the past (In later parts of this thesis, examples are provided). Also, techniques developed in one community might help the other, as things like storing data and quickly retrieving it are essential for information and data retrieval. 
+Although information retrieval and data retrieval are research fields investigated by different disciplines, they are closely related, and systems that use both have been researched and developed in the past (In later parts of this thesis, examples are provided). Also, techniques developed in one community might help the other, as things like storing and quickly retrieving data are essential for information and data retrieval. 
 
-In recent years there has been much exciting research in the database community studying graph databases. What these databases exactly are will be described in chapter \ref{related-work}. As these databases are becoming more popular for data retrieval tasks where the data is highly interconnected, they might also benefit similar tasks in the information retrieval field where data is often highly interconnected. This thesis will investigate how these databases, with dedicated graph query languages, can be used for information retrieval tasks. Leading us to the main research question of this thesis: \textbf{Research Question: How can information retrieval benefit from graph databases and graph query languages?}
+In recent years there has been much exciting research in the database community studying graph databases. What these databases exactly are will be described in chapter \ref{related-work}. As these databases are becoming more popular for data retrieval tasks where the data is highly interconnected, they might also benefit similar tasks in the information retrieval field where data is often highly interconnected. This thesis will investigate how these databases, with dedicated graph query languages, can be used for information retrieval tasks. This leads us to this thesis's main research question: \textbf{Research Question: How can information retrieval benefit from graph databases and graph query languages?}
 
 Three sub-research questions are defined to guide us in answering the main research question:
 
 \begin{enumerate}
 	\item \emph{Research Question 1: What are the benefits of using relational databases for information retrieval?} 
-	\item \emph{Research Question 2: Can we extend the benefits from using relational databases for information retrieval to using graph databases, while being able to express graph related problems easier?} 
-	\item \emph{Research Question 3: When does information retrieval research benefits from graph data?} 
+	\item \emph{Research Question 2: Can we extend the benefits from using relational databases for information retrieval to using graph databases while being able to express graph-related problems easier?} 
+	\item \emph{Research Question 3: When does information retrieval research benefit from graph data?} 
 \end{enumerate}
 
-\cref{ir-using-relational-databases,from-tables-to-graphs,ch:mmead} will take these research questions and try to answer them. Then in~\cref{conclusion}, we will try to take the answers to these questions and use them to answers the main research question. 
+\cref{ir-using-relational-databases,from-tables-to-graphs,ch:mmead} will take these research questions and try to answer them. Then in~\cref{conclusion}, we will try to take the answers to these questions and use them to answer the main research question. 
 
 \section{Thesis Contributions and Structure}
 
 \begin{itemize}
-\item Chapter~\ref{related-work} will describe all necessary background information to provide context to the other chapters. The background that is described in this chapter concerns the ``general'' background knowledge for this thesis. Individual chapters will also have related work sections that concerns the background knowledge concerning those chapters. The information described in those related work sections might contain overlapping information; i.e. knowledge that is needed to understand the context of those chapters. This is done to make it possible to understanding a chapter without first reading the chapters that become before it. 
-
-\item Chapter~\ref{ir-using-relational-databases} concerns information retrieval research through the usage of relational databases. 
-Although, traditionally, inverted indexes are used for information retrieval, we show that by employing relational databases some advantages are gained. 
-First, attempts of using relational databases for information retrieval through the years will be described. One of the latter attempts used a column-oriented relational database system for information retrieval, achieving competitive efficiency compared to traditional system built using inverted indexes. This approach is re-implemented as a prototype system used, which is then used for a reproduction study. This chapter establishes the usefulness of using relational databases for information retrieval by clearly demonstrating its benefits. The content in this chapter is based on the following published works: 
-
-{
-	\scriptsize
-	\begin{itemize}
-		\item \bibentry{olddog-docker}
-		\item \bibentry{Kamphuis2020BM25}
-	\end{itemize}
-}
-
-\item Chapter~\ref{from-tables-to-graphs} takes the concept of employing relational databases for information retrieval, and extends the relational model to the graph model. GeeseDB is introduced, a graph database prototype system built on top of a embedded column-oriented relational engine. By using the graph model it is possible to express more complex information retrieval problems, compared to when the relational model is used. These more complex models often use multi-stage retrieval approaches. As GeeseDB is built on top of an embedded database system, moving data between ranking stages can be done efficiently. The content of this chapter has previously been described in the following published works:
-
-{
-	\scriptsize
-	\begin{itemize}
-		\item \bibentry{need-graph-db}
-		\item \bibentry{geesedb}
-	\end{itemize}
-}
-
-\item Chapter~\ref{a-graph-of-entities} introduces the concept of entity linking. Specifically, the Radboud Entity Linker~\citep{rel} system is discussed. When trying to utilize REL in order to annotate a large corpus with entity linking, issues were found that prohibited the annotations process in such an extend that it was not possible to do within a reasonable time. In order to be able to annotate the corpus, the REL toolkit internals were upgraded, and a batch extension was developed. Altogether this led to more efficiency software such that REL can be used to annotate larger corpora. The content in this chapter has previously been described in the following published work: 
-
-{
-	\scriptsize
-	\begin{itemize}
-		\item \bibentry{rebl}
-	\end{itemize}
-}
-
-\item Chapter~\ref{ch:mmead} will employ the software described in the chapter before it, and uses it to annotate a large web corpus. For these annotations we developed a specification how entity link annotations can be shared. Following this specification, we made the annotations for the MS MARCO~\citep{msmarco} corpora publicly available. Using these annotations we show that, through query expansion, we can increase recall effectiveness for first stage rankers on this dataset. Next to this, a demonstration shows how entity links can also be used for applications that use geographical information. 
-This content has been described in the following work, accepted for publication; 
-
-{
-\scriptsize
-	\begin{itemize}
-		\item \bibentry{mmead}
-	\end{itemize}
-}
-
-\item Chapter~\ref{conclusion} will serve as a conclusion and tries to summarize the content discussed in the book. Here we will reflect on the research question, and discuss what future research is needed.
+	\item Chapter~\ref{related-work} will describe all necessary background information to provide context to the other chapters. The background that is described in this chapter concerns the ``general'' background knowledge for this thesis. Individual chapters will also have related work sections that concern the background knowledge in those chapters. The information described in those related work sections might contain overlapping information, i.e., the knowledge needed to understand the context of those chapters. This is done to make it possible to understand a chapter without first reading the chapters that come before it. 
+	
+	\item Chapter~\ref{ir-using-relational-databases} concerns information retrieval research using relational databases. 
+	Although, traditionally, inverted indexes are used for information retrieval, we show that by employing relational databases, some advantages are gained. 
+	First, attempts to use relational databases for information retrieval through the years will be described. One of the latter attempts used a column-oriented relational database system for information retrieval, achieving competitive efficiency compared to a traditional system built using inverted indexes. This approach is re-implemented as a prototype system used, which is then used for a reproduction study. This chapter establishes the usefulness of relational databases for information retrieval by demonstrating its benefits. The content in this chapter is based on the following published works: 
+	
+	{
+		\scriptsize
+		\begin{itemize}
+			\item \bibentry{olddog-docker}
+			\item \bibentry{Kamphuis2020BM25}
+		\end{itemize}
+	}
+	
+	\item Chapter~\ref{from-tables-to-graphs} takes the concept of employing relational databases for information retrieval and extends the relational model to the graph model. GeeseDB is introduced, a graph database prototype system built on top of an embedded column-oriented relational engine. Using the graph model makes it possible to express more complex information retrieval problems than when the relational model is used. These more complex models often use multi-stage retrieval approaches. GeeseDB is built on top of an embedded database system, so moving data between ranking stages can be done efficiently. The content of this chapter has previously been described in the following published works:
+	
+	{
+		\scriptsize
+		\begin{itemize}
+			\item \bibentry{need-graph-db}
+			\item \bibentry{geesedb}
+		\end{itemize}
+	}
+	
+	\item Chapter~\ref{a-graph-of-entities} introduces the concept of entity linking. Specifically, the Radboud Entity Linker~\citep{rel} system is discussed. When trying to utilize REL to annotate a large corpus with entity linking, issues were found that prohibited the annotations process to such an extent that it was not possible to do within a reasonable time. In order to be able to annotate the corpus, the REL toolkit internals were upgraded, and a batch extension was developed. Altogether this led to more efficient software such that REL can annotate larger corpora. The content in this chapter has previously been described in the following published work: 
+	
+	{
+		\scriptsize
+		\begin{itemize}
+			\item \bibentry{rebl}
+		\end{itemize}
+	}
+	
+	\item Chapter~\ref{ch:mmead} will employ the software described in the chapter before it and uses it to annotate a large web corpus. We developed a specification of how entity link annotations can be shared for these annotations. Following this specification, we made the annotations for the MS MARCO~\citep{msmarco} corpora publicly available. Using these annotations, we show that, through query expansion, we can increase recall effectiveness for first-stage rankers on this dataset. Next, a demonstration shows how entity links can also be used for geographical information applications. 
+	This content has been described in the following work, accepted for publication; 
+	
+	{
+		\scriptsize
+		\begin{itemize}
+			\item \bibentry{mmead}
+		\end{itemize}
+	}
+	
+	\item Chapter~\ref{conclusion} will serve as a conclusion and tries to summarize the content discussed in the book. Here we will reflect on the research question and discuss what future research is needed.
 \end{itemize}
 
 \section{Other Publications}
-During the employment at Radboud University the following work was also published: 
+During the employment at Radboud University, the following work was also published: 
 
 {\scriptsize
-\begin{itemize}	
-	\item \bibentry{trec-2019}
-	\item \bibentry{ciff}	
-	\item \bibentry{trec-2020}
-	\item \bibentry{trec-covid}
-	\item \bibentry{graphdb-for-ir}
-\end{itemize}
+	\begin{itemize}	
+		\item \bibentry{trec-2019}
+		\item \bibentry{ciff}	
+		\item \bibentry{trec-2020}
+		\item \bibentry{trec-covid}
+		\item \bibentry{graphdb-for-ir}
+	\end{itemize}
 }
 
-Although this work relates to the main subject of the thesis, is not used as source material for the work described in this thesis. 
+Although this work relates to the main subject of the thesis, it is not used as source material for the work described in this thesis. 
