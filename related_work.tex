@@ -259,7 +259,7 @@ With the rise of large language models, the vector space model became more popul
 
 The basic idea is to predict the relevance of a document $d$ for a query $q$:
 \begin{equation}
-	\mathit{rel}(q, d) = \omega\left(\phi\left(q\right),
+	\text{rel}(q, d) = \omega\left(\phi\left(q\right),
 	\psi\left(d\right)\right)
 \end{equation}
 Here, $\psi$ and $\phi$ are learned functions that typically use large language models that map the query and the document to vectors with low dimensionality. These functions map the query and the document to the same space. When documents are relevant to the query, the resulting vectors should be similar, while if the document is not relevant, they should be dissimilar. This similarity is measured through a distance function $\omega$, often the dot-product or cosine similarity.
