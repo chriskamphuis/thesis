@@ -215,9 +215,9 @@ As an example, we will show how to use GeeseDB for the background linking task o
 \begin{figure}
 	\centering
 	\begin{tikzpicture}[thick, node distance = {40mm}, main/.style = {draw, rectangle}] 
-		\node[main, align=center, shape=ellipse] (1) {\underline{Documents} \\ \textit{len:} 3  \\ \textit{collection id:} "abc"}; 
+		\node[main, align=center, shape=ellipse] (1) {\underline{Documents} \\ \textit{len:} 3  \\ \textit{collection\_id:} "abc"}; 
 		\node[main, align=center] (2) [above right of=1] {\underline{Authors} \\ \textit{Name:} "Arjen"};
-		\node[main, align=center, shape=ellipse] (3) [below right of=2] {\underline{Documents} \\ \textit{len:} 2 \\ \textit{collection id:} "def"};
+		\node[main, align=center, shape=ellipse] (3) [below right of=2] {\underline{Documents} \\ \textit{len:} 2 \\ \textit{collection\_id:} "def"};
 		\node[main, align=center] (4) [above right of=3] {\underline{Authors} \\ \textit{Chris:} "Chris"};
 		
 		\node[main, align=center, shape=rectangle] (5) [below of=1] {\underline{Terms} \\ \textit{string:} "dog" \\ \textit{df:} 1};
@@ -231,10 +231,10 @@ As an example, we will show how to use GeeseDB for the background linking task o
 		\draw (2) -- (3);
 		\draw (3) -- (4);
 		
-		\draw (5) edge[align=center] node[left] {\textit{TF:} 1} (1);
-		\draw (6) edge[align=center, bend left=10] node[right] {\ \textit{TF:} 2} (1);
-		\draw (6) edge[align=center] node[left] {\textit{TF:} 1} (3);
-		\draw (7) edge[align=center] node[left] {\textit{TF:} 1} (3);
+		\draw (5) edge[align=center] node[left] {\textit{tf:} 1} (1);
+		\draw (6) edge[align=center, bend left=10] node[right] {\ \textit{tf:} 2} (1);
+		\draw (6) edge[align=center] node[left] {\textit{tf:} 1} (3);
+		\draw (7) edge[align=center] node[left] {\textit{tf:} 1} (3);
 		
 		\draw (1) edge[align=center, bend left=45] node[above, left] 
 		{\textit{mention:} "dog"\\\textit{ner\_tag:} "misc"\\\textit{start:} 0\\\textit{len:} 1} (8);
