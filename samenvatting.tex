@@ -1,3 +1,13 @@
 \chapter*{Samenvatting}
 \addcontentsline{toc}{chapter}{Samenvatting}
 \markboth{Samenvatting}{Samenvatting}
+
+Het vinden van relevante informatie in een grote verzameling van documenten is een zeer uitdagende taak, zeker wanneer alleen tekst in overweging wordt genomen bij het bepalen of een document relevant is. Dit onderzoek maakt gebruik van grafen om informatiebehoeften uit te drukken waar meer in overweging genomen moet worden dan alleen tekst. In sommige gevallen gebruiken we, voor de data representatie, in plaats van \emph{inverted indexes}, data management systemen om data op te slaan.
+
+Allereerst, laten we zien dat relationele database systemen geschikt zijn voor \emph{information retrieval} experimenten.
+Een door ons gebouwd prototype systeem implementeert verscheidene verbeteringen aan het BM25-rangschikking algoritme die zijn voorgesteld in de literatuur. In een grootschalig reproductie onderzoek vergelijken we deze verbeteringen en vinden we dat de verschillen in effectiviteit kleiner zijn dan we op grond van de literatuur zouden verwachten. 
+We kunnen gemakkelijk wisselen tussen versies van BM25 door de SQL-query lichtelijk te herschrijven. Hiermee valideren we het nut van relationele databases voor reproduceerbaar IR-onderzoek.
+Vervolgens breiden we het datamodel uit naar een graaf datamodel. Met dit graaf datamodel kunnen we meer diverse gegevens uitdrukken dan alleen tekst. 
+We kunnen complexe informatiebehoeften makkelijker uitdrukken met een bijbehorende graaf querytaal, dan wanneer een relationele taal wordt gebruikt. Dit model is gebouwd bovenop een \emph{embedded} database systeem, hierdoor kunnen we data dat geproduceerd wordt door dit systeem snel voor een andere applicatie gebruiken.
+
+Een van de aspecten die we in de graaf vastleggen, is informatie over entiteiten. We gebruiken het Radboud Entity Linking (REL) systeem om entiteit informatie te koppelen aan documenten. Om een grote documentverzameling efficiënt te annoteren met REL hebben we de efficiëntie van REL verbeterd. Na deze verbeteringen hebben we REL gebruikt om annotaties te maken voor de MS MARCO-document- en passage-collecties. Met behulp van deze annotaties kunnen we de \emph{recall} voor moeilijkere MS MARCO-query's aanzienlijk verbeteren. Deze entiteiten worden ook gebruikt voor een interactieve demonstratie waarbij de geografische gegevens van entiteiten worden gebruikt.

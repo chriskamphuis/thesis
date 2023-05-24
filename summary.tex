@@ -1,3 +1,18 @@
 \chapter*{Summary}
 \addcontentsline{toc}{chapter}{Summary}
 \markboth{Summary}{Summary}
+% maximum 350 - 400 words
+
+\chapter*{Summary}
+\addcontentsline{toc}{chapter}{Summary}
+\markboth{Summary}{Summary}
+% maximum 350 - 400 words
+
+Finding relevant information in a large collection of documents can be challenging, especially when only text is considered when determining relevancy. This research leverages graph data to express information needs that consider more than just text data. In some cases, instead of using inverted indexes for the data representation in our work, we use database management systems to store data.
+
+First, we show that relational database systems are suited for retrieval experiments. A prototype system we built implements many proposed improvements to the BM25 ranking algorithm. In a large-scale reproduction study, we compare these improvements and find that the differences in effectiveness are smaller than we would expect, given the literature. We can easily change between versions of BM25 by rewriting the SQL query slightly, validating the usefulness of relational databases for reproducible IR research. 
+Then, we extend the data model to a graph data model. Using a graph data model; we can include more diverse data than just text. We show that we can more easily express complex information needs with a corresponding graph query language than when a relational language is used. This model is built on top of an embedded database system, allowing materializing of the output data quickly and using it for further steps.
+
+One of the aspects we capture in the graph is information about entities. We use the Radboud Entity Linking (REL) system to connect entity information with documents. In order to efficiently annotate a large document collection with REL, we improved its efficiency. After these improvements, we used REL to create annotations for the MS MARCO document and passage collections. We can significantly improve recall for harder MS MARCO queries using these annotations. These entities are also used for an interactive demonstration where the geographical data of entities is used.
+
+
