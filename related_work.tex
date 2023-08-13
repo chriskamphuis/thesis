@@ -6,9 +6,9 @@
 \section{Introduction}
 This chapter aims to provide the context in which this work is written. By introducing the related scientific fields, this chapter sketches a broader context wherein this research exists. 
 
-First, the field of information retrieval is introduced. Within the field of information retrieval, different approaches to \emph{retrieving information} have been used throughout the decades. These approaches will be introduced such that the reader understands what works in the field. The work described in this thesis would also be considered information retrieval research. 
+First, the field of information retrieval is introduced. Within the field of information retrieval, different approaches to \emph{retrieving information} have been used throughout the decades. These approaches will be introduced such that the reader understands the state-of-the-art. The work described in this thesis would also be considered information retrieval research. 
 
-Secondly, techniques from different research areas are also used for this research. Specifically, the research described in this thesis extensively uses techniques typically investigated by the \emph{data management} community. This field will also be introduced, especially the techniques used for the research described in this work are highlighted. 
+Secondly, techniques from different research areas are also used for this research. Specifically, the research described in this thesis extensively uses techniques typically investigated by the \emph{data management} community. This field will also be introduced, where especially the techniques used for the research described in this work are highlighted. 
 
 Then, the concept of \emph{graphs} will be explained. Graphs themselves are just mathematical structures that model the relations between objects. The objects are modeled as \emph{nodes} and relations between them as \emph{edges}. Many kinds of graphs exist; they are helpful for modeling problems that can be expressed formally through this framework. Different kinds of graphs will be explained, and examples of how to use them will be provided.
 
@@ -21,18 +21,18 @@ The research described in this thesis is \emph{information retrieval} research. 
 \textbf{Information retrieval (IR) deals with the representation, storage, organization of, and access to information items.}
 
 \medskip
-Following this description, an information retrieval system, i.e., a search engine, is a system that allows users to access information items that they are looking for. How this works internally is typically not interesting for the user, they want to find the information they seek. Typically, and also in this thesis, the term \emph{document} refers to information items, even though the item the user seeks is not necessarily a document literally. 
+Following this description, an information retrieval system, i.e., a search engine, is a system that allows users to access information items that they are looking for. How this works internally is usually not interesting for the user, they want to find the information they need. Typically, and also in this thesis, the term \emph{document} refers to information items, even though the item the user seeks is not necessarily a document literally. 
 
 Consider the following situation; someone wants to know whether it will rain in the coming half an hour. They might query a web search engine with the text \emph{weather}. In this case, the user does not care how the search engine works but only about the result. In order to satisfy the user's information need, the search engine needs to (1) present the correct weather forecast and (2) do this quickly. The user will be dissatisfied if the search engine presents the incorrect weather forecast or cannot do this in seconds.
 
-In order to answer this inquiry for information correctly, the information retrieval system needs more context. It can only correctly know the weather if it is known where the user resides. Typically, when accessing search engines through a telephone or computer, this information is sent along with the query as metadata. This way, the search engine can correctly answer even though the user did not explicitly give this information. 
+In order to answer this inquiry for information correctly, the information retrieval system needs more context. It can only correctly know the weather if it is known where the user resides. When accessing search engines through a telephone or computer, this information is sent along with the query as metadata. This way, the search engine can correctly answer even though the user did not explicitly give this information. 
 
-Then when the user's location is known, the search engine needs to find a webpage that correctly provides the weather for that particular location. As there are billions of web pages in the search engine's index, correctly identifying which one contains information about the weather at that particular location and time and then retrieving it in seconds is the next challenge.
+When the user's location is known, the search engine needs to find a webpage that correctly provides the weather for that particular location. As there are billions of web pages in the search engine's index, correctly identifying which one contains information about the weather at that particular location and time and then retrieving it in seconds is the next challenge.
 
-Search engines must smartly organize the data because it is infeasible to iterate over all web pages to check if the correct information is available. Typically, documents within a search engine are organized through a data structure called an inverted index.
+Search engines must smartly organize the data because it is infeasible to iterate over all web pages to check if the correct information is available. The most common data structure used in search engines is the inverted file.
 
 \subsection{Inverted Indexes}
-Inverted indexes have been used for decades in the field of information retrieval. They are designed to access documents quickly. If a system cannot provide the data quick enough, the user would use a different system. Documents are typically structured through words that form sentences, which form paragraphs, and, eventually, stories. When considering a document in its standard form, it is not trivial to quickly know whether it contains a specific word. When searching for something, it is paramount that the search engines know what documents contain the keywords in the query. Documents are \emph{inverted} to store this information. Instead of storing documents as is; a mapping from documents to words, search engines store the inverted information; a mapping from words to documents. To provide an example, consider the following three short documents:
+Inverted indexes have been used for decades in the field of information retrieval. They are designed to access documents quickly. If a system cannot provide the data quick enough, the user is likely to switch to a different system. Documents are typically structured through words that form sentences, which form paragraphs, and, eventually, stories. When considering a document in its standard form, it is not trivial to determine efficiently whether it contains a specific word. When searching for something, it is paramount that the search engines know what documents contain the keywords in the query. Documents are \emph{inverted} to store this information. Instead of storing documents as is (a mapping from documents to words), search engines store the inverted information (a mapping from words to documents). To provide an example, consider the following three short documents:
 
 \begin{itemize}
 	\item[\textbf{1.}] Cats and dogs are animals.
@@ -50,18 +50,18 @@ Then the inverted index looks something like this:
 \textbf{trick:} 3
 \medskip
 
-\noindent There are a couple of interesting observations that can be made here. Not all words appear in the inverted index. Typically words without ``meaning'', or so-called stop words, are dropped. These words tend to contain no semantic information and can therefore be dropped. This process is called stopword removal or \emph{stopping}. Then, words are sometimes shortened to their \emph{stem}. Let us say we have a query only mentioning the word ``dog'', so not plural, then we still want to be able to find the documents that mention the plural form. This shortening to the word's stem is called \emph{stemming}. In this case, the words are ordered alphabetically. When the number of documents in a collection increases, the number of unique words also increases. By storing the words alphabetically, a computer can find the entries for that particular word easier. 
+\noindent There are a couple of interesting observations that can be made here. Not all words appear in the inverted index. Typically words without ``meaning'', or so-called stop words, are dropped. These words tend to contain no semantic information and can therefore be dropped. This process is called stopword removal or \emph{stopping}. Then, words are sometimes shortened to their \emph{stem}. Let us say we have a query only mentioning the word ``dog'', so not plural, then we still want to be able to find the documents that mention the plural form. This shortening to the word's stem is called \emph{stemming}. In this case, the words are ordered alphabetically. When the number of documents in a collection increases, the number of unique words also increases. By storing the words alphabetically, a computer can find the entries for that particular word more efficiently. 
 
 When someone queries the search engine with the following query: ``dog tricks'', the search engine can directly find which documents contain these words using the inverted index. It can then automatically discard all documents that do not contain these words.
-For the keywords, the search engine retrieves the lists associated with them. These lists are called \emph{posting lists} in information retrieval. Entries in such lists are referred to as \emph{postings}. In this case, the postings only contain the document identifiers as data. Generally, however, information like how often a word appears in a document or its location is also stored in the posting. In practice, posting lists are often compressed, and instead of storing the direct identifiers, the gaps between them are stored such that the index becomes smaller. In literature, these gaps are referred to as delta gaps. 
+For the keywords, the search engine retrieves the lists associated with them. These lists are called \emph{posting lists} in information retrieval. Entries in such lists are referred to as \emph{postings}. In this case, the postings only contain the document identifiers as data. Generally, however, information like how often a word appears in a document or its location is also stored in the posting. In practice, posting lists are compressed, and instead of storing the direct identifiers, the gaps between them are stored such that the index becomes smaller. In literature, these gaps are referred to as delta gaps. 
 
 In this case, the posting lists of the words ``dog'' and ``trick'' are retrieved: [1 3] and [3]. Then some scoring method can process these lists and assign a score to the documents present in these lists. As document 3 is the only document containing both words, it makes sense to consider this document the most relevant. However, assessing relevance ordering is more complex when multiple documents contain both words with different frequencies. 
-In order to create orderings based on relevancy, different models for scoring documents have been proposed in the past. In the following sections, these models are presented.
+To create ranked lists of documents based on their estimated relevancy, different models for scoring documents have been proposed in the past. In the following sections, these models are presented.
 
 \subsection{Ranking Models}
 
 \subsubsection{Boolean Retrieval}
-The boolean retrieval model was used in the early days of information retrieval. Boolean retrieval can be formulated as the following; let, 
+The Boolean retrieval model was used in the early days of information retrieval. Boolean retrieval can be formulated as the following; let, 
 
 \begin{equation}
 	T = \begin{Bmatrix}
@@ -74,7 +74,7 @@ be the set of all index terms that appear in the collection. Let,
 		d_1, & d_2, & \ldots, & d_m
 	\end{Bmatrix}
 \end{equation}
-be the set of all documents, where every document is a subset of $T$. Specifically, the terms that appear in that document. Then a query can be any boolean expression over $T$. All documents that adhere to the boolean expression formed by the query are considered relevant. To give an example, consider the same three documents as before:
+be the set of all documents, where every document is a subset of $T$. Specifically, the terms that appear in that document. Then a query can be any Boolean expression over $T$. All documents that adhere to the Boolean expression formed by the query are considered relevant. To give an example, consider the same three documents as before:
 
 \begin{itemize}
 	\item[\textbf{1.}] Cats and dogs are animals.
@@ -98,17 +98,17 @@ Then, $D$ is formulated as $\left\{
 	\end{Bmatrix}
 \end{align}
 
-One could be interested in finding all documents that mention dogs but not cats. Then we can formulate the following boolean query:
+One could be interested in finding all documents that mention dogs but not cats. Then we can formulate the following Boolean query:
 
 \begin{equation}
 	Q = \mathit{dog} \land \neg \mathit{cat}
 \end{equation}
 
-Then if we find all subsets that adhere to the individual terms in this conjunction, we get the following set expression:
+If we find all subsets that adhere to the individual terms in this conjunction, we get the following set expression:
 \begin{equation}
-	Q = \{d_1, d_3\}\ \cap \{d_3\} = \{d_3\}
+	Q = \{d_1, d_3\} \cap \{d_3\} = \{d_3\}
 \end{equation}
-This shows that document $d_3$ is the only document about dogs, not cats. Although it is possible to express complicated expressions with boolean logic, a document either satisfies the expression or does not. All documents that satisfy the expression are considered relevant; creating a ranking between them cannot be done with this approach alone. 
+This shows that document $d_3$ is the only document that mentions dogs, but not cats. Although it is possible to express complicated expressions with Boolean logic, a document either satisfies the expression or does not. All documents that satisfy the expression are considered relevant; creating a ranking between them cannot be done with this approach alone. 
 
 With this approach, there is no apparent difference between data retrieval and information retrieval; there is only one correct solution: all documents that satisfy the restrictions imposed by the query. 
 
@@ -129,38 +129,38 @@ Then if we have a query $q$, we can represent it in the same way:
 \end{equation}
 where $q_i$ represents the weight of the $i$-th term in the collection. Most values in these vectors will be zero.
 
-Now it is possible to calculate a similarity score between the query and every document. This similarity is typically calculated by calculating the cosine similarity between the two vectors, which between a document $d$ and a query $q$ is defined as:
+Now it is possible to calculate a similarity score between the query and every document. A widely used similarity metric is the cosine similarity between two vectors, which between a document $d$ and a query $q$ is defined as:
 
 \begin{equation}
 	\cos\left(d, q\right) = \frac{\textbf{d} \cdot \textbf{q}}{||\textbf{d}||\ ||\textbf{q}||}
 \end{equation}
 
-Then, calculating this for the documents in the collection gives a relevance score value for all of them. Ordering them based on relevance then produces a ranked list where the highest is presumed to be the most interesting for the user. As mentioned before, the weights represented in the document vector do not necessarily have to be binary. \Citeauthor{VectorSpaceModel}~showed that the product of the term frequency with a general measure of term importance worked best. The measure they used for term importance was the inverse document frequency proposed by \citet{idf} three years earlier.
+Calculating this for the documents in the collection gives an estimated value of relevance for all of them. Ordering them based on this estimated value then produces a ranked list where the highest is presumed to be the most interesting for the user. As mentioned before, the weights represented in the document vector do not necessarily have to be binary. \Citeauthor{VectorSpaceModel}~showed that the product of the term frequency with a general measure of term importance worked best. The measure they used for term importance was the inverse document frequency proposed by \citet{idf} three years earlier.
 
 \subsubsection{Probabilistic Relevance Models}
-In 1976,~\citeauthor{RSJ} developed the probabilistic ranking framework. Within this framework, it is assumed that a document has a certain probability of being relevant given a query. Then, a search system that implements models within this framework ranks documents. Documents with the highest probability of being relevant are ranked the highest.
+In 1976,~\citeauthor{RSJ} developed the probabilistic ranking framework. Within this framework, it is assumed that a document has a certain probability of being relevant given a query. Then, a search system that implements models within this framework ranks documents with the highest probability of being relevant the highest.
 
-Within this framework, with the assumption of binary independence, which is nicely explained by~\citet{bm25-beyond}, the Robertson-Sp{\"a}rck Jones weight can be derived. When assuming no relevance labels are available, this leads to an approximation of the classical inverse document frequency.
+Within this framework, making an assumption of binary independence, which is nicely explained by~\citet{bm25-beyond}, the so-called Robertson-Sp{\"a}rck Jones weight can be derived. When assuming that no relevance labels are available, this leads to an approximation of the classical inverse document frequency.
 
-Then by extending this function to include within-document term frequency information and document length normalization, the well-known BM25 function can be derived. \cref{ir-using-relational-databases} will focus on this model, and additional information explaining this model will be presented there.
+By extending this function to include within-document term frequency information and document length normalization, the well-known BM25 function can be derived. \cref{ir-using-relational-databases} will focus on this model, and additional information explaining this model will be presented there.
 
 \subsubsection{Language Models}
-Later, language models were proposed~\citep{croft_lm, hiemstra_lm, zhai_lm}. The idea behind language models is that documents are considered language samples. These samples can be used for a generative process. This process generates terms in the sample by randomly selecting one of the words from that sample. Let the probability of a document $d$ generating a term $t_i$ be:
+Later, language models were proposed~\citep{croft_lm, hiemstra_lm, zhai_lm}. The idea behind language models is that documents are considered language samples. These samples can be considered the result of a generative process. This process generates terms in the sample by randomly selecting one of the words from that sample. Let the probability of a document $d$ generating a term $t_i$ be:
 
 \begin{equation}
 	P(t_i|d) = \frac{\mathit{tf}_{t_i,d}}{\sum_t^d tf(t, d)}
 \end{equation}
 with $\mathit{tf}_{t_j, d}$ being the term frequency of term $t_j$ in document $d$. 
 
-Then, if we have a query $Q$. It is possible to calculate the likelihood that the document samples generated this query, as we know for every term in the query what the probability is that one of the document samples generates that term: 
+Then, if we have a query $Q$, it is possible to calculate the likelihood that the model that best fits the document samples generated this query, as we know for every term in the query what the probability is that one of the document samples generates that term: 
 
 \begin{equation}
 	P(d|Q) = \prod_{q \in Q} P(q | d)
 \end{equation}
 
-There are some issues when we take the document with the maximum likelihood. First, if a query contains multiple terms, a document can only get a non-zero likelihood of generating that query if all query terms exist in that document. If this is not the case, the probability of generating that term would be zero. As we take the product of the individual probabilities of the query terms, if one of them would be zero, the product would also be. Then the second issue is that there is no term-independent specificity weighting. Terms with a higher degree of specificity should increase the resulting probabilities more than ``filler'' words. The previously described inverse document frequency took care of this in the vector space model.
+There are some issues when we take the document with the maximum likelihood. First, if a query contains multiple terms, a document can only get a non-zero likelihood of generating that query if all query terms exist in that document. If this is not the case, the probability of generating that term would be zero. As we take the product of the individual probabilities of the query terms, if one of them would be zero, the product would also be. The second issue is that there is no term-independent specificity weighting. Terms with a higher degree of specificity should increase the probability of relevance more than ``filler'' words. The previously described inverse document frequency took care of this in the vector space model.
 
-In order to overcome these issues, a smoothing technique is used. Instead of only considering the samples formed by the documents, a collection-wide sample is also being used. This collection-wide sample generates terms according to the frequency in which the terms appear in the collection:
+It has been shown that a simple smoothing technique addresses both issues at once. Instead of only considering the samples formed by the documents, a collection-wide sample is being used, in a mixture model. This collection-wide sample generates terms according to the frequency in which the terms appear in the collection:
 \begin{equation}
 	P(t_i|C) = \frac{\mathit{df}(t_i)}{\sum_t^C \mathit{df}(t)}
 \end{equation}
@@ -170,14 +170,14 @@ With $C$ being the collection, and $df(t_i)$ the document frequency of term $t_i
 \end{equation}
 with $\omega$ being the smoothing factor, i.e., how much is the collection sample weighted against the document sample?
 
-This smoothing solves both problems. As the collection sample contains all terms, it is no longer possible for probabilities generated by a specific term to be zero, so the resulting product will not be zero either. Then, words with a higher specificity also get a boost; words with a high specificity have a low probability of being generated by the collection sample, meaning that it is more important for a document to contain that word to achieve a high probability of relevance. Words with a low specificity have a smaller effect; the probability of them being generated by the collection sample is already relatively high. 
+This smoothing solves both problems. As the collection sample contains all terms, it is no longer possible for probabilities generated by a specific term to be zero, so the resulting product will not be zero either. Words with a higher specificity also get a boost; words with a high specificity have a low probability of being generated by the collection sample, meaning that it is more important for a document to contain that word to achieve a high probability of relevance. Words with a low specificity have a smaller effect; the probability of them being generated by the collection sample is already relatively high. 
 
 \subsubsection{Learning-to-Rank}
-With the increase in computing power, learning-to-rank became a popular approach to ranking. The methods described in the previous sections can all be considered unsupervised learning methods if we look at them from a machine-learning perspective. Learning-to-rank models would be considered supervised or reinforcement learning methods from that perspective. 
+With the increase in compute power, learning-to-rank became a popular approach to ranking. The methods described in the previous sections can all be considered unsupervised learning methods if we look at them from a machine-learning perspective. Learning-to-rank models would be considered supervised or reinforcement learning methods from that perspective. 
 
 The goal is to learn a model that, given a query, ranks documents relevant to that query higher than those not relevant to that query. In general, there are three ways to achieve this; for all these methods, relevance labels are assumed to be available from which the function can be learned. Learning-to-rank methods are usually categorized into the following three categories: 
 
-\paragraph{Pointwise.} Pointwise methods are most comparable to standard regression methods. The idea is to learn a function that directly predicts a document's relevance label. Consider that we have $n$ query-document pairs for which relevance labels are available, with $m$ independent variables per pair. Then the relevance labels for these pairs can be expressed as a vector $\mathbf{y}$, and the independent variables as a matrix $\mathbf{X}$;
+\paragraph{Pointwise.} Pointwise methods are most comparable to standard regression methods. The idea is to learn a function that directly predicts a document's relevance label. Consider that we have $n$ query-document pairs for which relevance labels are available, with $m$ independent variables per pair. The relevance labels for these pairs can then be expressed as a vector $\mathbf{y}$, and the independent variables as a matrix $\mathbf{X}$;
 \begin{multicols}{2}
 	\begin{equation}
 		\mathbf{y} = 
@@ -196,7 +196,7 @@ The goal is to learn a model that, given a query, ranks documents relevant to th
 		\end{bmatrix}
 	\end{equation}	
 \end{multicols}
-Then, the goal is to learn a function $\mathbf{\hat y} = f(\mathbf{X})$ such that some distance measure between $\mathcal{L}\left(\mathbf{\hat y}, \mathbf{y} \right)$ is minimized. Commonly used measures for this are mean square error or mean absolute error. The pointwise learning approach to ranking has some unwanted properties, however. Consider a situation where we have three documents; 
+The goal would be to learn a function $\mathbf{\hat y} = f(\mathbf{X})$ such that some distance measure between $\mathcal{L}\left(\mathbf{\hat y}, \mathbf{y} \right)$ is minimized. Commonly used measures for this are mean square error or mean absolute error. The pointwise learning approach to ranking has some undesirable effects, however. Consider a situation where we have three documents; 
 $\left[
 \begin{smallmatrix}
 	d_1, & d_2, & d_3
@@ -229,11 +229,17 @@ $\left[
 	d_3, & d_2, & d_1
 \end{smallmatrix}
 \right]$. 
-The ranking produced by system $a$ is objectively better. It ranks the relevant document as the most relevant. System $b$, however, ranks the relevant document as the least relevant. If we evaluate the two systems with a loss function, say mean absolute error, system $b$ would seem better as the mean absolute error is smaller. 
+The ranking produced by system $a$ is objectively better. It ranks the relevant document as the most relevant. System $b$, however, ranks the relevant document as the least relevant. If we evaluate the two systems with a loss function like mean absolute error however, system $b$ would seem the better one as the mean absolute error from
+$\left[
+\begin{smallmatrix}
+	1, & 0, & 0
+\end{smallmatrix}
+\right]$
+is smaller. 
 
-\paragraph{Pairwise.} Pairwise ranking tries to deal with this by not directly learning from the relevance label but by looking at pairs of documents. The idea behind this is that it does not matter what the actual ranking score value is, as long as it is higher for relevant documents than non-relevant ones.  
+\paragraph{Pairwise.} Pairwise ranking tries to deal with this by not directly learning from the relevance labels but by looking at the relative preferences between pairs of documents. The idea behind this is that it does not matter what the actual ranking score value is, as long as it is higher for relevant documents than for non-relevant ones.  
 
-Pairwise functions consider, given a query, two documents at a time. Then the function tries to determine which one of the two documents is more relevant than the other. If we consider the same set of relevance labels $\mathbf{y}$ and independent variables $\mathbf{X}$, then if we would take a pair of documents $x_k$ and $x_l$, with their corresponding relevance labels $y_k$ and $y_l$, assuming $y_k \neq y_l$, then we are trying to learn the following function:
+Pairwise functions consider, given a query, two documents at a time. The function tries to determine which one of the two documents is more relevant than the other. If we consider the same set of relevance labels $\mathbf{y}$ and independent variables $\mathbf{X}$, then if we would take a pair of documents $x_k$ and $x_l$, with their corresponding relevance labels $y_k$ and $y_l$, assuming $y_k \neq y_l$, then we will learn the following function:
 \begin{equation}
 	f(x_k, x_l) = \begin{cases}
 		0 & \text{if } y_k < y_l \\
@@ -250,21 +256,21 @@ Generally, when learning a listwise learning-to-rank method, the goal is to opti
 
 \paragraph{Multistage Ranking}
 \label{sec:multistage}
-In many cases, applying inference to all documents in the collection is still impossible because of computational costs. A non-learning-to-rank approach is often used to create an initial ranking. Then it is assumed that the top-$k$ documents probably contain all relevant documents. Then the learned method only has to reorder the top-$k$ documents to present to the user. 
+In many cases, applying inference to all documents in the collection is still impossible because of computational costs. A non-learning-to-rank approach is often used to create an initial ranking, under the assumption that the top-$k$ documents contain all relevant documents. The learned method only reorders the top-$k$ documents to present to the user. 
 
 In these cases, it can make sense to rank the top-$k$ documents using an inverted index, while the reranking is done with another ranking approach.
 
 \subsubsection{Vector Space Models revisited}
-With the rise of large language models, the vector space model became more popular again due to what is called \emph{dense} retrieval.  
+With the rise of large language models after the introduction of BERT in 2019~\cite{BERT}, the vector space model has become more popular again due to what is called \emph{dense} retrieval.  
 
-The basic idea is to predict the relevance of a document $d$ for a query $q$:
+The basic idea is to predict the relevance of a document $d$ for a query $q$ as follows:
 \begin{equation}
 	\text{rel}(q, d) = \omega\left(\phi\left(q\right),
 	\psi\left(d\right)\right)
 \end{equation}
-Here, $\psi$ and $\phi$ are learned functions that typically use large language models that map the query and the document to vectors with low dimensionality. These functions map the query and the document to the same space. When documents are relevant to the query, the resulting vectors should be similar, while if the document is not relevant, they should be dissimilar. This similarity is measured through a distance function $\omega$, often the dot-product or cosine similarity.
+Here, $\psi$ and $\phi$ are learned functions that typically use large language models that map the query and the document to vectors with low dimensionality. These functions map the query and the document to the same space. When documents are relevant to the query, the resulting vectors should be similar, while if the document is not relevant, they should be dissimilar. This similarity is measured through a similarity function $\omega$, often the dot-product or cosine similarity.
 
-Finding the vectors closest to a query vector is the same as nearest neighbor search. In the case of dense retrieval, dedicated dense retrieval systems tend to be used instead of an inverted index. 
+Finding the vectors closest to a query vector is the nearest neighbor search problem. In the case of dense retrieval, dedicated dense retrieval systems tend to be used instead of an inverted index~\cite{faiss}. 
 
 \subsection{Evaluation}
 \label{sec:evaluation}
@@ -278,23 +284,23 @@ A straightforward approach to evaluating a ranking produced by a system is throu
 	\textit{P}@k = \frac{\sum_{i=1}^k\text{rel}\left(d_i\right)}{k}
 \end{equation}
 In this case, $\text{rel}(.)$ is a function that returns 1 if the document is relevant; otherwise, 0.
-If $k=30$, then only the first $30$ documents are considered. If ten of these documents are relevant, then $P@30 = \frac{10}{30} = \frac{1}{3}$. Precision can, however, be somewhat limited in its use. In this example, the quality of the ranking might not seem good. Only a third of the produced documents are relevant. However, when only ten relevant documents are present in the collection, the $P@30$ could not have been higher. 
+If $k=30$, then only the first $30$ documents are considered. If ten of these documents are relevant, then $P@30 = \frac{10}{30} = \frac{1}{3}$. Precision can, however, be somewhat limited in its use. In this example, the quality of the ranking might not seem good, as only a third of the produced documents are relevant. However, when only ten relevant documents are present in the collection, the $P@30$ could not have been higher. 
 
 \subsubsection{Recall}
-To prevent the issue that the precision is low when there are few relevant documents in the collection, we could measure how many relevant documents were retrieved compared to the total number of documents as well. This measure is called recall: 
+Another approach to evaluate a ranking would be to measure how many relevant documents were retrieved compared to the total number of documents. This measure is called recall: 
 \begin{equation}
 	\textit{R}@k = \frac{\sum_{i=1}^k\text{rel}\left(d_i\right)}{\sum_{i=1}^N\text{rel}\left(d_i\right)}
 \end{equation}
-Here $N$ is the number of documents in the collection. If, again, $k=30$ and we found $10$ relevant documents, and if there are $15$ relevant documents in the collection. Then $R@30 = \frac{10}{15} = \frac{2}{3}$.
+Here $N$ is the number of documents in the collection. If, again, $k=30$ and we found $10$ relevant documents out of $15$ known relevant documents in the collection, then $R@30 = \frac{10}{15} = \frac{2}{3}$. The problem with recall is that it does not distinguish well between systems if there are not many relevant documents. Also, it is not so easy to determine the total number of relevant documents for an arbitrary query.
 
 \subsubsection{$F_1$-measure}
 Where precision measures the share of documents found that are relevant, recall measures the number of relevant documents found compared to the total number of relevant documents. For precision, it makes sense to retrieve as few documents as possible; the probability of finding relevant documents decreases the more documents are returned. For recall, it makes sense to retrieve more documents, as when more documents are retrieved, it can only increase.  
 
-To find the correct balance between precision and recall, it is possible to use the $F_1$-measure. It is defined as the harmonic mean between precision and recall:
+To find the correct balance between precision and recall, the $F_1$-measure is usually reported, defined as the harmonic mean between precision and recall:
 \begin{equation}
 	\textit{F}_1@\textit{k}  = 2\cdot\frac{P@k \cdot R@k}{P@k + R@k} 
 \end{equation}
-If either recall or precision is low, the $F_1$-measure suffers as well. To achieve a high $F_1$-measure, recall, and precision must be high.
+If either recall or precision is low, the $F_1$-measure suffers as well. To achieve a high $F_1$-measure, recall, and precision must both be high.
 
 \subsubsection{Average Precision}
 Consider the situation where three documents are retrieved, and two systems might produce rankings with the following relevance labels: $\left[
@@ -306,7 +312,7 @@ Consider the situation where three documents are retrieved, and two systems migh
 	0, & 0, & 1
 \end{smallmatrix}
 \right]$.
-Both rankings achieve the same $P@3$ and $R@3$ scores, and subsequently also the same $F_1@3$. The previously introduced metrics cannot distinguish between ranking quality in this situation. It is, however, clear that the first ranking is better than the second ranking. 
+Both rankings achieve the same $P@3$ and $R@3$ scores, and subsequently also the same $F_1@3$. The previously introduced metrics cannot distinguish between ranking quality in this situation. It is, however, clear that the order of documents in the first ranking should be preferred over the document-list in the second ranking. 
 Instead of measuring the precision only at rank $k$, the average precision measure calculates it every time a relevant document is encountered. The sum of these values is divided by the number of relevant documents found up to $k$:
 \begin{equation}
 	\textit{AP}@k = \frac{1}{\sum_{i=1}^N\text{rel}\left(d_i\right)}\sum^k_{i=1} P\left(i\right) \cdot \text{rel}\left(d_i\right)
@@ -323,7 +329,7 @@ $\left[
 \right]$, the rankings produce an $\textit{AP}@3$ of $1$ and $\frac{1}{3}$ respectively.
 
 \subsubsection{Discounted Cumulative Gain}
-Discounted cumulative gain is an evaluation metric developed after the observation that users often only look at the highest-ranked documents and that documents might not have binary relevance labels.
+Discounted cumulative gain is an evaluation metric developed after the observation that users often only look at the highest-ranked documents and that documents might not have binary relevance labels (when we refer to their scores as graded relevance assessments).
 If a document is ranked at, say, rank 5, it might already be possible that it is not considered by the user anymore and that they already reformulated the query. Plus, the metrics described before would rank the following two rankings to be of equal quality: 
 $\left[
 \begin{smallmatrix}
@@ -334,28 +340,28 @@ $\left[
 	1, & 2, & 0
 \end{smallmatrix}
 \right]$
-So discounted cumulative gain was developed with the intention that there should be a discounted gain every time a new relevant document is found, plus non-binary relevance labels can be taken into account. This discount is applied by dividing by the logarithm of the rank plus one: 
+Discounted cumulative gain was developed with the intention that there should be a discounted gain every time a new relevant document is found, while non-binary relevance labels can be taken into account. This discount is applied by dividing by the logarithm of the rank plus one: 
 \begin{equation}
 	\textit{DCG}@k = \sum^k_{i=1} \frac{\text{rel}(d_i)}{\log_2(i+1)}
 \end{equation}
-In this case, $\text{rel}(.)$ does not return a binary value but the actual relevance assessment.
+In this case, $\text{rel}(\cdot)$ does not return a binary value but the actual relevance assessment.
 
 \subsubsection{Normalized Discounted Cumulative Gain}
-A disadvantage of $\textit{DCG}$ is that the scores produced by this metric can vary greatly between rankings. If many relevant documents exist for a query, the values $\textit{DCG}$ takes can be much higher than if only one relevant label is available. Normalized discounted cumulative gain takes care of this by dividing by the highest possible $\textit{DCG}$ that can be achieved. So normalized discounted cumulative gain is calculated by dividing the $\textit{DCG}$ of the ranking, by the $\textit{DCG}$ of the ideal ranking:  
+A disadvantage of $\textit{DCG}$ is that the scores produced by this metric can vary greatly between rankings. If many highly relevant documents exist for a query, the values $\textit{DCG}$ takes can be much higher than if only one moderately relevant label is available. Normalized discounted cumulative gain takes care of this by dividing by the highest possible $\textit{DCG}$ that can be achieved. So normalized discounted cumulative gain is calculated by dividing the $\textit{DCG}$ of the ranking, by the $\textit{DCG}$ of the ideal ranking:  
 \begin{equation}
 	\textit{NDCG}@k = \frac{\textit{DCG}@k}{\textit{IDCG}@k} 
 \end{equation}
 with $\textit{IDCG}@k$ being the $\textit{DCG}@k$ for a perfect ranking. 
 
 \subsubsection{Reciprocal Rank} 
-The metrics described before score the whole ranking up to rank $k$. This might be unnecessary; if a document found is relevant, it should not matter anymore what the relevance assessment is of all documents after it. After all, the user would stop looking after a relevant document when the relevant information is found. The reciprocal rank only takes the first found relevant document into account. It divides $1$ by the index of the first found document:
+The metrics described before score the whole ranking up to rank $k$. This might be unnecessary, for example, in a question answering scenario. If a document found is relevant, it may not matter anymore what the relevance assessment is of all documents after it. After all, the user would already have the answer, and likely stop looking for more information. The reciprocal rank therefore takes only the first found relevant document into account. Reciprocal rank is the inverse of the index of the first found document:
 \begin{equation}
-	\textit{RR@k} = \frac{1}{\text{minrank}(d)}
+	\textit{RR@k} = \frac{1}{\text{rank}(d)}
 \end{equation}
-where only the first $k$ documents are considered. If the index of the first relevant is greater than $k$, the resulting score is $0$.
+where only the first $k$ documents are considered. Here, rank($d$) refers to the position of the first found relevant document. If the index of the first relevant is greater than $k$, the resulting score is $0$.
 
 \subsection{Significance Testing}
-Some of the measures described above can still be problematic when they are used to compare different systems. \Citet{fuhr-mrr} describes common mistakes when evaluating IR systems and how to avoid them.
+Some of the measures described above can still be problematic when they are used to compare different ranking approaches. It is not always entirely clear how to do significance testing on some metrics. For example, in the case of reciprocal rank, the scores are not on an interval scale. In this case it is not possible to calculate a mean score for an ordinal scale, it is however necessary for the most common tests for significance. \Citet{fuhr-mrr} describes mistakes when evaluating IR systems and how to avoid them.
 
 \section{Data Retrieval}
 In the case of information retrieval, the concept of \emph{relevance} is critical. When someone issues a query, it does not necessarily have to be the case that words in the query must be present for the document to be relevant. Information retrieval has to deal with some uncertainty. Also, if only some relevant documents are found, this does not necessarily have to be a problem, the information need of the user is satisfied. If we think about a search engine from a user's perspective, a document is only relevant if it contains the information they seek. In order to find this information, the user has to express their information need in a query, which the systems then have to interpret somehow in order to present the user (hopefully) the correct information. 
@@ -387,7 +393,7 @@ In particular, graph database systems are a type of NoSQL database management sy
 Typically, databases run on dedicated database servers. It is, however, also possible to have so-called embedded database systems. These systems do not require a dedicated database server to be set up. They work within the application process itself. A massive advantage of embedded databases is that they work within the same memory space as the application process. This makes it possible to instantly move data from the database to a usable format for the application process. For information retrieval applications, this might be beneficial, especially in the case of multistage ranking as described in ~\cref{sec:multistage}. However, embedded databases might not be the best solution in some cases. When a dedicated database server is run, it is possible to optimize the database better as it is less dependent on data representations in application processes. 
 
 \subsection{Databases for Information Retrieval}
-As databases are designed for the purpose of data retrieval, they are especially suited for information retrieval in the case of boolean retrieval. However, it is harder to express models following a data retrieval approach when considering the concept of relevancy. When expressing models that model some uncertainty, much data must be processed efficiently—inverted indexes are used to select critical data quickly. Older (row-based) database systems were not efficient enough to quickly retrieve all the necessary data to create rankings and model uncertainty simultaneously. After columnar databases became prominent, it was possible to express simple ranking models that consider uncertainty somewhat efficiently. In this thesis, we will use, in some cases, columnar databases for information retrieval problems. Specifically, MonetDB~\citep{monet}, a non-embedded columnar database, is used for the work presented in \cref{ir-using-relational-databases}, and DuckDB~\citep{duckdb}, an embedded columnar database, is used for the work presented in \cref{from-tables-to-graphs,ch:mmead}.
+As databases are designed for the purpose of data retrieval, they are especially suited for information retrieval in the case of Boolean retrieval. However, it is harder to express models following a data retrieval approach when considering the concept of relevancy. When expressing models that model some uncertainty, much data must be processed efficiently—inverted indexes are used to select critical data quickly. Older (row-based) database systems were not efficient enough to quickly retrieve all the necessary data to create rankings and model uncertainty simultaneously. After columnar databases became prominent, it was possible to express simple ranking models that consider uncertainty somewhat efficiently. In this thesis, we will use, in some cases, columnar databases for information retrieval problems. Specifically, MonetDB~\citep{monet}, a non-embedded columnar database, is used for the work presented in \cref{ir-using-relational-databases}, and DuckDB~\citep{duckdb}, an embedded columnar database, is used for the work presented in \cref{from-tables-to-graphs,ch:mmead}.
 
 \section{Graphs}
 \label{sec:graphs}

@@ -2,7 +2,7 @@
 \label{chp:introduction}
 \epigraph{I \textit{propose} to consider the question, ``Can machines think?''}{Alan Turing - 1950}
 
-I also propose to consider the question, ``Can machines think?'' Instead of approaching this through a thought experiment as Turing did, nowadays, one can approach this question by asking it to a search engine. When issuing this query to popular web search systems, we get varying results: the first result on Google is a passage generated from the article written by Turing, while the first result on Bing is a passage generated from a website that concludes machines cannot think\footnote{However, if a machine cannot think, can we trust the result presented by this algorithm?}\footnote{These results were retrieved in October of 2022}.
+I also propose to consider the question, ``Can machines think?'' Instead of approaching this through a thought experiment as Turing did, nowadays, one can approach this question by asking it to a search engine. When issuing this query to popular web search systems, we get varying results: the first result on Google is a passage generated from the article written by Turing, while the first result on Bing is a passage from a website that concludes machines cannot think\footnote{However, if a machine cannot think, can we trust the result presented by this algorithm?}\footnote{These results were retrieved in October of 2022}.
 
 We use systems that process queries daily when looking for \textit{information}. While Google and Bing are all-purpose web engines that mainly focus on finding and retrieving information from the internet, people also use specialized search systems in their day-to-day lives: Amazon and eBay when we are looking for a product to buy, Scholar and ResearchGate for scientific resources, Youtube and TikTok for Videos, or Facebook and LinkedIn when we are searching for people. It might even be possible that you are reading this text after you found this document through search. 
 
@@ -15,7 +15,7 @@ Although it might be possible to encode all this information as written text, of
 \section{Problem Description and Research Questions}
 Although information retrieval and data retrieval are research fields investigated by different disciplines, they are closely related, and systems that use both have been researched and developed in the past. Techniques developed in one community might help the other, as things like storing and quickly retrieving data are essential for information and data retrieval. 
 
-In recent years there has been much exciting research in the database community studying graph databases. As these databases are becoming more popular for data retrieval tasks where the data is highly interconnected, they might also benefit similar tasks in the information retrieval field where data is often highly interconnected. This thesis will investigate how these databases, with dedicated graph query languages, can be used for information retrieval tasks. This leads us to this thesis's main research question: \textbf{Research Question: How can information retrieval benefit from graph databases and graph query languages?}
+The database community has shown more interest in graph databases in recent years. As these databases are becoming more popular for data retrieval tasks where the data is highly interconnected, they might also benefit similar tasks in the information retrieval field where data (especially relevant results) is often highly interconnected. This thesis will investigate how these databases, with dedicated graph query languages, can be used for information retrieval tasks. This leads us to this thesis's main research question: \textbf{Research Question: How can information retrieval benefit from graph databases and graph query languages?}
 
 Three sub-research questions are defined to guide us in answering the main research question:
 
@@ -34,7 +34,7 @@ Three sub-research questions are defined to guide us in answering the main resea
 	
 	\item Chapter~\ref{ir-using-relational-databases} concerns information retrieval research using relational databases. 
 	Although, traditionally, inverted indexes are used for information retrieval, we show that by employing relational databases, some advantages are gained. 
-	First, attempts to use relational databases for information retrieval through the years will be described. One of the latter attempts used a column-oriented relational database system for information retrieval, achieving competitive efficiency compared to a traditional system built using inverted indexes. This approach is re-implemented as a prototype system used, which is then used for a reproduction study. This chapter establishes the usefulness of relational databases for information retrieval by demonstrating its benefits. The content in this chapter is based on the following published works: 
+	First, attempts to use relational databases for information retrieval through the years will be described. One of the latter attempts used a column-oriented relational database system for information retrieval, achieving competitive efficiency compared to a traditional system built using inverted indexes. This approach is re-implemented as a prototype system, which is then used for a reproduction study. This chapter establishes the usefulness of relational databases for information retrieval by demonstrating its benefits. The content in this chapter is based on the following published works: 
 	
 	{
 		\scriptsize
@@ -63,8 +63,8 @@ Three sub-research questions are defined to guide us in answering the main resea
 		\end{itemize}
 	}
 	
-	\item Chapter~\ref{ch:mmead} will employ the software described in the chapter before it and uses it to annotate a large web corpus. We developed a specification of how entity link annotations can be shared for these annotations. Following this specification, we made the annotations for the MS MARCO~\citep{msmarco} corpora publicly available. Using these annotations, we show that, through query expansion, we can increase recall effectiveness for first-stage rankers on this dataset. Next, a demonstration shows how entity links can also be used for geographical information applications. 
-	This content has been described in the following work, accepted for publication; 
+	\item Chapter~\ref{ch:mmead} employs the software of chapter~\ref{a-graph-of-entities} to annotate a large web corpus. We developed a specification for sharing entity link annotations. Following this specification, we made annotations for the MS MARCO~\citep{msmarco} corpora publicly available. Using these annotations, we show that, through query expansion, we can increase recall effectiveness for first-stage rankers on this dataset. Next, a demonstration shows how entity links can also be used for geographical information applications. 
+	This content has been described in the following published work; 
 	
 	{
 		\scriptsize
@@ -73,7 +73,7 @@ Three sub-research questions are defined to guide us in answering the main resea
 		\end{itemize}
 	}
 	
-	\item Chapter~\ref{conclusion} will serve as a conclusion and tries to summarize the content discussed in the book. Here we will reflect on the research question and discuss what future research is needed.
+	\item Chapter~\ref{conclusion} serves as a conclusion and summarizes the content discussed in the book. We will reflect on the research questions that motivated this dissertation, and discuss what future research is needed.
 \end{itemize}
 
 \section{Other Publications}
