@@ -15,88 +15,91 @@ In recent years there has been a lot of exciting new information retrieval resea
 
 The previous chapter demonstrates how relational databases can be used for information retrieval problems. Integrating alternative data sources into search systems is easier when using a relational database instead of an inverted index. In the case of information retrieval, graph data can often be used to improve search effectiveness. One of the most famous examples where graphs help information retrieval is the PageRank algorithm~\citep{pagerank}. Although it might be possible to express this data in relational databases, they are not designed with graph structures in mind. 
 
-The data management community has shown much interest in graph databases in recent years. Graph databases are different from relational databases in that a relation is not the abstraction for representations, but a graph is. Graphs can be considered a better abstraction for real-world data than relations. Graphs focus much more on concepts (nodes in a graph) and how they relate to each other (edges in a graph), while in a relational database this information is more implicit. Many different graph types exist; one is called the \emph{property graph model}. This type of graph contains nodes and directed edges, which can be labeled; nodes and edges can also have associated key-value pairs. In this chapter, we will work with the property graph model and see how it benefits IR research.
+The data management community has shown much interest in graph databases in recent years. Graph databases are different from relational databases in that graphs are the main representation for managing the data, instead of the usual relations. Graphs can be considered a better abstraction for real-world data than relations. Graphs focus much more on concepts (nodes in a graph) and how they relate to each other (edges in a graph), while in a relational database this information is more implicit. Many different graph types exist; one is called the \emph{property graph model}. This type of graph contains nodes and directed edges, which can be labeled; nodes and edges can also have associated key-value pairs. In this chapter, we will work with the property graph model and see how it benefits IR research.
 
-The research goal in this chapter is two-fold; firstly we want to develop a system that can search efficiently and handle graphs. In the previous chapter, we showed that relational databases could search efficiently and help reproducible research. However, these systems do not support graph data structures well. Systems built on inverted indexes use coupled architectures, which can introduce unnecessary overhead.
+The research goal in this chapter is two-fold; firstly, we develop a system that can search efficiently in information represented as graphs. In the previous chapter, we showed that relational databases could search efficiently and help reproducible research. However, these systems do not support graph data structures directly in their interface to the user (e.g., the query language). Systems built on inverted indexes use coupled architectures, which can introduce unnecessary overhead.
 
-Secondly, we want to create a system where both first and second-stage retrieval are directly supported. In IR research multi-stage retrieval systems contain components that are not ran in the same ecosystem; introducing overhead in retrieval efficiency. 
+Secondly, we want to create a system where both first and second-stage retrieval are directly supported. In IR research, multi-stage retrieval systems contain components that are not run in the same ecosystem; introducing overhead in retrieval efficiency. 
 So in this chapter, the prototype system GeeseDB is introduced; it tries to leverage the same techniques for search as relational databases do while also naturally being able to support graphs. This leads to the main research question for this chapter:
 
 \begin{itemize}
 	\item[\textbf{RQ2:}] Can we extend the benefits from using relational databases for information retrieval to using graph-databases while being able to express graph-related problems easier?
 \end{itemize} 
 
-In order to answer this research question, we will work with the prototype system GeeseDB, but before GeeseDB is discussed, first we will look into work that uses systems that try to combine two systems for two-stage retrieval experiments, and systems built for processing graphs.
+In order to answer this research question, we will use our own prototype system GeeseDB, but before introducing GeeseDB, we first look into work that uses systems that try to combine two systems for two-stage retrieval experiments, and systems built for processing graphs.
 
 % rewrite and reflect on the previous chapter, and give context in which graph databases are helpful.
 
 \section{Related work }
 % Describe the related work which was presented in the GeeseDB paper, but also include more related work regarding approaches that use graph language-like approaches (different subsection). 
-In modern IR it is not uncommon to use coupled architectures. In many situations a ranking model is used that is efficient, but only reasonably effective. BM25 can be considered such a model, it can be calculated cheaply, while more advanced, but less efficient, retrieval models achieve higher effectiveness. In such cases, BM25 can be used to calculate an initial top-$k$ ranking that contains (presumably) all relevant documents. Then, the more expensive model only has to calculate the final ranking scores over the top-$k$ documents.
+In modern IR it is not uncommon to use coupled architectures. In many situations a ranking model is used that is efficient, but only reasonably effective. BM25 can be considered a model that can be calculated cheaply providing a good score for a more advanced (but less efficient) retrieval model that could achieve higher effectiveness. In such cases, BM25 can be used to calculate an initial top-$k$ ranking that contains (presumably) all relevant documents. Then, the more expensive model only has to calculate the final ranking scores over the top-$k$ documents.
 
-In this section, first some methods are introduced where such multi-stage approaches are used, then systems that implement these approaches are highlighted. In particular there will be a focus on the coupled-architectures aspect of these systems, and finally some proposed methods will be discussed to deal with cons arising from coupled architectures. 
+In this section we start discussing methods that implement multi-stage approaches, then systems that implement them are highlighted. In particular there will be a focus on the coupled-architectures aspect of these systems. Finally some proposed methods will be discussed to deal with cons arising from coupled architectures. 
 
 \subsection{Learning To Rank}
-In learning-to-rank multi-stage retrieval approaches tend to be used, often the models are not efficient enough to compute a relevance score value for all documents in the collection. \Citet{ltr-1} showed that for the TREC Contextual Suggestion track~\citep{contextual-suggestion-track}, reranking using user-based features significantly improved retrieval effectiveness over a baseline language modeling approach. These features show that data not present in the document's text can help the retrieval effectiveness of systems; metadata helps to rank. 
+In learning-to-rank (LTR), multi-stage retrieval approaches are widely used; LTR models are not efficient enough to compute a relevance score value for all documents in the collection.
+In these cases, a decision tree based ensemble like LambdaMART~\citep{lambdamart} tends to be trained. These models take input that is typically not stored in an inverted index. So, in order to use these models, the output from the inverted index needs to be combined with other data.
 
-\Citet{ltr-2} show examples of many features that are effective for learning to rank, many of these features are non-textual. Some influential features are: click count, click entropy, and the number of displayed results in a session.
+\Citet{ltr-1} showed that for the TREC Contextual Suggestion track~\citep{contextual-suggestion-track}, reranking using user-based features significantly improved retrieval effectiveness over a baseline language modeling approach. These features show that data not present in the document's text can help the retrieval effectiveness of systems; metadata helps to rank. 
 
-Often, in these cases, a decision tree based ensemble like LambdaMART~\citep{lambdamart} tends to be trained. These models take input that's not typically produced by an inverted index. So, in order to use these models, the output from the inverted index needs to be converted. 
+\Citet{ltr-2} show examples of features that have been effective for learning to rank, many of these features are non-textual. Some influential features are: click count, click entropy, and the number of displayed results in a session. 
 
 \subsection{Dense Retrieval}
-Where traditionally, search was carried out using inverted indexes, dense retrieval has become more prevalent in recent years. Consider, for example, the work by \citet{dense-retrieval-1}; in their work, they proposed \texttt{clear}, a model that aims to complement lexical models with a dense retrieval model. In their study, they use BM25 as the lexical model. The BM25 scores are calculated using an inverted index (Anserini~\citep{anserini}), while the dense retrieval model is a fine-tuned BERT bi-encoder. This dense model calculates a score using a different maximum inner-product search (MIPS) system (Faiss~\citep{faiss}) to calculate a similarity score for the query document pairs. Then scores are weighted and summed to calculate a new ranking score value. 
+Where traditionally, search was carried out using inverted indexes, neural retrieval has become more prevalent in recent years. When neural retrieval \citep{neural-ir} is implemented as a vector search approach, we speak about dense retrieval.
+Consider, for example, the work by \citet{dense-retrieval-1}; in their work, they proposed \texttt{clear}, a model that aims to complement lexical models with a dense retrieval model. In their study, they use BM25 as the lexical model. The BM25 scores are calculated using an inverted index (Anserini~\citep{anserini}), while the dense retrieval model is a fine-tuned BERT bi-encoder. This dense model calculates a score using a different maximum inner-product search (MIPS) system (Faiss~\citep{faiss}) to calculate a similarity score for the query document pairs. Then scores are weighted and summed to calculate a new ranking score value. 
 
-In a similar study, \citet{dense-retrieval-2} compared several methods on the MS Marco document en passage datasets. In their work, one of the two best models on the passage dataset was combining a lexical model and a BERT-based bi-encoder. The scores were combined by retrieving the top-\textit{n} documents for both the lexical model and the bi-encoder. In order to do this, an inverted index (Anserini) is used to retrieve the documents for the lexical model, while the bi-encoder uses a MIPS system (ScaNN~\citep{scann}).
+In a similar study, \citet{dense-retrieval-2} compared several methods on the MS Marco document and passage datasets. In their work, one of the two best models on the passage dataset was to combine a lexical model with a BERT-based bi-encoder. The scores were combined by retrieving the top-\textit{n} documents for both the lexical model and the bi-encoder. In order to do this, an inverted index (Anserini) is used to retrieve the documents for the lexical model, while the bi-encoder uses a MIPS system (ScaNN~\citep{scann}).
 
-Then to give a third example, \citet{dense-retrieval-3} do experiments with distilled dense representations. They do an extensive comparison study, and in their work, the best results are reported by either multi-stage or hybrid dense + sparse retrieval methods. The multi-stage retrieval method was BM25 + BERT-large. Although effective, it is a method with a high latency because of the cross-encoder used. A TCT-ColBERT (Tightly-Coupled Teacher - ColBERT) bi-encoder with doc2query-T5 sparse retrieval was the best hybrid method. This sparse retrieval method is a BM25 retrieval method that expands the documents with T5 language model questions~\citep{2020t5}. These questions were generated by letting the T5 language model generate questions that the passage might answer. Sparse retrieval is carried out by Anserini, and dense retrieval by Faiss. 
+A third example, is the study of  \citet{dense-retrieval-3} that experiments with distilled dense representations. They do an extensive comparison study, and in their work, the best results are reported by either multi-stage or hybrid dense + sparse retrieval methods. The multi-stage retrieval method used BM25 in combination with BERT-large. Although effective, it is a method with a high latency because of the cross-encoder used. A TCT-ColBERT (Tightly-Coupled Teacher - ColBERT) bi-encoder with doc2query-T5 sparse retrieval was the best hybrid method. This sparse retrieval method is a BM25 retrieval method that expands the documents with T5 language model questions~\citep{2020t5}. These questions were generated by letting the T5 language model generate questions that the passage might answer. Sparse retrieval is carried out by Anserini, and dense retrieval by Faiss. 
 
 \subsection{Knowledge Graphs and Entities}
 % knowledge graphs to leverage entity information~\cite{entity-1, entity-2, entity-3}, 
-Knowledge graphs have been used a lot as well in IR research. \Citet{entity-1} proposed the Entity Linking incorporated Retrieval (ELR) approach. The idea behind this concept is that when entity annotations are available for queries and documents, they can be incorporated into the ranking model. This study only focuses on entity retrieval, but it generalizes to retrieval. The entities are incorporated by creating a dedicated index for entities on which entity scores can be calculated. These are then merged by the document scores calculated using the regular index. By incorporating entity scores, ELR can increase effectiveness scores for multiple baseline methods. 
+Knowledge graphs have been used a lot as well in IR research. \Citet{entity-1} proposed the Entity Linking incorporated Retrieval (ELR) approach. The idea behind this concept is that when entity annotations are available for queries and documents, they can be incorporated into the ranking model. Their publication only focuses on entity retrieval, but the method can generalize to ad-hoc document and passage retrieval. The entities are incorporated by creating a dedicated index for entities on which entity scores can be calculated. These are then merged by the document scores calculated using the regular index. By incorporating entity scores, ELR has been shown to increase effectiveness scores for multiple baseline methods. 
 
-\Citet{entity-3} used entity features for query expansion. One of the features was calculated by tagging queries with an entity-linking system. When entities were found, information from the knowledge base linked to them was included in query expansion. Alternative names of the entity were also included in the query expansion. Then this expanded query provided a score for all documents. Another feature they calculate is by ranking the entities in the knowledge base using the original query text. Then the data (e.g., words in the descriptions) included in the knowledge base can be included as terms for query expansion. Multiple other features using entities were also calculated, 
+\Citet{entity-3} also used entity features for query expansion. One of the features was calculated by tagging queries with an entity-linking system. When entities were found, information from the knowledge base linked to them was included in query expansion. Alternative names of the entity were also included in the query expansion. Then this expanded query provided a score for all documents. Another feature they calculate is obtained by ranking the entities in the knowledge base using the original query text. Then the data (e.g., words in the descriptions) included in the knowledge base can be included as terms for query expansion. Multiple other features using entities were also calculated, 
 
-\Citet{entity-2} wrote a book on entity-oriented search, giving an excellent outline of methods that use entities for search. I recommend it if you want to read more about entity information for IR. 
+For additional background related to entities in search, refer to \Citet{entity-2}, an excellent book on entity-oriented search, giving an excellent outline of methods that use entities for search. 
 
-Basically, in order to include entities, a knowledge graph needs to be queried. This tends to be done by a different systems than the systems used for regular retrieval.
+Basically, in order to include entities, a knowledge graph needs to be queried. This tends to be done by a different systems than the systems used for regular retrieval. If we could integrate IR in graph databases, a single system would solve the complete process.
 % maybe include a subsection about graphs including the work by mcdonald
 
 \subsection{Current approaches}
-Some systems are used a lot for information retrieval research. These systems are typically built as inverted index systems. Recently, retrieval methods using neural networks have become state-of-the-art, mainly using large language models. Some systems will be described, and how they deal with these recent advances will be highlighted.  
+PyTerrier~\citep{pyterrier} and Pyserini~\citep{pyserini} are research systems that are used a lot for information retrieval research. These systems are built as inverted index systems, with a separate component to handle neural retrieval models. Recently, retrieval methods using neural networks have become state-of-the-art, mainly using large language models. In this section the two most commonly used research systems are described, highlighting how they with neural approaches to IR.
 
 \subsubsection{PyTerrier}
 PyTerrier by~\citet{pyterrier}, is a Python extension of Terrier~\citep{terrier}. Terrier is an open-source search engine system written in Java. It implements state-of-the-art indexing and retrieval techniques on top of an inverted index. It is a system suited for rapidly developing retrieval experiments concerning document collections with many documents. 
 The PyTerrier extension was developed to express complex IR pipelines in Python. Using Python operators directly, it is possible to set up an IR pipeline using PyTerrier in only a few lines of code. 
 
-PyTerrier was expanded to support state-of-the-art large language model reranking approaches and dense retrieval methods. As the PyTerrier framework is developed for the Python ecosystem, other (re-)ranking methods that are implemented in Python can readily work with PyTerrier. Because of these features, the PyTerrier system is ideal for modern information retrieval research that often concerns reranking through learned methods, as they are often developed in Python.
+PyTerrier was expanded to support state-of-the-art large language model reranking approaches and dense retrieval methods. As the PyTerrier framework is developed for the Python ecosystem, other (re-)ranking methods that are implemented in Python can readily work with PyTerrier. Because of these features, the PyTerrier system is ideal for modern information retrieval research, that often concerns reranking through learned methods, as they are often developed in Python.
 
-Note, however, that PyTerrier uses a coupled architecture, first-stage retrieval is carried out using Terrier in Java (e.g., a bm25 run), and then the resulting top documents are reranked in Python. For this, some overhead is introduced because of data transfer between processes. 
+Note, however, that PyTerrier uses a coupled architecture. First-stage retrieval is carried out using Terrier in Java (e.g., a BM25 run), and then the resulting top documents are reranked in Python. For this, some overhead is introduced because of data transfer between processes. 
 
 \subsubsection{Pyserini}
-Pyserini was developed by~\citet{pyserini}, which is a Python extension of Anserini~\citep{anserini}. Pyserini and Anserini have a lot in common with PyTerrier and Terrier. Just like Terrier, Anserini is developed in Java, but on top of Apache Lucene. Anserini is developed as a system with solid support for reproducible research. Anserini provides reproducible baselines for many retrieval benchmarks that can be run with minimal setup. 
+Pyserini was developed by~\citet{pyserini}, which is a Python extension of Anserini~\citep{anserini}. Pyserini and Anserini have a lot in common with PyTerrier and Terrier. Just like Terrier, Anserini is developed in Java, but on top of Apache Lucene. Anserini is developed as a system with solid support for reproducible research. Anserini provides reproducible baselines for many retrieval benchmarks that can be run with minimal investment of resources. 
 
 Pyserini is developed as a Python wrapper around the Anserini retrieval system. Within the Python ecosystem, it is possible to access the Anserini internals and replicate the same experiments implemented in Anserini. Similarly to PyTerrier, Pyserini also contains features that are not available directly in Anserini; ranking methods that make use of large language models, such as dense retrievers and BERT-based cross encoders. As these methods are generally developed in Python, it is much easier to support them with Pyserini compared to Anserini.
 
-Anserini is included in Pyserini as a JAR file, so when using Pyserini for first-stage retrieval, data needs to be retrieved from JAVA before it can be materialized in Python. The setup is similar to Pyterrier. 
+Anserini is included in Pyserini as a JAR file, so when using Pyserini for first-stage retrieval, data needs to be retrieved from JAVA before it can be materialized in Python. The setup is similar to that of Pyterrier. 
 
 \subsection{Proposed approaches}
 % Paper van Jimmy op DESIRES is belangrijk. 
 \subsubsection{Separation of the Logical and Physical Model}
-As shown in the previous sections, dense and sparse retrieval methods are often implemented using different systems, which introduces the coupled architecture. \citet{seperation-logical-physical} recognizes that sparse retrieval models are typically implemented in inverted indexes and dense retrieval methods with approximate nearest neighbor systems. Although these systems are different, the input and the output are the same: the input is a query, and the output is a ranked list of the top-$k$ documents the ranking methods deem the most relevant. 
+As shown in the previous sections, dense and sparse retrieval methods are often implemented using different systems, which introduces the coupled architecture. \citet{seperation-logical-physical} recognizes that sparse retrieval models tend to be implemented using inverted indexes and dense retrieval methods with approximate nearest neighbor systems. Although these systems are different, the input and the output are the same: the input is a query, and the output is a ranked list of the top-$k$ documents the ranking methods deem the most relevant. 
 
-In order to be able to formalize these similarities and distinctions more clearly, \citeauthor{seperation-logical-physical} proposes a distinction between the logical and physical retrieval models. Logical models consists of encoders that maps documents and queries to a representation, and a comparison function that defines how a ranking score value can be computed from comparing these representations. Physical models define how to create a top-$k$ ranking from a large corpus given a query. This could be applying the logical model to every query-document pair, but through optimizations it might not necessary to compare all documents to the query. For example, dense retrieval methods often make use of HNSW which prunes documents that have a low likelihood of being relevant. 
+In order to be able to formalize these similarities and distinctions more clearly, \citeauthor{seperation-logical-physical} proposes a distinction between the logical and physical retrieval models. Logical models consists of encoders that maps documents and queries to a representation, and a comparison function that defines how a ranking score value can be computed from comparing these representations. Physical models define how to create a top-$k$ ranking from a large corpus given a query. This could be implemented by applying the logical model to every query-document pair, but through optimizations it might not necessary to compare all documents to the query. For example, dense retrieval methods often make use of HNSW for nearest neighbor search~\citep{faiss} which prunes documents that have a low likelihood of being relevant. 
 
 \subsubsection{A Graph Query Language for IR}
 % Reproducible IR needs a graph query language ook belangrijk
-We \citep{need-graph-db} proposed to create graph query language for information retrieval problems. In the context of separating logical and physical models, a graph query language can be interpreted as a logical model, while the engine that implements the graph query language can be considered the physical model.
+It would be ideal for a system to encapture these different ways of approaching IR research natively; work with multiple stages in the ranking process, but also reason about entities and knowledge graphs. 
+\citet{need-graph-db} proposed to use a graph query language for information retrieval problems. In the context of separating logical and physical models, a graph query language can be interpreted as a logical model, while the engine that implements the graph query language can be considered the physical model.
 
 If it is possible to express both first stage and second stage retrieval in such a query language, both stages would be computed by the same physical model, automatically ensuring a coupled architecture is not necessary. Having a graph query language available, ensures that more complicated retrieval strategies can be expressed compared to when a relational query language is used. 
 
-So ideally we develop a system with the following two capabilities; the system supports first stage retrieval directly, and graph queries over the output of this first stage retrieval can be processed without a coupled architecture. In order to fulfill these needs, we developed GeeseDB in a follow up study. 
+So ideally we develop a system with the following two capabilities; the system supports first retrieval stage directly, and graph queries over the output of this first stage retrieval can be processed without a coupled architecture. In order to fulfill these needs, we developed GeeseDB in a follow up study. 
 
 \section{GeeseDB}
 % Introduce GeeseDB, and the approach of what we are doing with GeeseDB
-GeeseDB\footnote{\url{https://github.com/informagi/geesedb}} is a prototype Python toolkit for information retrieval that leverages graphs as data structures, allowing metadata and graph-oriented data to be easily included in the ranking pipeline. The toolkit is designed to quickly set up first-stage retrieval and make it easy for researchers to explore new ranking models. 
+GeeseDB\footnote{\url{https://github.com/informagi/geesedb}, last accessed January 22th 2024} is a prototype Python toolkit for information retrieval that leverages graphs as data structures, allowing metadata and graph-oriented data to be easily included in the ranking pipeline. The toolkit is designed to quickly set up first-stage retrieval and make it easy for researchers to explore new ranking models. 
 
 In short, GeeseDB aims to provide the following functionalities:
 \begin{itemize}
@@ -108,14 +111,14 @@ In short, GeeseDB aims to provide the following functionalities:
 
 \section{Design}
 % Expand the Design part a lot, how did we solve certain technical problems. 
-At the core of GeeseDB lies the full-text search design presented by~\citet{OldDog}. This work proposes a column-store database for IR prototyping, which uses the database schema described in~\cref{olddog_schema}, consisting of three database tables.
+At the core of GeeseDB lies the full-text search design presented by~\citet{OldDog} as discussed already in~\cref{ir-using-relational-databases}. This work proposes a column-store database for IR prototyping, which uses the database schema described in~\cref{olddog_schema}, consisting of three database tables.
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{./imgs/olddog-schema-2.pdf}
 	\caption{Database schema by \citeauthor{OldDog} for full text search in relational databases}
 	\label{olddog_schema}
 \end{figure}
-These tables are exactly the same as the tables described in the previous chapter. Using these three tables, the authors show that BM25 can be easily expressed as a SQL query with latencies on par with custom-built IR engines. In GeeseDB, we use the same relational schema for full-text search.
+Using these three tables, the authors show that BM25 can be easily expressed as a SQL query with latencies on par with custom-built IR engines. In GeeseDB, we use the same relational schema for full-text search.
 Instead of seeing the document data and term data as tables that relate to each other through a many-to-many join table, it is also possible to consider this schema as a bipartite graph. In this graph, documents and terms are considered nodes connected through edges. If a term occurs in a document, an edge exists between that term and the document. GeeseDB uses the data model of property graphs labeled multigraphs where both edges and nodes can have property-value pairs. The database schema, as described in~\cref{olddog_schema}, would then translate to the property graph schema shown in~\cref{olddog-graph-schema}.
 \begin{figure}
 	\centering
@@ -157,15 +160,15 @@ A small example of a graph represented by this schema is shown in~\cref{example-
 	\label{example-olddog-graph}
 \end{figure}
 
-If one wants to, for example, also store position data, this graph can easily be changed to a graph where the edges store the position of a term. If a term appears multiple times in a document, the property graph model will allow multiple edges between two nodes. The graph schema that we described by~\cref{olddog-graph-schema} maps one-to-one to the relational database schema described by~\cref{olddog_schema}, so nodes are represented by standard relational tables that represent specific data units (terms, documents), while many-to-many join tables represent edges. So even though we think of the data as graphs, they are represented as relational tables in the backend. When using GeeseDB for search, we at least expect the document-term graph to be present. Of course, new node types can be introduced to explore new search strategies. 
+If one wants to, for example, also store position data, this graph can easily be extended to a graph where the edges store term positions. If a term appears multiple times in a document, the property graph model will allow multiple edges between two nodes. The graph schema that we described by~\cref{olddog-graph-schema} maps one-to-one to the relational database schema described by~\cref{olddog_schema}, when we represent nodes by standard relational tables that represent specific data units (terms, documents), while many-to-many join tables represent the edges. So, even though we think of the data as graphs, they are represented as relational tables in the backend. When using GeeseDB for search, we at least expect the document-term graph to be present. New node types can be introduced to explore new search strategies. 
 
-\subsection{Backend}
-GeeseDB is built on top of DuckDB~\citep{duckdb}, an in-process SQL OLAP (analytics optimized) database management system. DuckDB is designed to support analytical query workloads. It aims explicitly to process complex, long-running queries where a significant portion of the data is accessed, conditions matching the case of IR research. DuckDB has a client Python API which can be installed using \texttt{pip}. Afterward, it can be used directly. DuckDB has a separate API built around NumPy and Pandas, providing NumPy/Pandas views over the same underlying data representation without incurring data transfer (usually referred to as ``zero-copy'' reading). Pandas DataFrames can be registered as virtual tables, allowing to query the data in Pandas DataFrames directly. GeeseDB inherits all these functionalities from DuckDB.
+\subsubsection{Backend}
+GeeseDB is built on top of DuckDB~\citep{duckdb}, an in-process SQL OLAP (analytics optimized) database management system. DuckDB is designed to support analytical query workloads. It aims explicitly to process complex, long-running queries where a significant portion of the data is accessed, conditions matching the case of IR research. DuckDB has a client Python API which can be installed using \texttt{pip}\footnote{\url{https://duckdb.org/docs/installation/?version=stable&environment=python}, last accessed March 2nd 2024}. Afterward, it can be used directly. DuckDB has a separate API built around NumPy\footnote{\url{https://numpy.org/}, last accessed March 2nd 2024} and Pandas\footnote{\url{https://pandas.pydata.org/}, last accessed March 2nd 2024}, providing NumPy/Pandas views over the same underlying data representation without incurring data transfer (usually referred to as ``zero-copy'' reading). Pandas DataFrames can be registered as virtual tables, allowing to query the data in Pandas DataFrames directly. GeeseDB inherits all these functionalities from DuckDB.
 
 As DuckDB is a database management system, we can execute analytical SQL queries on tables containing our data, including the BM25 rankings described by~\citet{OldDog}. By default, the BM25 implementation provided with GeeseDB implements the disjunctive variant of BM25 instead of the conjunctive variant they used. Although the conjunctive variant of BM25 can be calculated more quickly, we chose to use the disjunctive variant as IR researchers more commonly use it, and the differences between effectiveness scores are noticeable on smaller collections. For now, we only support the original formulation of BM25 by~\citet{bm25-robertson}. However, supporting other versions of BM25 as described in the previous chapter is trivial.
 
 \section{Graph Query Language}
-What distinguishes GeeseDB from alternatives, database-backed (OldDog)~\citep{olddog-docker}, or native systems (Anserini~\citep{anserini}, Terrier~\citep{terrier}) is the graph query language, based on Cypher~\citep{cypher}. 
+GeeseDB distinguishes itself from alternatives, database-backed (OldDog)~\citep{olddog-docker}, or native systems (Anserini~\citep{anserini}, Terrier~\citep{terrier}) by offering a graph query language, based on Cypher~\citep{cypher}. 
 For now, GeeseDB implements Cypher's basic graph pattern-matching queries for retrieving data. An example of a graph query supported by GeeseDB is presented in~\cref{fig:graph_query}.
 \begin{figure}
 	\begin{minted}[linenos]{cypher}
@@ -176,7 +179,7 @@ RETURN DISTINCT d2.collection_id
 	\caption{An example cypher query that finds all documents that were written by the same author that wrote the document with the \texttt{collecion\_id} ``96ab542e''}
 	\label{fig:graph_query}
 \end{figure}
-This query finds all documents written by the same authors as those who wrote document ``96ab542e''. For comparison, ~\cref{fig:corresponding_sql} illustrates the same query represented in SQL; much more complex than the Cypher version, due to the join conditions that have to be made explicit. In order to connect the ``docs'' table with the ``authors'' table 2 joins are needed; reconnecting the ``docs'' table again introduces two more joins.
+This co-authorship query finds all documents written by the same authors as those who wrote document ``96ab542e''. For comparison, ~\cref{fig:corresponding_sql} illustrates the same query represented in SQL; much more complex than the Cypher version, due to the join conditions that have to be made explicit. In order to connect the ``docs''-table with the ``authors''-table two joins are needed; reconnecting the ``docs'' table again introduces two more joins.
 
 \begin{figure}
 	\begin{minted}[linenos]{sql}
@@ -192,7 +195,7 @@ WHERE d.collection_id = '96ab542e'
 	\label{fig:corresponding_sql}
 \end{figure}
 
-At the moment of writing, GeeseDB supports the following Cypher keywords: \texttt{MATCH}, \texttt{RETURN}, \texttt{WHERE}, \texttt{AND}, \texttt{DISTINCT}, \texttt{ORDER BY}, \texttt{SKIP}, and \texttt{LIMIT}. Instead of using \texttt{WHERE} to filter data, it is also possible to use graph matching, as shown in~\cref{fig:graph_query2}; the query returns the length of document ``96ab542e''. 
+The current implementation of  GeeseDB supports the following Cypher keywords: \texttt{MATCH}, \texttt{RETURN}, \texttt{WHERE}, \texttt{AND}, \texttt{DISTINCT}, \texttt{ORDER BY}, \texttt{SKIP}, and \texttt{LIMIT}. Instead of using \texttt{WHERE} to filter data, it is also possible to use graph matching, as shown in~\cref{fig:graph_query2}; the query returns the length of document ``96ab542e''. 
 \begin{figure}
 	\begin{minted}[linenos]{cypher}
 MATCH (d:docs {d.collection_id: "96ab542e"})
@@ -201,7 +204,7 @@ RETURN d.len
 	\caption{Graph query where the length of document with \texttt{collection\_id} is returned.}
 	\label{fig:graph_query2}
 \end{figure}
-Everything that is not directly supported yet by our implementation can, of course, still be expressed in SQL, which is fully supported. \footnote{GeeseDB supports the graph queries by translating them to their corresponding SQL queries. After all, both nodes and edges are just tables in the backend.} In order to know how to join nodes to each other if no edge information has been provided, GeeseDB stores information on the schema. This way, GeeseDB knows how nodes relate to each other through which edges. GeeseDB has a module for updating the graph schema, allowing researchers to quickly set up the graph they want to be represented in the database.
+Everything that is not directly supported yet by our implementation can, of course, still be expressed in SQL, which is fully supported. \footnote{GeeseDB supports the graph queries by translating them to their corresponding SQL queries. After all, both nodes and edges are just tables in the backend.} In order to know how to join nodes to each other if no edge information has been provided, GeeseDB stores information on the graph schema. This way, GeeseDB knows how nodes relate to each other through which edges. 
 
 \section{Usage}
 GeeseDB comes as an easy-to-install Python package that can be installed using pip, the standard package installer for Python:
@@ -210,7 +213,7 @@ GeeseDB comes as an easy-to-install Python package that can be installed using p
 	$ pip install geesedb
 \end{verbatim}
 After installing GeeseDB, we can immediately start using it. It is also possible to install the latest commit by installing the latest version directly from GitHub.
-As an example, we will show how to use GeeseDB for the background linking task of the TREC News Track~\citep{soboroff2018trec}. The goal of this task is: \textit{Given a news story, find other news articles that can provide meaningful context or background information.} These articles can then be recommended to the reader to help them understand the context in which these news articles occur. The collection used for this task is the Washington Post V3 collection\footnote{\url{https://trec.nist.gov/data/wapost/}} released for the 2020 edition of TREC. It contains $671,945$ news articles published by the Washington Post published between 2012 and 2020 and 50 topics with relevance assessments (topics correspond to collection identifiers of documents for which relevant data has to be found). The articles in this collection contain valuable metadata; in particular, we will use authorship information. We extracted $25,703$ unique article authors, where it is possible that multiple authors co-wrote a news article. We also annotate documents with entity information which was obtained by using the Radboud Entity Linker~\citep{rel}. In total $31,622,419$ references to $541,729$ unique entities were found. The links also contain mention and location information, as well as the \texttt{ner\_tag} found by the linker's entity recognition module (The \texttt{ner\_tag} is part of a link, as the entity linker can assign different tags to the same entity). \Cref{fig:geesedb-graph} illustrates the data schema that we use for the background linking task using a small example graph. 
+As an example, we will show how to use GeeseDB for the background linking task of the TREC News Track~\citep{soboroff2018trec}. The goal of this task is: \textit{Given a news story, find other news articles that can provide meaningful context or background information.} These articles can then be recommended to the reader to help them understand the context in which these news articles occur. The collection used for this task is the Washington Post V3 collection\footnote{\url{https://trec.nist.gov/data/wapost/}, last accessed March 2nd 2024} released for the 2020 edition of TREC. It contains $671,945$ news articles published by the Washington Post published between 2012 and 2020, and 50 topics with relevance assessments (topics correspond to collection identifiers of documents for which relevant data has to be found). The articles in this collection contain valuable metadata; in particular, we will investigate how to best use the article authorship information. We extracted $25,703$ unique article authors, where it is possible that multiple authors co-wrote a news article. We also annotate documents with entity information which was obtained by using the Radboud Entity Linker~\citep{rel}. In total $31,622,419$ references to $541,729$ unique entities were found. The links also contain mention and location information, as well as the entity type (\texttt{ner\_tag}) found by the linker's entity recognition module (The entity type is part of a link, as the entity linker can assign different tags to the same entity.) \Cref{fig:geesedb-graph} illustrates the data schema that we use for the background linking task through a small example graph. 
 
 \begin{figure}
 	\centering
@@ -261,7 +264,7 @@ index.load_data()
 	\label{fig:load_text_data}
 \end{figure}
 
-Instead of loading the data from CSV files, it is also possible to load the text data directly using the CIFF format for data exchange~\citep{ciff}. GeeseDB also has functionalities to create CSV files from the CIFF format. Authorship information and entity links can be loaded similarly. After loading the data, we can quickly create a BM25 ranking for ad hoc search in the Washington Post collection, as shown in~\cref{fig:code_bm25_ranking}.
+Instead of loading the data from CSV files, it is also possible to load the text data directly using the CIFF format for information retrieval data exchange~\citep{ciff}. GeeseDB also has functionalities to create CSV files from the CIFF format. Authorship information and entity links can be loaded similarly. After loading the data, we can easily create a BM25 ranking for ad hoc search in the Washington Post collection, as shown in~\cref{fig:code_bm25_ranking}.
 
 \begin{figure}
 	\begin{minted}[linenos]{python}
@@ -277,7 +280,7 @@ hits = searcher.search_topic('obama and trump')
 	\label{fig:code_bm25_ranking}
 \end{figure}
 
-For the background linking task, however, we do not have regular topics; we only have the collection identifiers of the documents for which we need to find relevant background info. In order to search for relevant background reading, queries that represent our information need have to be constructed. A common approach is to use the top-$k$ TF-IDF terms of the source article. These can easily be found using the Cypher statement in~\cref{fig:tfidf-cypher}. Instead of using Cypher, it would also be possible to use SQL, as shown in~\cref{fig:tfidf}; however, this example shows again that the Cypher query is more elegant than SQL. 
+For the background linking task, however, we do not have regular topics; we only have the collection identifiers of the documents for which we need to find relevant background info. In order to search for relevant background reading, queries that represent our information need have to be constructed. A common approach uses the top-$k$ TF-IDF terms of the source article~\citep{anserini-news}. These can easily be found using the Cypher statement in~\cref{fig:tfidf-cypher}. Instead of using Cypher, it would also be possible to use SQL, as shown in~\cref{fig:tfidf}; however, this example shows again that the Cypher query is more elegant than SQL, and easier to comprehend. 
 
 \begin{figure}
 	\begin{minted}[linenos, escapeinside=||]{cypher}
@@ -287,7 +290,7 @@ ORDER BY tf*log(671945|/|df)
 DESC
 LIMIT 5
 	\end{minted}
-	\caption{Prepared Cypher statement that finds the top-$5$ TF-IDF terms in a document.}
+	\caption{Prepared Cypher statement that finds the top-$5$ TF-IDF terms in a given document.}
 	\label{fig:tfidf-cypher}
 \end{figure}
 \begin{figure}
@@ -297,14 +300,14 @@ FROM term_dict
 JOIN term_doc ON (term_dict.term_id = term_doc.term_id)
 JOIN docs ON (docs.doc_id = term_doc.doc_id)
 WHERE docs.collection_id = ?
-ORDER BY term_doc.tf * log(671945/term_dict.df
+ORDER BY term_doc.tf * log(671945/term_dict.df)
 DESC
 LIMIT 5;
 	\end{minted}
 	\caption{Prepared SQL statement that finds the top-$5$ TF-IDF terms in a document.}
 	\label{fig:tfidf}
 \end{figure}
-Processing Cypher queries depends on the schema information that must be loaded. We have a supporting class for this, and the schema data used in this paper will be available via GitHub. Using the terms found with Cypher, we can construct queries to pass to the searcher and create a BM25 ranking. The code that generates the rankings for all topics is presented in~\cref{fig:code_bm25_background_linking}. In only a few lines of Python code, it is easy to create rankings. From this point, writing the content of \texttt{hits} to a runfile and evaluating using \texttt{trec\_eval} is trivial. 
+Processing Cypher queries depends on the schema information that must be loaded, before queries can be issued. We have a supporting class for this, and the schema data used in this chapter are available via GitHub. Using the terms found with Cypher, we can construct queries to pass to the searcher and create a BM25 ranking. The code that generates the rankings for all topics is presented in~\cref{fig:code_bm25_background_linking}. In only a few lines of Python code, it is easy to create rankings. From this point, writing the content of \texttt{hits} to a runfile and evaluating their effectiveness using \texttt{trec\_eval} is trivial. 
 
 \begin{figure}
 	\begin{minted}[linenos, breaklines]{python}
@@ -425,12 +428,14 @@ for topic_no, collection_id in topics:
 	\label{fig:entities-code}
 \end{figure}
 
+%todo hier nog resultaten opnemen, evt gewoon de resultaten hoe die zouden zijn als we de queries zouden vuren op de TREC data. 
+
 \section{Conclusion}
 This chapter described the prototype implementation of GeeseDB, and how we envision graph databases can be used for information retrieval research.
 The GeeseDB system can be considered the question on our research question: \emph{Can we extend the benefits from using relational databases for information retrieval to using graph databases, while being able to express graph-related problems easier?}
 As GeeseDB is built on top of a relational engine it automatically inherits the benefits of using relational databases for IR. As GeeseDB can process graph queries, we also are able to express graph related problems. 
 
-GeeseDB is still however a prototype system, and more functionalities need to be implemented. In particular, although the architecture is not coupled, it is not as efficient as traditional methods that do use coupled architectures. The overhead introduced introduce in coupled architectures is lower than the retrieval efficiency from methods that are state of the art but work coupled.
+GeeseDB is still however a prototype system, and more functionalities need to be implemented. In particular, although the architecture is not coupled, it is not as efficient as traditional methods that do use coupled architectures. 
 
-Also, not all graph operators are yet supported. In order to make GeeseDB a usable system for IR researchers, more operators need to be implemented and the system needs to be developed to be more robust. 
+Not all graph operators are yet supported. In order to make GeeseDB a usable system for IR researchers, more operators need to be implemented and the system needs to be developed to be more robust. 
  
