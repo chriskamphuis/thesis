@@ -428,7 +428,44 @@ for topic_no, collection_id in topics:
 	\label{fig:entities-code}
 \end{figure}
 
-%todo hier nog resultaten opnemen, evt gewoon de resultaten hoe die zouden zijn als we de queries zouden vuren op de TREC data. 
+\section{Experiment}
+
+The previous sections gives examples on how non textual content can be used for retrieval experiments. For example, authorship information can be used as a boost for finding related background reading articles. In the example the result set is filtered if sufficient articles are written by the same author, it might however be more interesting to use authorship information as a feature. Lets us define a boosting value $p$ that represents the amount of boosts a document gets when it is written by the same author. Then we can score documents with, e.g., BM25 and adapt the score with $p$:
+
+\begin{equation}
+	\text{score} = \begin{cases}
+		p \cdot \text{BM}25  & \text{if same author} \\
+		\text{BM}25 & \text{otherwise}
+	\end{cases}
+\end{equation}
+
+We choose to multiply the scores by $p$ instead of adding a constant values, as the distribution of BM25 scores can different quite a bit depending on the topic\footnote{Topic terms with a high IDF will increase the BM25 scores for that topic.}.
+We run some retrieval experiments for different values of $p$ and see what the effect is on retrieval effectiveness.  We run this experiment on the background linking tasks for TREC news 2018 and 2019. Both topic sets contain 60 topics.  If we vary for different values of $p$, we can see what the effects are on the retrieval effectiveness.  We evaluate using recall, as this is quite a cheap ranking method whose ranking can be the input for a more expensive second stage ranking system.  
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{./imgs/recall-20-geesedb.png}
+	\caption{Recall @ 20 for varying levels of $p$}
+	\label{geesedb-recall-20}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{./imgs/recall-50-geesedb.png}
+	\caption{Recall @ 50 for varying levels of $p$}
+	\label{geesedb-recall-50}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{./imgs/recall-100-geesedb.png}
+	\caption{Recall @ 100 for varying levels of $p$}
+	\label{geesedb-recall-100}
+\end{figure}
+
+\Cref{geesedb-recall-20,geesedb-recall-50,geesedb-recall-100} show the effectiveness scores for values of $p$ from $0.75$ to $1.25$ for recall at 20, 50 and 100. When $p = 1$, documents written by the same author get the same score. Values for $p$ lower than $1$ would decrease the scores for articles written by the same author.  
+We see that for both collections, a slight boost of documents that are written by the same author, represented by the values $1 < p < 1.1$ slightly increases recall at different depths for both document collections.  However when $p$ becomes larger than $1.1$ the recall tends to decrease, especially for recall at depth $20$. 
+This experiment shows that it is quite easy to use GeeseDB for retrieval experiments and adding metadata; showing that including metadata might benefit first stage ranking methods.
 
 \section{Conclusion}
 This chapter described the prototype implementation of GeeseDB, and how we envision graph databases can be used for information retrieval research.
