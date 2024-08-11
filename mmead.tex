@@ -440,6 +440,23 @@ Instead of querying for France, we can also query for different countries. Table
 	\end{tabular}
 \end{table}
 
+\begin{figure}
+	\centering
+	\begin{minted}[linenos]{cypher}
+MATCH (pid:Passage)-[:has]->(entity)
+WHERE entity.uri CONTAINS "wikidata"
+MATCH (pid)-[:description]->(content)
+MATCH (entity)-[:label {lang: 'en'}]->(label)
+MATCH (entity)-[:P625]->(coord)
+MATCH (entity)-[:P17]->(:Country)
+RETURN pid, content, entity, label, coord
+	\end{minted}
+	\caption{Cypher query with similar behaviour as the SPARQL query shown in~\ref{fig:code_sparql}.}
+	\label{fig:code_geese}
+\end{figure}
+
+Although we have used SPARQL for this experiment, it would also be possible to express this query Cypher in GeeseDB. Depending on the schema this could look something like the query as shown in~\cref{fig:code_geese}.
+
 \section{Conclusion and Future Work}
 This research presents the resource MMEAD, or MS MARCO Entity Annotations and Disambiguations. MMEAD contains entity annotations for the passages and documents in MS MARCO v1 and v2. These annotations simplify entity-oriented research on the MS MARCO collections. Links have been provided using the REL and BLINK entity linking systems. Using DuckDB, the data can quickly be queried, making the resource easy to use.
  

@@ -3,11 +3,6 @@
 \markboth{Summary}{Summary}
 % maximum 350 - 400 words
 
-\chapter*{Summary}
-\addcontentsline{toc}{chapter}{Summary}
-\markboth{Summary}{Summary}
-% maximum 350 - 400 words
-
 Finding relevant information in a large collection of documents can be challenging, especially when only text is considered when determining relevancy. This research leverages graph data to express information needs that consider more than just text data. In some cases, instead of using inverted indexes for the data representation in our work, we use database management systems to store data.
 
 First, we show that relational database systems are suited for retrieval experiments. A prototype system we built implements many proposed improvements to the BM25 ranking algorithm. In a large-scale reproduction study, we compare these improvements and find that the differences in effectiveness are smaller than we would expect, given the literature. We can easily change between versions of BM25 by rewriting the SQL query slightly, validating the usefulness of relational databases for reproducible IR research. 
