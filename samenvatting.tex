@@ -5,8 +5,10 @@
 Het vinden van relevante informatie in een grote verzameling van documenten is een zeer uitdagende taak, zeker wanneer alleen tekst in overweging wordt genomen bij het bepalen of een document relevant is. Dit onderzoek maakt gebruik van grafen om informatiebehoeften uit te drukken waar meer in overweging genomen moet worden dan alleen tekst. In sommige gevallen gebruiken we, voor de data representatie, in plaats van \emph{inverted indexes}, data management systemen om data op te slaan.
 
 Allereerst, laten we zien dat relationele database systemen geschikt zijn voor \emph{information retrieval} experimenten.
-Een door ons gebouwd prototype systeem implementeert verscheidene verbeteringen aan het BM25-rangschikking algoritme die zijn voorgesteld in de literatuur. In een grootschalig reproductie onderzoek vergelijken we deze verbeteringen en vinden we dat de verschillen in effectiviteit kleiner zijn dan we op grond van de literatuur zouden verwachten. 
-We kunnen gemakkelijk wisselen tussen versies van BM25 door de SQL-query lichtelijk te herschrijven. Hiermee valideren we het nut van relationele databases voor reproduceerbaar IR-onderzoek.
+Een door ons gebouwd prototype systeem implementeert een hele reeks verbeteringen aan het BM25-rangschikking algoritme die zijn voorgesteld in de literatuur. In een grootschalig reproductie onderzoek vergelijken we deze verbeteringen en vinden we dat de verschillen in effectiviteit kleiner zijn dan we op grond van de literatuur zouden verwachten. 
+We kunnen gemakkelijk wisselen tussen versies van BM25 door de SQL-query slechts weinig te herschrijven met simpele variaties op een onderliggende SQL query. 
+
+Hiermee valideren we het nut van relationele databases voor reproduceerbaar IR-onderzoek.
 Vervolgens breiden we het datamodel uit naar een graaf datamodel. Met dit graaf datamodel kunnen we meer diverse gegevens uitdrukken dan alleen tekst. 
 We kunnen complexe informatiebehoeften makkelijker uitdrukken met een bijbehorende graaf querytaal, dan wanneer een relationele taal wordt gebruikt. Dit model is gebouwd bovenop een \emph{embedded} database systeem, hierdoor kunnen we data dat geproduceerd wordt door dit systeem snel voor een andere applicatie gebruiken.
 

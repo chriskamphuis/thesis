@@ -29,10 +29,10 @@ In order to answer this inquiry for information correctly, the information retri
 
 When the user's location is known, the search engine needs to find a webpage that correctly provides the weather for that particular location. As there are billions of web pages in the search engine's index, correctly identifying which one contains information about the weather at that particular location and time and then retrieving it in seconds is the next challenge.
 
+\subsection{Inverted Indexes}
 Search engines must smartly organize the data because it is infeasible to iterate over all web pages to check if the correct information is available. The most common data structure used in search engines is the inverted file.
 
-\subsection{Inverted Indexes}
-Inverted indexes have been used for decades in the field of information retrieval. They are designed to access documents quickly. If a system cannot provide the data quick enough, the user is likely to switch to a different system. Documents are typically structured through words that form sentences, which form paragraphs, and, eventually, stories. When considering a document in its standard form, it is not trivial to determine efficiently whether it contains a specific word. When searching for something, it is paramount that the search engines know what documents contain the keywords in the query. Documents are \emph{inverted} to store this information. Instead of storing documents as is (a mapping from documents to words), search engines store the inverted information (a mapping from words to documents). To provide an example, consider the following three short documents:
+Inverted indexes have been used for decades in the field of information retrieval. They are designed to access documents quickly. If a system cannot provide the data quick enough, the user is likely to switch to a different system. Documents are typically structured through words that form sentences, which form paragraphs, and, eventually, stories. When considering a document in its standard form, it is not trivial to determine efficiently whether it contains a specific word. When searching for something, it is paramount that the search engine knows what documents contain the keywords in the query. Documents are \emph{inverted} to store this information. Instead of storing documents as is (a mapping from documents to words), search engines store the inverted information (a mapping from words to documents). To provide an example, consider the following three short documents:
 
 \begin{itemize}
 	\item[\textbf{1.}] Cats and dogs are animals.
@@ -50,7 +50,7 @@ Then the inverted index looks something like this:
 \textbf{trick:} 3
 \medskip
 
-\noindent There are a couple of interesting observations that can be made here. Not all words appear in the inverted index. Typically words without ``meaning'', or so-called stop words, are dropped. These words tend to contain no semantic information and can therefore be dropped. This process is called stopword removal or \emph{stopping}. Then, words are sometimes shortened to their \emph{stem}. Let us say we have a query only mentioning the word ``dog'', so not plural, then we still want to be able to find the documents that mention the plural form. This shortening to the word's stem is called \emph{stemming}. In this case, the words are ordered alphabetically. When the number of documents in a collection increases, the number of unique words also increases. By storing the words alphabetically, a computer can find the entries for that particular word more efficiently. 
+\noindent A couple of interesting observations that can be made here. Not all words appear in the inverted index. Typically words without ``meaning'', or so-called stop words, are dropped. These words tend to contain no semantic information and can therefore be dropped. This process is called stopword removal or \emph{stopping}. Then, words are sometimes shortened to their \emph{stem}. Let us say we have a query only mentioning the word ``dog'', so not plural, then we still want to be able to find the documents that mention the plural form. This shortening to the word's stem is called \emph{stemming}. In this case, the words are ordered alphabetically. When the number of documents in a collection increases, the number of unique words also increases. By storing the words alphabetically, a computer can find the entries for that particular word more efficiently. 
 
 When someone queries the search engine with the following query: ``dog tricks'', the search engine can directly find which documents contain these words using the inverted index. It can then automatically discard all documents that do not contain these words.
 For the keywords, the search engine retrieves the lists associated with them. These lists are called \emph{posting lists} in information retrieval. Entries in such lists are referred to as \emph{postings}. In this case, the postings only contain the document identifiers as data. Generally, however, information like how often a word appears in a document or its location is also stored in the posting. In practice, posting lists are compressed, and instead of storing the direct identifiers, the gaps between them are stored such that the index becomes smaller. In literature, these gaps are referred to as delta gaps. 
@@ -108,9 +108,9 @@ If we find all subsets that adhere to the individual terms in this conjunction, 
 \begin{equation}
 	Q = \{d_1, d_3\} \cap \{d_3\} = \{d_3\}
 \end{equation}
-This shows that document $d_3$ is the only document that mentions dogs, but not cats. Although it is possible to express complicated expressions with Boolean logic, a document either satisfies the expression or does not. All documents that satisfy the expression are considered relevant; creating a ranking between them cannot be done with this approach alone. 
+This shows that document $d_3$ is the only document that mentions dogs, but not cats. Although it is possible to express complicated expressions with Boolean logic, a document either satisfies the expression or does not. All documents that satisfy the expression are considered of equal importance; creating a ranking between them cannot be done with this approach alone. 
 
-With this approach, there is no apparent difference between data retrieval and information retrieval; there is only one correct solution: all documents that satisfy the restrictions imposed by the query. 
+Using Boolean retrieval, there is no apparent difference between data retrieval and information retrieval; there is only one correct solution: all documents that satisfy the restrictions imposed by the query. 
 
 \subsubsection{Vector Space Models}
 In 1975, the vector space model was introduced by~\citet{VectorSpaceModel}. The idea behind the vector space model is to represent documents and queries as vectors. Consider a collection that has $t$ unique terms, then we can represent a document in the collection as a $t$ dimensional vector:
@@ -135,7 +135,7 @@ Now it is possible to calculate a similarity score between the query and every d
 	\cos\left(d, q\right) = \frac{\textbf{d} \cdot \textbf{q}}{||\textbf{d}||\ ||\textbf{q}||}
 \end{equation}
 
-Calculating this for the documents in the collection gives an estimated value of relevance for all of them. Ordering them based on this estimated value then produces a ranked list where the highest is presumed to be the most interesting for the user. As mentioned before, the weights represented in the document vector do not necessarily have to be binary. \Citeauthor{VectorSpaceModel}~showed that the product of the term frequency with a general measure of term importance worked best. The measure they used for term importance was the inverse document frequency proposed by \citet{idf} three years earlier.
+Calculating this for the documents in the collection gives an estimated value of relevance for all of them. Ordering them based on this estimated value then produces a ranked list where the highest is presumed to be the most interesting for the user. As mentioned before, the weights represented in the document vector do not necessarily have to be binary. \Citeauthor{VectorSpaceModel}~showed that the product of the term frequency with a general measure of term importance is highly effective. The measure they used for term importance was the inverse document frequency proposed by \citet{idf} three years earlier.
 
 \subsubsection{Probabilistic Relevance Models}
 In 1976,~\citeauthor{RSJ} developed the probabilistic ranking framework. Within this framework, it is assumed that a document has a certain probability of being relevant given a query. Then, a search system that implements models within this framework ranks documents with the highest probability of being relevant the highest.
@@ -145,7 +145,7 @@ Within this framework, making an assumption of binary independence, which is nic
 By extending this function to include within-document term frequency information and document length normalization, the well-known BM25 function can be derived. \cref{ir-using-relational-databases} will focus on this model, and additional information explaining this model will be presented there.
 
 \subsubsection{Language Models}
-Later, language models were proposed~\citep{croft_lm, hiemstra_lm, zhai_lm}. The idea behind language models is that documents are considered language samples. These samples can be considered the result of a generative process. This process generates terms in the sample by randomly selecting one of the words from that sample. Let the probability of a document $d$ generating a term $t_i$ be:
+Later, language models were proposed~\citep{croft_lm, hiemstra_lm, zhai_lm}. The idea behind language models is that documents are considered samples of language, modelled as the result of a generative process. This process generates terms in the sample by randomly selecting one of the words from that sample. Let the probability of a document $d$ generating a term $t_i$ be:
 
 \begin{equation}
 	P(t_i|d) = \frac{\mathit{tf}_{t_i,d}}{\sum_t^d tf(t, d)}
@@ -164,13 +164,13 @@ It has been shown that a simple smoothing technique addresses both issues at onc
 \begin{equation}
 	P(t_i|C) = \frac{\mathit{df}(t_i)}{\sum_t^C \mathit{df}(t)}
 \end{equation}
-With $C$ being the collection, and $df(t_i)$ the document frequency of term $t_i$; i.e., the number of documents in the collection in which term $t_i$ appears. Then, the probability generated by the document sample is interpolated by the probability generated by the collection sample:
+With $C$ being the collection, and $df(t_i)$ the document frequency of term $t_i$; i.e., the number of documents in the collection in which term $t_i$ appears. Then, the probability estimated by the document sample is interpolated by the probability based on the collection sample:
 \begin{equation}
 	P(d|Q) = \prod_{q \in Q} \omega \cdot P(q | d) + (1 - \omega) \cdot P(q | C) 
 \end{equation}
 with $\omega$ being the smoothing factor, i.e., how much is the collection sample weighted against the document sample?
 
-This smoothing solves both problems. As the collection sample contains all terms, it is no longer possible for probabilities generated by a specific term to be zero, so the resulting product will not be zero either. Words with a higher specificity also get a boost; words with a high specificity have a low probability of being generated by the collection sample, meaning that it is more important for a document to contain that word to achieve a high probability of relevance. Words with a low specificity have a smaller effect; the probability of them being generated by the collection sample is already relatively high. 
+Smoothing the probability estimates like this, solves both problems. As the collection sample contains all terms, it is no longer possible for probabilities generated by a specific term to be zero, so the resulting product will not be zero either. Words with a higher specificity also get a boost; words with a high specificity have a low probability of being generated by the collection sample, meaning that it is more important for a document to contain that word to achieve a high probability of relevance. Words with a low specificity have a smaller effect; the probability of them being generated by the collection sample is already relatively high. 
 
 \subsubsection{Learning-to-Rank}
 With the increase in compute power, learning-to-rank became a popular approach to ranking. The methods described in the previous sections can all be considered unsupervised learning methods if we look at them from a machine-learning perspective. Learning-to-rank models would be considered supervised or reinforcement learning methods from that perspective. 
@@ -229,7 +229,7 @@ $\left[
 	d_3, & d_2, & d_1
 \end{smallmatrix}
 \right]$. 
-The ranking produced by system $a$ is objectively better. It ranks the relevant document as the most relevant. System $b$, however, ranks the relevant document as the least relevant. If we evaluate the two systems with a loss function like mean absolute error however, system $b$ would seem the better one as the mean absolute error from
+The ranking produced by system $a$ is objectively better. It ranks the relevant document as the most relevant. System $b$, however, ranks the relevant document as the least relevant. If we evaluate the two systems with a loss function like mean absolute error however, system $b$ would seem the better one as the mean absolute error to
 $\left[
 \begin{smallmatrix}
 	1, & 0, & 0
@@ -237,7 +237,7 @@ $\left[
 \right]$
 is smaller. 
 
-\paragraph{Pairwise.} Pairwise ranking tries to deal with this by not directly learning from the relevance labels but by looking at the relative preferences between pairs of documents. The idea behind this is that it does not matter what the actual ranking score value is, as long as it is higher for relevant documents than for non-relevant ones.  
+\paragraph{Pairwise.} Pairwise ranking tries to deal with this problem by not directly learning from the relevance labels but by looking at the relative preferences between pairs of documents. The idea behind this is that it does not matter what the actual ranking score value is, as long as it is higher for relevant documents than for non-relevant ones.  
 
 Pairwise functions consider, given a query, two documents at a time. The function tries to determine which one of the two documents is more relevant than the other. If we consider the same set of relevance labels $\mathbf{y}$ and independent variables $\mathbf{X}$, then if we would take a pair of documents $x_k$ and $x_l$, with their corresponding relevance labels $y_k$ and $y_l$, assuming $y_k \neq y_l$, then we will learn the following function:
 \begin{equation}
@@ -251,32 +251,32 @@ Pairwise methods tend to be more expensive than pointwise methods, as the number
 
 A disadvantage of pairwise methods is that every pair is treated equally when training a model. There is no difference when comparing the two highest-ranked documents to comparing the two lowest-ranked documents, even though users typically care about the highest-ranked documents. 
 
-\paragraph{Listwise.} Instead of only looking at pairs of documents, the listwise approach considers the whole ranking. This way, the top of the ranking can affect the function's learning more than the bottom of the ranking.
+\paragraph{Listwise.} Instead of looking at pairs of documents only, the listwise approach considers the whole ranking. This way, the top of the ranking can affect the function's learning more than the bottom of the ranking.
 Generally, when learning a listwise learning-to-rank method, the goal is to optimize some ranking metric quality directly. Examples of ranking metrics will be introduced in~\cref{sec:evaluation}.
 
 \paragraph{Multistage Ranking}
 \label{sec:multistage}
-In many cases, applying inference to all documents in the collection is still impossible because of computational costs. A non-learning-to-rank approach is often used to create an initial ranking, under the assumption that the top-$k$ documents contain all relevant documents. The learned method only reorders the top-$k$ documents to present to the user. 
+In many cases, applying inference to all documents in the collection is prohibitively costly. A non-learning-to-rank approach is often used to create an initial ranking, under the assumption that the top-$k$ documents contain all relevant documents. The learned method only reorders the top-$k$ documents to present to the user. 
 
 In these cases, it can make sense to rank the top-$k$ documents using an inverted index, while the reranking is done with another ranking approach.
 
 \subsubsection{Vector Space Models revisited}
-With the rise of large language models after the introduction of BERT in 2019~\cite{BERT}, the vector space model has become more popular again due to what is called \emph{dense} retrieval.  
+With the rise of large language models after the introduction of BERT by~\cite{BERT}, the vector space model has become more popular again due to what is called \emph{dense} retrieval.  
 
-The basic idea is to predict the relevance of a document $d$ for a query $q$ as follows:
+The basic idea is to predict the relevance of a document $d$ for a query $q$ as follows~\cite{seperation-logical-physical}:
 \begin{equation}
 	\text{rel}(q, d) = \omega\left(\phi\left(q\right),
 	\psi\left(d\right)\right)
 \end{equation}
-Here, $\psi$ and $\phi$ are learned functions that typically use large language models that map the query and the document to vectors with low dimensionality. These functions map the query and the document to the same space. When documents are relevant to the query, the resulting vectors should be similar, while if the document is not relevant, they should be dissimilar. This similarity is measured through a similarity function $\omega$, often the dot-product or cosine similarity.
+Here, $\psi$ and $\phi$ are learned functions that use large language models to map the query and the document to vectors with relatively low dimensionality.\footnote{$10^2$ - $10^3$ instead of the $10^8$ - $10^9$ parameters of the LLM's.} These functions map the query and the document to the same space. When documents are relevant to the query, the resulting vectors should be similar, while if the document is not relevant, they should be dissimilar, as measured through a similarity function $\omega$, often the dot-product or cosine similarity.
 
-Finding the vectors closest to a query vector is the nearest neighbor search problem. In the case of dense retrieval, dedicated dense retrieval systems tend to be used instead of an inverted index~\cite{faiss}. 
+Finding the vectors closest to a query vector then corresponds directly to the nearest neighbor search problem. In the case of dense retrieval, dedicated dense retrieval systems tend to be used instead of an inverted index~\citep{faiss}. 
 
 \subsection{Evaluation}
 \label{sec:evaluation}
-In the previous section, all kinds of ranking approaches have been introduced. When comparing different ranking methods to each other, we need to be able to measure some ranking quality. In order to measure the quality of rankings produced by systems, many different metrics have been introduced. In this section, the most common evaluation metrics are introduced, among them all metrics used in this thesis. 
+In the previous section, a variety of ranking approaches has been introduced. When comparing different ranking methods to each other, we need to be able to measure the quality of a result list for a given query. Many metrics have been introduced in the literature. Here, we focus on the most common evaluation metrics, including all the metrics used in this thesis. 
 
-All metrics introduced are $@k$ metrics. We only evaluate the documents ranked up to rank $k$, i.e., if $k=30$, we only consider the first $30$ documents produced by the system.
+The metrics are $@k$ metrics, these only evaluate the documents ranked up to rank $k$, i.e., if $k=30$, we only consider the first $30$ documents produced by the system.
 
 \subsubsection{Precision}
 A straightforward approach to evaluating a ranking produced by a system is through precision. The precision metric counts the number of relevant documents found by the system, which is then divided by the total number of documents found by the system:
@@ -284,17 +284,17 @@ A straightforward approach to evaluating a ranking produced by a system is throu
 	\textit{P}@k = \frac{\sum_{i=1}^k\text{rel}\left(d_i\right)}{k}
 \end{equation}
 In this case, $\text{rel}(.)$ is a function that returns 1 if the document is relevant; otherwise, 0.
-If $k=30$, then only the first $30$ documents are considered. If ten of these documents are relevant, then $P@30 = \frac{10}{30} = \frac{1}{3}$. Precision can, however, be somewhat limited in its use. In this example, the quality of the ranking might not seem good, as only a third of the produced documents are relevant. However, when only ten relevant documents are present in the collection, the $P@30$ could not have been higher. 
+If $k=30$, then only the first $30$ documents are considered. If ten of these documents are relevant, then $P@30 = \frac{10}{30} = \frac{1}{3}$. Precision can, however, be somewhat limited in its use. In this example, the quality of the ranking might not seem good, as only a third of the produced documents are relevant. However, when only ten relevant documents are present in the collection, the $P@30$ found is the maximum attainable.  
 
 \subsubsection{Recall}
 Another approach to evaluate a ranking would be to measure how many relevant documents were retrieved compared to the total number of documents. This measure is called recall: 
 \begin{equation}
 	\textit{R}@k = \frac{\sum_{i=1}^k\text{rel}\left(d_i\right)}{\sum_{i=1}^N\text{rel}\left(d_i\right)}
 \end{equation}
-Here $N$ is the number of documents in the collection. If, again, $k=30$ and we found $10$ relevant documents out of $15$ known relevant documents in the collection, then $R@30 = \frac{10}{15} = \frac{2}{3}$. The problem with recall is that it does not distinguish well between systems if there are not many relevant documents. Also, it is not so easy to determine the total number of relevant documents for an arbitrary query.
+Here $N$ is the number of documents in the collection. If, again, $k=30$ and we found $10$ relevant documents out of $15$ known relevant documents in the collection, then $R@30 = \frac{10}{15} = \frac{2}{3}$. The problem with recall is that it does not distinguish well between systems if only few relevant documents exist. Also, it is far from straightforward to determine the total number of relevant documents for an arbitrary query.
 
 \subsubsection{$F_1$-measure}
-Where precision measures the share of documents found that are relevant, recall measures the number of relevant documents found compared to the total number of relevant documents. For precision, it makes sense to retrieve as few documents as possible; the probability of finding relevant documents decreases the more documents are returned. For recall, it makes sense to retrieve more documents, as when more documents are retrieved, it can only increase.  
+Where precision measures the share of documents found that are relevant, recall measures the share of relevant documents found. For precision, it makes sense to retrieve as few documents as possible; the probability of finding relevant documents is likely to decrease the more documents are returned. For recall, it makes sense to retrieve more documents, as when more documents are retrieved, it can only increase.  
 
 To find the correct balance between precision and recall, the $F_1$-measure is usually reported, defined as the harmonic mean between precision and recall:
 \begin{equation}
@@ -326,11 +326,11 @@ $\left[
 \begin{smallmatrix}
 	0, & 0, & 1
 \end{smallmatrix}
-\right]$, the rankings produce an $\textit{AP}@3$ of $1$ and $\frac{1}{3}$ respectively.
+\right]$, the rankings produce an $\textit{AP}@3$ of $1$ and $\frac{1}{3}$, respectively.
 
 \subsubsection{Discounted Cumulative Gain}
 Discounted cumulative gain is an evaluation metric developed after the observation that users often only look at the highest-ranked documents and that documents might not have binary relevance labels (when we refer to their scores as graded relevance assessments).
-If a document is ranked at, say, rank 5, it might already be possible that it is not considered by the user anymore and that they already reformulated the query. Plus, the metrics described before would rank the following two rankings to be of equal quality: 
+If a document is ranked at, say, rank 5, it might be possible that it is not considered by the user anymore, because they would rather reformulated the query. Plus, the metrics described before would rank the following two rankings to be of equal quality: 
 $\left[
 \begin{smallmatrix}
 	2, & 1, & 0
@@ -354,24 +354,24 @@ A disadvantage of $\textit{DCG}$ is that the scores produced by this metric can 
 with $\textit{IDCG}@k$ being the $\textit{DCG}@k$ for a perfect ranking. 
 
 \subsubsection{Reciprocal Rank} 
-The metrics described before score the whole ranking up to rank $k$. This might be unnecessary, for example, in a question answering scenario. If a document found is relevant, it may not matter anymore what the relevance assessment is of all documents after it. After all, the user would already have the answer, and likely stop looking for more information. The reciprocal rank therefore takes only the first found relevant document into account. Reciprocal rank is the inverse of the index of the first found document:
+The metrics described before score the whole ranking up to rank $k$. This might be unnecessary, for example, in a question answering scenario. If a document found is relevant, it may not matter anymore what the relevance assessment of the remaining documents. After all, the user would already have the answer, and likely stop looking for more information. The reciprocal rank therefore takes only the first found relevant document into account. Reciprocal rank is the inverse of the index of the first found document:
 \begin{equation}
 	\textit{RR@k} = \frac{1}{\text{rank}(d)}
 \end{equation}
 where only the first $k$ documents are considered. Here, rank($d$) refers to the position of the first found relevant document. If the index of the first relevant is greater than $k$, the resulting score is $0$.
 
 \subsection{Significance Testing}
-Some of the measures described above can still be problematic when they are used to compare different ranking approaches. It is not always entirely clear how to do significance testing on some metrics. For example, in the case of reciprocal rank, the scores are not on an interval scale. In this case it is not possible to calculate a mean score for an ordinal scale, it is however necessary for the most common tests for significance. \Citet{fuhr-mrr} describes mistakes when evaluating IR systems and how to avoid them.
+Some of the measures described above can still be problematic when they are used to compare different ranking approaches. It is not always entirely clear how to do significance testing on some metrics. For example, in the case of reciprocal rank, the scores are not on an interval scale. In this case it is not possible to calculate a mean score for an ordinal scale, which is however necessary for the most common tests for significance. \Citet{fuhr-mrr} describes mistakes when evaluating IR systems and how to avoid them. There are however some contrary views~\citep{on-fuhrs-guideline}. Also, when comparing against results previously published in literature, we can only use the same metrics they used to compare the methods. 
 
 \section{Data Retrieval}
 In the case of information retrieval, the concept of \emph{relevance} is critical. When someone issues a query, it does not necessarily have to be the case that words in the query must be present for the document to be relevant. Information retrieval has to deal with the uncertainty inherent to the information seeking process. Also, if only some relevant documents are found, this does not necessarily have to be a problem, as long as the information need of the user is satisfied. If we think about a search engine from a user's perspective, a document is only relevant if it contains the information they seek. In order to find this information, the user has to express their information need in a query, which the systems then have to interpret somehow in order to present the user (hopefully) the correct information. 
 It might, however, be possible that two different users issue the same query, e.g., \emph{the weather}. Suppose one user is interested in today's weather, while the other is interested in tomorrow's weather. Different documents will be relevant for the user in these cases: relevancy is also tied to the user's expectations, that may not be known to the system.
 
-In the field of \emph{data retrieval}, relevancy does not exist. When we speak about data retrieval, we are interested in retrieving all data that fulfills some predicate. It assumes that there is no ambiguity in the data and the request for data. An example query could be; to provide a list of all dog breeds. In this case, the system should return a list of all dog breeds known by the system. If it would accidentally forget to return one dog breed or includes an answer that is not correct, the system works incorrectly. 
-The most commonly used data retrieval systems are relational database management systems (RDBMS) or relational databases. Relational databases are used to represent tabular data as relations. The concept of a relation comes from relational algebra, where a relational is defined as a set of tuples. In a relational database, a table corresponds to the relation, a row is one of the tuples, and a column can be considered an attribute in the tuple. Relational databases implement the operators as defined by relational algebra, which means users can select columns from a table (projection), filter rows that fulfill certain predicates (selection), and combine tables (join). There are differences between the theoretic framework of relational algebra and its implementation in relational databases. For example, in practice, it is often possible to have duplicate rows in a relational database, which is not possible in a set. 
+In the field of \emph{data retrieval}, the notion of relevancy does not exist. When we speak about data retrieval, we are interested in retrieving all data that fulfills some predicate. It assumes that there is no ambiguity in the data and the request for data. An example query could be; to provide a list of all dog breeds. In this case, the system should return a list of all dog breeds known by the system. If it would accidentally forget to return one dog breed or includes an answer that is not correct, the system works incorrectly. 
+The most commonly used data retrieval systems are relational database management systems (RDBMS) or relational databases. Relational databases represent tabular data as relations, a concept of from relational algebra; where a relational is defined as a set of tuples. In a relational database, a table corresponds to the relation, a row is one of the tuples, and a column can be considered an attribute in the tuple. Relational databases implement the operators as defined by relational algebra, which means users can select columns from a table (projection), filter rows that fulfill certain predicates (selection), and combine tables into new ones (join). There are differences between the theoretic framework of relational algebra and its wide-spread implementation in relational databases. For example, in practice, it is often possible to have duplicate rows in a relational database, which is inconsistent with a set. 
 
-In the 1970's, relational databases have standardized on the structured query language (SQL).  
-SQL is a declarative language; someone can express which data needs to be retrieved but not how. Depending on what a user expects from the program, choosing different database management systems for different applications makes sense. In the case of storing employee records for a company, it makes sense to store this data in a database suited for online processing transactions (OLTP). When data analysis for scientific studies is important, storing data in a database system focused on analytics (OLAP) makes more sense.
+In the 1970s, relational databases have standardized on the structured query language (SQL).  
+SQL is a declarative language; expressions specify which data needs to be retrieved, but not how. Depending on what a user expects from the program, choosing different database management systems for different applications makes sense. In the case of storing employee records for a company, it makes sense to store this data in a database suited for online processing transactions (OLTP). When data analysis for scientific studies is important, storing data in a database system focused on analytics (OLAP) makes more sense.
 
 \subsection{Physical vs. Logical models}
 As SQL is a declarative language, data management systems' physical and logical models are strongly separated. Although many dialects of SQL exist, basic SQL queries are system agnostic and can run on different types of SQL engines. The logical model of data management systems are the SQL queries; what should be done. The physical model is how this should be done. Depending on which system is used, things like join ordering, how the data is processed, or how it is represented internally, can be very different. The logical model does not ``mind'' how the query is resolved, as long as it is done correctly. 
@@ -381,26 +381,25 @@ In the case of information retrieval, the physical and logical models are often 
 \citet{seperation-logical-physical} discusses how information retrieval might benefit from separating physical and logical models in the context of dense retrieval models. \Cref{from-tables-to-graphs} will discuss his proposal in more detail.
 
 \subsection{Columns vs Rows}
-Earlier database management systems were row oriented. Row-oriented means that when we look at how data is physically stored on the computer, all data within a tuple is represented near each other in memory. This orientation is especially well suited when a database needs to process many transactions. In the past, some IR systems have been built on top of such databases. However, these were less efficient than when inverted indexes were used. Later, column-oriented databases were developed. These databases are more suited for analytical queries; transactions tend to be more costly. As these databases are more suited for analytics, they are also more suited for information retrieval systems. This practice is used throughout this thesis. 
+Earlier database management systems were row oriented. Row-oriented means that when we look at how data is physically stored on the computer, all data within a tuple is represented near each other in memory. This orientation is especially well suited when a database needs to process many transactions. In the past, some IR systems have been built on top of such databases. However, these were much less efficient than when inverted indexes were used. Later, column-oriented databases were developed. These databases are more suited for analytical queries, at the cost of more expensive transaction processing. As these databases are designed for efficient and scalable analytics, they are also more suited for information retrieval systems. This practice is used throughout this thesis. 
 
 \subsection{NoSQL and Graphs}
 \label{sec:nosqlgraph}
-In recent years there has been interest in database systems that approach data retrieval differently than traditional relational database systems. These systems approach data retrieval without relying on the relational model. This could, for example, mean that joins are not possible within the system. This might seem limiting, but if certain operations are not supported, it might be possible to increase the efficiency of other operations. A very efficient key-value store could be an example of this.
+In recent years there has been interest in database systems that approach data retrieval differently than traditional relational database systems. These systems approach data retrieval without relying on the relational model. This could, for example, mean that joins are inefficient or not even possible to express within the system. This might seem limiting, but if certain operations are not supported, it might be possible to increase the efficiency of other operations. A very efficient key-value store is a good example to illustrate this trade-off.
 
-In particular, graph database systems are a type of NoSQL database management systems that have been of interest in the database community in the last few years. The concept of graphs is explained in \cref{sec:graphs}. The research presented in~\cref{from-tables-to-graphs} explores these databases from an IR point of view.
+In particular, graph database systems are a type of NoSQL database management systems that have been of interest in the database community in the last few years. The concept of graphs is explained in \cref{sec:graphs}. The research presented in~\cref{from-tables-to-graphs} explores the possible benefits of considering these databases from an IR point of view.
 
-\subsection{Embedded Database}
-Database management systems, usually run on dedicated database servers. It is, however, also possible to have so-called embedded database systems. These systems do not require a dedicated database server, but work within the application process itself. An advantage of embedded databases is that they share memory space with the application process. This makes it possible to instantly move data from the database to a usable format for the application process. For information retrieval applications, this might be beneficial, especially in the case of multistage ranking as described in ~\cref{sec:multistage}. However, embedded databases might not be the best solution in every case. When a dedicated database server is run, it is easier for multiple clients to read and write to the same database simultaneously. 
+\subsection{Embedded Databases}
+Database management systems usually run on dedicated database servers. It is, however, also possible to use so-called embedded database systems. These systems do not require a dedicated database server, but work within the application process itself. An advantage of embedded databases is that they share memory space with the application process. This makes it possible to instantly move data from the database to a usable format for the application process. For information retrieval applications, this might be beneficial, especially in the case of multistage ranking approaches as described in ~\cref{sec:multistage}. However, embedded databases might not be the best solution in every case. When a dedicated database server is run, it is easier for multiple clients to read and write to the same database simultaneously. 
 
 \subsection{Databases for Information Retrieval}
-As databases are designed for the purpose of data retrieval, they are especially suited for information retrieval in the case of Boolean retrieval. However, it is harder to express models following a data retrieval approach when considering the concept of relevancy. When expressing models that model some uncertainty, much data must be processed efficiently—inverted indexes are used to select critical data quickly. Older (row-based) database systems were not efficient enough to quickly retrieve all the necessary data to create rankings and model uncertainty simultaneously. After columnar databases became prominent, it was possible to express simple ranking models that consider uncertainty, with query plants that can be executed in a reasonably efficient manner. In this thesis, we will use, column oriented databases for information retrieval problems. Specifically, MonetDB~\citep{monet}, a non-embedded columnar database, is used for the work presented in \cref{ir-using-relational-databases}, and DuckDB~\citep{duckdb}, an embedded column oriented database, is used for the work presented in \cref{from-tables-to-graphs,ch:mmead}.
+As databases are designed for the purpose of data retrieval, they are especially suited for information retrieval in the case of Boolean retrieval. However, it is harder to express the models that capture relevancy using a purely data retrieval approach.
+When expressing models that represent uncertainty, much data must be processed efficiently—inverted indexes are used to select critical data quickly. Older (row-based) database systems were not efficient enough to retrieve all necessary data to create rankings and model uncertainty simultaneously. After columnar databases became prominent, it was possible to express simple ranking models that consider uncertainty, with query plants that can be executed in a reasonably efficient manner. In this thesis, we will use, column oriented databases for information retrieval problems. Specifically, MonetDB~\citep{monet}, a non-embedded columnar database, is used for the work presented in \cref{ir-using-relational-databases}, and DuckDB~\citep{duckdb}, an embedded column oriented database, is used for the work presented in \cref{from-tables-to-graphs,ch:mmead}.
 
 \section{Graphs}
 \label{sec:graphs}
 As mentioned in~\cref{sec:nosqlgraph}, in this thesis, we present work where we want to think about information retrieval using the concept of graphs and
 which kinds of graphs exist. The graphs definitions follow the descriptions by \citet{big-graphs} and \citet{angles2018property}.
-% TODO uitzoeken wat Arjen wil met uitzoeken volgens feedback.
-
 
 \paragraph{Basic Graphs}
 A \emph{graph} is a structure consisting of a set of objects where pairs of these objects can be related. Typically, these objects are called nodes or vertices, and the relation between a pair of objects is referred to as an edge. So more formally, a graph $G$ is a pair of vertices $V$ and edges $E$;
@@ -412,7 +411,7 @@ where $V$ is the set of vertices in the graph, and $E$ a set of pairs (sets with
 	E = \left\{\left\{v_1, v_2\right\} | \left\{v_1, v_2\right\} \in V^2\right\}
 	\label{undirected-edges}
 \end{equation}
-Graphs  can be depicted graphically illustrated as a set of circles, where every circle represents a vertex. If an edge exists between two vertices, a line is drawn between the two circles. Considering for example \cref{basic-graph}, the graph illustrates a graph with $V = \left\{x_1, x_2, x_3\right\}$ and $E = \left\{\left\{x_1, x_2\right\}, \left\{x_2, x_3\right\}\right\}$. It does not necessarily have to be the case that every vertex is included in at least one edge.
+Graphs  can be depicted graphically illustrated as a set of circles, where every circle represents a vertex. If an edge exists between two vertices, a line is drawn between the two circles. \Cref{basic-graph}, for example illustrates a graph with $V = \left\{x_1, x_2, x_3\right\}$ and $E = \left\{\left\{x_1, x_2\right\}, \left\{x_2, x_3\right\}\right\}$. It does not necessarily have to be the case that every vertex is included in at least one edge.
 
 \begin{figure}
 	\centering
@@ -461,8 +460,9 @@ Graphs  can be depicted graphically illustrated as a set of circles, where every
 	\caption{Example of (\textbf{a}) a simple graph, (\textbf{b}) a directed graph, and (\textbf{c}) a mixed graph.}  
 \end{figure}
 
-A graph is called \emph{bi-partite} if it is possible to separate the set of vertices in two separate sets,  such that  all edges only connect vertices from the two sets with each other (there are no edges between vertices in the same set). The graph's structure can be used to analyze how things relate. 
-Considering geographical maps, we can model countries as vertices and create an edge between two countries if they are neighboring. Then, we can use the graph structure to analyze the possible paths from one country to another where only the fewest possible other countries are crossed, on a smaller scale this is useful for navigation systems. For many use cases, however, it is helpful to let graphs contain data or have less restrictive rules on how a graph might be formed.
+A graph is called \emph{bi-partite} if it is possible to separate the set of vertices in two disjoint subsets,  such that  all edges only connect vertices from the two subsets with each other (there are no edges between vertices in the same subset). 
+
+The graph's structure can be used to analyze how things relate. Considering geographical maps, we can model countries as vertices and create an edge between two countries if they are neighboring. Then, we can use the graph structure to analyze the possible paths from one country to another where only the fewest possible other countries are crossed, on a smaller scale this is useful for navigation systems. For many use cases, however, it is helpful to let graphs have less restrictive rules on how it might be formed.
 
 \paragraph{Directed Edges} The most basic extension of graphs is that they are allowed directed edges. This means an edge can exist from one node to another, but this connection does not  automatically also exist in the opposite direction. In the case of countries and their neighbors, this does not make sense; if one country borders another, the opposite is also true. However, on the internet, one website might contain a hyperlink to another, while the opposite does not have to be the case. We need directed graphs to properly model the situation. Again, we can use this model to see how many paths exist from one website to another, with the restriction of visiting two other websites. In this case, $E$ is a set of ordered pairs of vertexes: 
 \begin{equation}
@@ -569,7 +569,7 @@ They are a standard by the World Wide Web Consortium (W3C). The idea behind RDF 
 	\label{property-graph} 
 \end{figure}
 
-The final type of graph we discuss is the property graphs. Property graphs allow everything we described before, while vertices can also have labels, and vertices and edges can have property-value pairs (multiple values per property are even allowed). A property-value represents some named data for either a vertex or edge. For example, if a node represents a person, the person's age can be a property of the node. Depending on the type of property graph, the graph might also contain multiple vertex or edge labels. \cref{property-graph} shows an example of a property graph. The node with label \emph{Chris} has last name and birth year properties. The edge with label \emph{knows} from the node \emph{Chris} to the node \emph{Arjen} has a timestamp as a property. Property graphs have high expressive power, and have become the preferred the data model for graph databases. 
+The final type of graph we discuss is the property graphs. Property graphs allow everything we described before, while vertices can also have labels, and vertices and edges can have property-value pairs (multiple values per property are even allowed). A property-value represents some named data for either a vertex or edge. For example, if a node represents a person, the person's age can be a property of the node. Depending on the type of property graph, the graph might also contain multiple vertex or edge labels. \cref{property-graph} shows an example of a property graph. The node with label \emph{Chris} has last name and birth year properties. The edge with label \emph{knows} from the node \emph{Chris} to the node \emph{Arjen} has a timestamp as a property. Property graphs have high expressive power, and have become the preferred data model for graph databases. 
 
 Formally, to complement our previous definitions of vertices and edges, we assume the existence of three infinite sets; $L$, $P$, and $A$. $L$ is an infinite set containing vertex/edge labels, $P$ is an infinite set containing property names, and $A$ is an infinite set of atomic values. Using these sets we can define the following two functions that assign labels, and property-value pairs:
 \begin{equation}
@@ -582,16 +582,16 @@ Formally, to complement our previous definitions of vertices and edges, we assum
 In \cref{from-tables-to-graphs}, we built on this representation to explore graph databases for IR. 
 
 \section{Reproducible Science}
-In order to establish experimental results in science, it is essential that they can independently be verified. Many fields have had problems where the reproducibility of scientific studies fell short. In psychology, a large reproducibility study was carried out~\citep{psychology-reproduciblity}, based on a selection of 100 studies published in 2008. The goal was to reproduce the findings of all these studies, to determinethe state of reproducibility of the field. Of the original 100 studies, 97 presented significant results. However, when trying to reproduce these results, this was possible for only 35 out of 97 of these studies to reproduce significant results. 
+In order to establish experimental results in science, it is essential that they can independently be verified. Many fields have had problems where the reproducibility of scientific studies fell short. In psychology, a large reproducibility study was carried out~\citep{psychology-reproduciblity}, based on a selection of 100 studies published in 2008. The goal was to reproduce the findings of all these studies, to determinethe state of reproducibility of the field. Of the original 100 studies, 97 presented significant results. However, when trying to reproduce these results, only 35 out of 97 of these studies succeeded to reproduce significant results. 
 
-It is unclear why that many scientific studies were not reproducible. Nevertheless, many type II errors happened; failure to reject the null hypothesis while it is false. Scientific misconduct could explain some of these results, but it is unlikely that this is happening at such a large scale. All studies this project tried to reproduce were published in just three journals. These journals were peer-reviewed; only the scientific studies the reviewers thought were good enough were published. This process, of course, introduces a selection bias. Studies that show more impactful results have a higher probability of being published. This bias favors papers with type II errors, even though the scientific conduct was proper. 
+It is unclear why that many scientific studies were not reproducible. Nevertheless, many type II errors happened; failure to reject the null hypothesis while it is false. Scientific misconduct could explain some of these results, but it is unlikely that this is happening at such a large scale. All studies this project tried to reproduce were published in just three journals. These journals were peer-reviewed; only the scientific studies the reviewers thought were good enough were published. This process, of course, introduces a selection bias. Studies that show more impactful results have a higher probability of being published. This bias favors papers with type II errors, even when the scientific conduct was proper. 
 
 When a scientific study is published, people might interpret its results as fact. However, one should consider experimental results only as evidence of how the world might work. Then, whenever the results are reproduced, more evidence is gathered to support the findings. By reproducing science, our understanding of the world becomes more precise, and eventually, we can assume with high certainty a hypothesis to be true. 
 
-In the field of information retrieval, reproducibility has also been a topic of interest. The topic of reproducibility forms a red line through the dissertation, and only some observations on the topic of reproducibility in our field are highlighted here, Before introducing these observations, it is important to clearly define what is meant by reproducibility. Within the Association for Computing Machinery (ACM), a distinction has been made between the concepts of repeatability, replicability, and reproducibility: 
+In the field of information retrieval, reproducibility has also been a topic of interest. The topic of reproducibility forms a thread through the dissertation, and only some observations on the topic of reproducibility in our field are highlighted here. Before introducing these observations, it is important to clearly define what is meant by reproducibility. Within the Association for Computing Machinery (ACM), a distinction has been made between the concepts of repeatability, replicability, and reproducibility: 
 \begin{itemize}
-	\item \emph{Repeatability} is verification of results produced by the \underline{same} research group, using the \underline{same} resources. Confirming that when one reruns their experiments, the same results are produced. This might seem trivial, but it might happen that when software is updated to some newer version, the results software produces might slightly differ. 
-	\item \emph{Replicability} is the verification of results produced by a \underline{different} research group, but using the \underline{same} resources. This could, for example, be done by running the publicly available code for a research project and verifying its results. This is already somewhat more tricky than it might look. Often, in scientific papers, the parameter settings of the software might be left out, making it hard to verify results correctly. 
+	\item \emph{Repeatability} is verification of results produced by the \underline{same} research group, using the \underline{same} resources. Confirming that when one reruns their experiments, the same results are produced. This might seem trivial, but when software is updated to some newer version, the results that the software produces could differ slightly. 
+	\item \emph{Replicability} is the verification of results produced by a \underline{different} research group, but using the \underline{same} resources. This could, for example, be done by running the publicly available code for a research project and verifying its results. This is more tricky than it might look. Often, for example in scientific papers, the exact parameter settings of the software might be left out, making it hard to verify results correctly. 
 	\item \emph{Reproducibility} is the verification of results produced by a \underline{different} research group that uses its own (\underline{different}) resources. Typically, in a reproduction study, the scientific study is done from scratch using the instructions presented in a paper. As many details might be left out, it is even harder to reproduce results exactly. However, if a reproduction study can confirm the results of previous work, this is a strong indication of the correctness of the results presented in that work.
 \end{itemize}
 
