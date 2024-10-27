@@ -13,40 +13,40 @@ The MS MARCO datasets~\citep{msmarco} have become the \emph{de facto} benchmark 
 
 Purely text-based neural IR models, trained using MS MARCO collections, can generally not reason over complex concepts in the social and physical world~\citep{bosselut2021dynamic, sciavolino:2021:simple}. In response, recently proposed neuro-symbolic methods aim to combine neural models and symbolic AI approaches, e.g., by using knowledge graphs, which map concepts to symbols and relations. An essential step in developing neuro-symbolic models is connecting text to entities that represent the world's concepts formally. This step is mainly done using \textit{Entity linking}, an intermediary between text and knowledge graphs, which detects entity mentions in the text and links them to the corresponding entries in a knowledge graph.
 
-Despite the proven effectiveness of neuro-symbolic AI -- and for IR models in particular~\citep{Tran:2022:DRE, Gerritse:2022:EMBERT, chatterjee2022bert} -- the IR community has made limited efforts to develop such models. A primary hindrance is the annotation of large-scale collections with entities; entity linking methods are computationally expensive. Running them over a large text corpus (e.g., MS MARCO v2 with 12M documents and 140M passages) requires extensive resources. This work aims to fill this gap by making entity annotations of the MS MARCO ranking collections readily available and easy to use. In the context of green AI / IR, computing the data only once, and then sharing it with many will reduce the amount of computation needed for people to use this resource. %todo until here
+Despite the proven effectiveness of neuro-symbolic AI -- and for IR models in particular~\citep{Tran:2022:DRE, Gerritse:2022:EMBERT, chatterjee2022bert} -- the IR community has made limited efforts to develop such models. A primary hindrance is the annotation of large-scale collections with entities; entity linking methods are computationally expensive. Running them over a large text corpus (e.g., MS MARCO v2 with 12M documents and 140M passages) requires extensive resources. This work aims to fill this gap by making entity annotations of the MS MARCO ranking collections readily available and easy to use. In the context of green AI / IR, computing the data only once, and then sharing it with many will reduce the amount of computation needed for people to carry out research on entity annotated web documents.
 
-So, this chapter is a continuance of the previous chapter. In the previous chapter the batch extension for the Radboud Entity Linking system, REBL, is introduced. In this chapter MMEAD is presented, a resource that provides entity links for the MS MARCO document and passage ranking collections. Two state-of-the-art entity linking tools, namely REL~\citep{rel}, with efficiency improvements made in REBL,~\citep{rebl} and BLINK~\citep{blink}, are utilized for annotating the corpora. The annotations are stored in a DuckDB database, enabling efficient analytical operations and fast access to the entities. The resource is available as a Python package and can be installed from PyPI effortlessly. The resource also includes a sample demo, enabling queries with complex compositional structures about entities. 
+This chapter continues where the previous chapter ended. In the previous chapter the batch extension for the Radboud Entity Linking system, REBL, is introduced. In this chapter MMEAD is presented, a resource that provides entity links for the MS MARCO document and passage ranking collections. Two state-of-the-art entity linking tools, namely REL~\citep{rel}, with efficiency improvements made in REBL,~\citep{rebl} and BLINK~\citep{blink}, are utilized for annotating the corpora. The annotations are stored in a DuckDB database, enabling efficient analytical operations and fast access to the entities. The resource is available as a Python package and can be installed from PyPI effortlessly. The resource also includes a sample demo, enabling queries with complex compositional structures about entities. 
 
-The primary objective of the work in this chapter is to simplify the study of neuro-symbolic IR research, enabling furhter steps in neural IR. In our experiments, we show significant improvements on recall for neural re-ranking IR models when using MMEAD annotations as bag-of-word expansions for queries and passages. Our experiments reveal that the difference in effectiveness is even greater (in terms of both recall and MRR) for complex queries that require further reasoning over entities.
+The primary objective of the work in this chapter is to simplify the study of neuro-symbolic IR research, enabling further steps in neural IR. In our experiments, we show significant improvements on recall for neural re-ranking IR models when using MMEAD annotations as bag-of-word expansions for queries and passages. Our experiments reveal that the difference in effectiveness is even greater (in terms of both recall and MRR) for complex queries that require further reasoning over entities.
 
-To show the usefulness of our resource, we also present how to enrich interactive search applications. Specifically, we demonstrate how to obtain entities' geographical locations by relating the entities found in passages to their Wikidata entries. Plotting these entities on the world map shows that the MS MARCO passages can be geo-located all over the world.
-We can also move from location to web text by retrieving all passages associated with a geographical location that we present through an interactive demo. 
+To show the usefulness of our resource beyond plain ranking, we also present how to enrich interactive search applications. Specifically, we demonstrate how to obtain entities' geographical locations by relating the entities found in passages to their Wikidata entries. Plotting these entities on the world map shows that the MS MARCO passages can be geo-located all over the world.
+We can also move from location to web text by retrieving all passages associated with a geographical location.
 
 To return to our last research question; 
 \begin{itemize}
 	\item[\textbf{RQ3:}] When does information retrieval research benefit from graph data?
 \end{itemize}   
-In this chapter attempts to demonstrate that graph data, in this case a graph of entities, can help retrieval by including metadata that can be included through graph operations. Although we do not use GeeseDB, the work described in~\cref{from-tables-to-graphs}, to carry out the query expansion methods described, it would be a natural application of GeeseDB. % todo toch toevoegen
+This chapter attempts to demonstrate that graph data, in this case a graph of entities, can help retrieval by including metadata that can be included through graph operations. Although we have not used GeeseDB, the work described in~\cref{from-tables-to-graphs}, it would be a natural application of GeeseDB to carry out the query expansion methods described.
 
 In summary, this chapter makes the following contributions:
  \begin{itemize}
 	\item We annotate the documents of the MS MARCO passage and document collections and share these annotations. By sharing these annotations, we ease future research in neuro-symbolic retrieval, which extensively uses entity information. We also provide useful metadata such as Wikipedia2Vec~\citep{wikipedia2vec} entity embeddings. 
 	\item We provide a Python library that makes our data easy to use. All data is stored in DuckDB tables, which can be loaded and queried quickly. The library is easy to install through PyPI, and the entity annotations are available with only a few lines of code.
-	\item We experimentally show that retrieval effectiveness measured by recall significantly increases when using MMEAD. The improvement is even greater for hard queries, where we observe low retrieval effectiveness using text-only IR models.
+	\item We experimentally show that retrieval effectiveness measured by recall significantly increases when using MMEAD. The improvement is even greater for complex queries, where we observe low retrieval effectiveness using text-only IR models.
 	\item We demonstrate how the data can be used in geographical applications. For example, we can plot on a static map all entities found in the MS MARCO v2 passage collection for which geographical data is available. Additionally, through an interactive demo, one can retrieve all passages associated with a geographical location.  
 \end{itemize}
 
 MMEAD is publicly available at \url{https://github.com/informagi/mmead}.
 
 \section{Background}
-In this section, we describe systems that are used for creating entity annotations on the MS MARCO collections for MMEAD. Some information presented in this section is also already presented in the previous chapter, as it is also important for the context of this chapter, it is presented again. 
+In this section, we describe systems that are used for creating entity annotations on the MS MARCO collections for MMEAD. Some information presented in this section overlaps with that of the previous chapter, but the full context is included here to enable reading this chapter as standalone work.
 
 \subsection{REL}
 REL (Radboud Entity Linker)~\citep{rel} is a state-of-the-art open-source entity linking tool designed for high throughput and precision. REL links entities to a knowledge graph (Wikipedia) using a three-stage approach: (1) mention detection, (2) candidate selection, and (3) entity disambiguation. We briefly explain these three steps:
 
 \begin{enumerate}
 	\item \emph{Mention Detection.} REL starts the entity linking process by first identifying all text spans that might refer to an entity. In this stage, it is essential that all possible entities in the text are identified, as only the output of this stage can be considered an entity by REL. These spans are identified using a named entity recognition (NER) model based on contextual word embeddings. For our experiments, we use the NER model based on Flair embeddings. 
-	\item \emph{Candidate Selection.} Up to seven candidate entities are considered for every mention found by Flair. Part of these entities are selected according to the prior probability $P(e|m)$ of the mention $m$ being linked to the entity $e$. Precisely, the top-4 ranked entities based on $P(e|m) = \min(1, P_{\mathit{Wiki}}(e|m) + P_{\mathit{YAGO}}(e|m))$ are selected, where $P_{\mathit{YAGO}}(e|m))$ is a uniform probability from the YAGO dictionary~\citep{yago} and $P_{\mathit{Wiki}}(e|m)$ is computed based on the summation of hyperlink counts in Wikipedia and the CrossWikis corpus~\citep{crosswiki}.
+	\item \emph{Candidate Selection.} Up to seven candidate entities are considered for every mention found by Flair. Part of these entities are selected according to the prior probability $P(e|m)$ of the mention $m$ being linked to the entity $e$. This probability is estimated from existing dictionaries YAGO~\citep{yago}, Wikipedia, and CrossWikis~\citep{crosswiki}. Precisely, the top-4 ranked entities are selected based on $P(e|m) = \min(1, P_{\mathit{Wiki}}(e|m) + P_{\mathit{YAGO}}(e|m))$, where $P_{\mathit{YAGO}}(e|m))$ is a uniform probability from the YAGO dictionary and $P_{\mathit{Wiki}}(e|m)$ is computed based on the summation of hyperlink counts in Wikipedia and the CrossWikis corpus.
 	%, and a uniform probability from the YAGO dictionary~\citep{yago}. These probabilities are precalculated for every mention: $P(e|m) = \min(1, P_{\mathit{Wiki}}(e|m) + P_{\mathit{YAGO}}(e|m))$.
 	The remaining three candidate entities are determined according to the similarity of an entity and the context of a mention. For the top-ranked candidates based on $P(e|m)$ probabilities, the context similarity is calculated by $\mathbf{e}^T \sum_{w\in c}\mathbf{w}$. Here $\mathbf{e}$ is the entity embedding for entity $e$, and $\mathbf{w}$ are the word embeddings in context $c$, with a maximum length of 200-word tokens. The entity and word embeddings are jointly learned using Wikipedia2Vec~\citep{wikipedia2vec}. 
 	\item \emph{Entity Disambiguation.} The final stage tries to select the correct entity from the candidate entities and maps it to the corresponding entry in a knowledge graph (Wikipedia). For this, REL assumes a latent relation between entities in the text and utilizes the Ment-norm method proposed by~\citet{ED-paper}.
@@ -57,8 +57,8 @@ BLINK~\citep{blink} is a BERT-based~\citep{BERT} model for candidate selection a
 
 \begin{enumerate}
     \item \emph{Mention Detection.} The mention detection stage can be done using an NER model. Like REL, we use Flair~\citep{flair} for mention detection.
-	\item \emph{Candidate Selection.} BLINK considers ten candidates for each mention. The candidates are selected through a bi-encoder (similar to~\citet{poly-encoders}) that embeds mention contexts and entity descriptions. The mention and the entity are encoded into separate vectors using the \texttt{[CLS]} token of BERT. The similarity score is then calculated using the dot-product of the two vectors representing the mention context and the entity.  
-	\item \emph{Entity Disambiguation.} For entity disambiguation, BLINK employs a cross-encoder to re-rank the top 10 candidates selected by the candidate selection stage. The cross-encoder usage is similar to the work by~\citet{poly-encoders}, which employs a cross-attention mechanism between the mention context and entity descriptions. The input is the concatenation of the mention text and the candidate entity description.    
+	\item \emph{Candidate Selection.} BLINK considers ten candidates for each mention. The candidates are selected through a bi-encoder (similar to the bi-encoder described by~\citet{poly-encoders}) that embeds mention contexts and entity descriptions. The mention and the entity are encoded into separate vectors using the \texttt{[CLS]} token of BERT. The similarity score is then calculated using the dot-product of the two vectors representing the mention context and the entity.  
+	\item \emph{Entity Disambiguation.} For entity disambiguation, BLINK employs a cross-encoder to re-rank the top 10 candidates selected by the candidate selection stage. The cross-encoder usage is similar to cross encoder described by~\citet{poly-encoders}, which employs a cross-attention mechanism between the mention context and entity descriptions. The input is the concatenation of the mention text and the candidate entity description.    
 \end{enumerate}
 
 \subsection{DuckDB}
@@ -87,9 +87,9 @@ The design criteria for MMEAD are based on the following goals:
 
 All essential information about the entity mentions and linked entities is stored in the JSON objects. 
 Specifically, the following metadata is made available: \texttt{entity\_id}, \texttt{start\_pos}, \texttt{end\_pos}, \texttt{entity}, and \texttt{details}. The field \texttt{entity\_id} stores the identifier that refers to the entry in the knowledge graph (Wikipedia, in our case). The \texttt{start\_pos} and \texttt{end\_pos} fields store the start and end positions of the text span that refers to the linked entity (i.e., as a standoff annotation of the entity mention). The positions are UTF-8 indices into the text, ready to be used in Python to extract the relevant parts of the document. The field \texttt{entity} stores the text representation of the entity from the knowledge graph. 
-We chose to store this field for convenience and human readability. The \texttt{details} field is a JSON object that stores linker-specific information; examples include the entity type available from the NER module and the confidence of the identified mention.
+We chose to store this field for convenience and human readability. The \texttt{details} field is a JSON object that stores linker-specific information; examples include the entity type according to the NER module and the confidence of the identified mention.
 
-\paragraph{High-quality entity links.} MMEAD provides entity links produced by state-of-the-art entity linking systems. For this paper, we provide links from REL for both MS MARCO v1 and v2 passages and docs, and links from BLINK for MS MARCO v1 passages. Both these systems have high precision, ensuring that identified mentions and their corresponding entities are likely correct. The knowledge graphs used by the entity linkers are the same as those used in the original studies; this way, extensive research has been done to confirm the precision of the linking systems.
+\paragraph{High-quality entity links.} MMEAD provides entity links produced by state-of-the-art entity linking systems. Both REL and BLINK are high precision entity linkers, ensuring that identified mentions and their corresponding entities are likely correct. The knowledge graphs used by the entity linkers are the same as those used in the original studies; this way, extensive research has been done to confirm the precision of the linking systems.
 
 \paragraph{Extensibility.} We ensure extensibility by clearly describing the format in which the entity links are provided. If another system shares its links in the same format, the MMEAD Python library can work with the data directly. The \texttt{details} field per entity annotation enables inclusion of linker-specific information. REL provides specific instructions on updating the system to newer versions of Wikipedia in its documentation, making it possible to easily release links to newer versions of Wikipedia.
 
@@ -168,7 +168,7 @@ MMEAD comes with easy-to-use Python code, allowing users to work with the resour
 $ pip install mmead
 \end{verbatim}
 
-After installation, the entity links can be loaded into a DuckDB database~\citep{duckdb} with only a couple of lines of code, as shown in Figure~\ref{fig:load-links}.
+After installation, the entity links can be loaded into a DuckDB database~\citep{duckdb}, as shown in Figure~\ref{fig:load-links}, with only a couple of lines of code.
 %
 \begin{figure}
 \begin{minted}[linenos]{python}
@@ -213,7 +213,7 @@ array([-1.497e-01, -7.765e-01, -1.000e-02, ...])
 >>> montreal_word @ toronto_word
 21.62585146
 	\end{minted}
-	\caption{Example code for loading word and entity embeddings. It shows that the dot-product between ``Montreal'' word and entity embeddings is greater than the dot-product of embedding vectors for the word ``Montreal'' and a random word. The word embeddings of Montreal and Toronto, two cities in Canada, are more similar.}
+	\caption{Example code for loading word and entity embeddings. It shows that the dot-product between ``Montreal'' word and entity embeddings is greater than the dot-product of embedding vectors for the word ``Montreal'' and ``green'' (a word chosen at random). The word embeddings of Montreal and Toronto, two cities in Canada, are also more similar.}
 	\label{fig:dot-product}
 \end{figure}
 
@@ -265,9 +265,9 @@ These experiments serve a demonstrative purpose only, and the full potential of 
 \paragraph{BM25 expansion.} We experimented with three retrieval methods to show the benefits of entity annotation for passage ranking: one baseline method and two methods that use query entity expansion~\citep{Shehata} using REL:
 
 \begin{itemize}
-	\item[\textbf{a}] \textbf{BM25 -- No Expansion.} As a baseline method, we used BM25 as implemented in Anserini~\cite{Kamphuis2020BM25} using hyper-parameters $k_1=0.82$ and $b=0.68$, shown to be optimal for the MS MARCO dataset. MS MARCO was indexed normally, and no expansion was considered for the queries or the passages. 
+	\item[\textbf{a}] \textbf{BM25 -- No Expansion.} As a baseline method, we used BM25 as implemented in Anserini~\citep{anserini} using hyper-parameters $k_1=0.82$ and $b=0.68$, shown to be optimal for the MS MARCO dataset. MS MARCO was indexed normally, and no expansion was considered for the queries or the passages. 
 	\item[\textbf{b}] \textbf{BM25 -- Entity Text Expansion.} In this method, passages and queries are expanded with the text representation of their annotated entities (from REL). Once the passages and queries have been expanded with entities, we run BM25 with the same hyper-parameter settings as described in \textbf{a}.
-	\item[\textbf{c}] \textbf{BM25 -- Entity Hash Expansion.} Instead of using the text representation of entities as an expansion, we expanded the passages and queries by the MD5 hash of the entity text (from REL). The use of MD5 hashing is to provide a consistent representation of multi-word terms and to avoid partial or incorrect matching between queries and non-relevant passages; e.g., passages that contain the word ``united'', do not benefit if the query contains ``United States'' as an entity. Again, after expansion, we run BM25 with the same hyper-parameter settings described in \textbf{a}.
+	\item[\textbf{c}] \textbf{BM25 -- Entity Hash Expansion.} Instead of using the text representation of entities as an expansion, we expanded the passages and queries by the MD5 hash of the entity text (from REL). The use of MD5 hashing provides a consistent representation of multi-word terms and avoids partial or incorrect matching between queries and non-relevant passages; e.g., passages that contain the word ``united'', do not benefit if the query contains ``United States'' as an entity. Again, after expansion, we run BM25 with the same hyper-parameter settings described in \textbf{a}.
 \end{itemize}
 In these experiments, the identified entities are deduplicated. As a demonstration of the proposed text expansion methods, Figure~\ref{fig:exp_queries} shows how the query expansion is performed using explicit and hashed forms. The added entities provide more precise context and help eliminate ambiguous terms. Figure~\ref{fig:exp_passage} shows the expansion methods on the relevant passage for this query. The relevant passage can be found through our expansion technique. The linking system recognizes that both the query and the passage contain a reference to the entity \emph{Sacagawea}, even though they are spelled differently in the query and the passage.
 
@@ -279,7 +279,7 @@ In these experiments, the identified entities are deduplicated. As a demonstrati
 			\item[\textbf{c.}] \underline{The same text as shown in \textbf{a.}} + \texttt{860324} \texttt{a97fed} \texttt{3e3b0e} \texttt{3fe907}
 		\end{itemize}
 	}
-	\caption{Examples of queries for the three different experiments; (\textbf{a}) the non-expanded query, (\textbf{b}) the query with entity text expansion, and (\textbf{c}) the query with entity hash expansion. Text expansions are shown in italics. The MD5 hashes shown in (\textbf{c}) are shortened in this example for formatting.}
+	\caption{Examples of queries for the three different experiments; (\textbf{a}) the non-expanded query, (\textbf{b}) the query with entity text expansion, and (\textbf{c}) the query with entity hash expansion. Text expansions are shown in italics. The MD5 hashes shown in (\textbf{c}) are shortened for formatting.}
 	\label{fig:exp_queries}
 \end{figure}
 
@@ -291,7 +291,7 @@ In these experiments, the identified entities are deduplicated. As a demonstrati
 			\item[\textbf{c.}] \underline{The same text as shown in \textbf{a.}} + \texttt{fe6fc8} \texttt{860324} \texttt{aa84e6} \texttt{7847ef} \texttt{3e3b0e} \texttt{7d31e0} \texttt{2d8836} \texttt{e58bef}
 		\end{itemize}
 	}
-	\caption{The relevant passage for the query presented in Figure~\ref{fig:exp_queries}; (\textbf{a}) the non-expanded passage, (\textbf{b}) the passage with entity text expansion, and (\textbf{c}) the passage with entity hash expansion. Text expansions are in italics. The MD5 hashes shown in (\textbf{c}) are shortened in this example for formatting.}
+	\caption{The relevant passage for the query presented in Figure~\ref{fig:exp_queries}; (\textbf{a}) the non-expanded passage, (\textbf{b}) the passage with entity text expansion, and (\textbf{c}) the passage with entity hash expansion. Text expansions are in italics. The MD5 hashes shown in (\textbf{c}) are shortened for formatting.}
 	\label{fig:exp_passage}
 \end{figure}
 
@@ -311,7 +311,7 @@ This provides us with four new rankings; the RRF of the pairwise combinations of
 \end{itemize}
 
 \subsection{Experimental Setup}
-In our experiments, we use MMEAD as a resource to expand queries and passages with entities. The experiments are performed using the MS MARCO v1 passage ranking collection, where only queries containing at least one entity annotation are used. We do not expect meaningful differences for queries without any linked entities, as the expanded query is identical to the original query in that case (due to the simplicity of the method applied here). 
+In our experiments, we use MMEAD as a resource to expand queries and passages with entities. The experiments are performed using the MS MARCO v1 passage ranking collection, where only queries containing at least one entity annotation are used. We do not expect meaningful differences for queries without any linked entities, as the expanded query is identical to the original query in that case. 
 
 As we expect the linked entities to provide additional semantic information about the queries and passages, we conduct further testing on the obstinate query sets of the MS MARCO Chameleons~\citep{chameleons}, which consist of challenging queries from the original MS MARCO passage dataset. In general, ranking methods show poor effectiveness in finding relevant matches for these queries. Our testing focuses on the bottom 50\% of the worst-performing queries from the subsets of Veiled Chameleon (Hard), Pygmy Chameleon (Harder), and Lesser Chameleon (Hardest), which represent increasing levels of difficulty. 
 
@@ -368,7 +368,7 @@ Entity links to Wikidata provide an entr\'ee into the broader world of open-link
 This allows us to build interesting ``mashups'' or support search beyond simple keyword queries.
 As a simple example, we can take the entities referenced in MS MARCO, look up the coordinates for geographic entities, and plot them on a map. 
 Figure \ref{fig:entity_map} shows a world map with all entities found in the MS MARCO v2 passage collection mapped onto it (each shown with a transparent blue dot).
-The results are as expected, where the blue dots' density largely mirrors worldwide population density, although (also as expected) we observe more representation from entities in North America, Europe, and other better-developed parts of the world.
+The results are as expected, where the blue dots' density largely mirrors worldwide population density, although (also as expected) we observe more representation from entities in North America, Europe, and other parts of the world with better access to internet.
 
 Figure \ref{fig:entity_map} is a static visualization, but we can take the same underlying data and principles to create interesting interactive demonstrations.
 Geo-based search is an obvious idea, where users can specify a geographic region -- either by dragging a box in an interactive interface to encompass a region of interest, or specifying a geographic entity.
@@ -377,7 +377,7 @@ Simple reasoning based on geographic containment relationships on open-linked da
 While it is possible that pretrained transformers might implicitly contain this information, they can never offer the same degree of fine-grained control provided by explicit entity linking.
 
 As a simple demonstration, we have taken MMEAD, reformatted the entity links into RDF, and ingested the results into the QLever SPARQL engine~\citep{qlever}.\footnote{\url{https://github.com/ad-freiburg/qlever}, last accessed April 26th 2023}
-By combining MMEAD with RDF data from Wikidata and OpenStreetMap, we can issue SPARQL queries such as ``Show me all passages in MS MARCO about France''.
+By combining MMEAD with RDF data from Wikidata and OpenStreetMap, we can issue SPARQL queries such as ``Show me all passages in MS MARCO related to France''.
 
 \begin{figure}
 	\centering
@@ -409,17 +409,17 @@ WHERE {
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.9\textwidth]{imgs/france.png}
-	\caption{First 1000 entities found in that are connected to France. Entities are represented with a blue dot on the map.}
+	\caption{First 1000 entities found that are connected to France. Entities are represented with a blue dot on the map.}
 	\label{fig:france}
 \end{figure}
 
-The query is shown in Figure~\ref{fig:code_sparql}, which gives us $122,316$ entities found in the collection that have a connection with France (most of them are located in France). Then we can automatically show the entities on a map, as presented in Figure~\ref{fig:france} (showing the first 1000 entities found). 
+The query is shown in Figure~\ref{fig:code_sparql}, which gives us $122,316$ entities found in the collection that have a connection with France (most of them are located in France). We can automatically show the entities on a map, as presented in Figure~\ref{fig:france} (showing the first 1000 entities found). 
 
-Not all linked entities are located in France, however. For example, some entities are related to France (entities for which France is mentioned in their Wikidata), but are located elsewhere in the world. One of the blue dots in Germany is the source of the river \emph{Moselle}. This river starts in Germany by splitting off from the \emph{Rhine}, and then goes through France. 
+Not all linked entities are located in France, however. For example, some entities are related to France (entities for which France is mentioned in their Wikidata) but located elsewhere in the world. One of the blue dots in Germany is the source of the river \emph{Moselle}. This river starts in Germany by splitting off from the \emph{Rhine}, and then goes through France. 
 Instead of querying for France, we can also query for different countries. Table~\ref{tab:country_entities} shows the number of entities found for a sample of countries.
 
 \begin{table}[]
-	\caption{Number of entities found per country for some example countries where the entity has an English label.}
+	\caption{Number of entities found per country, for example countries where the entity has an English language label.}
 	\label{tab:country_entities}
 	\centering
 	\begin{tabular}{l|c|r}
@@ -455,18 +455,18 @@ RETURN pid, content, entity, label, coord
 	\label{fig:code_geese}
 \end{figure}
 
-Although we have used SPARQL for this experiment, it would also be possible to express this query Cypher in GeeseDB. Depending on the schema this could look something like the query as shown in~\cref{fig:code_geese}.
+Although we have used SPARQL for this experiment, it would also be possible to express this query Cypher in GeeseDB. Depending on exact the schema, this would look like the query shown in~\cref{fig:code_geese}.
 
 \section{Conclusion and Future Work}
-This research presents the resource MMEAD, or MS MARCO Entity Annotations and Disambiguations. MMEAD contains entity annotations for the passages and documents in MS MARCO v1 and v2. These annotations simplify entity-oriented research on the MS MARCO collections. Links have been provided using the REL and BLINK entity linking systems. Using DuckDB, the data can quickly be queried, making the resource easy to use.
+This chapter introduces a new Information Retrieval resource called MMEAD, or MS MARCO Entity Annotations and Disambiguations. MMEAD contains entity annotations for the passages and documents in MS MARCO v1 and v2. These annotations simplify entity-oriented research on the MS MARCO collections. Links have been provided using the REL and BLINK entity linking systems. Using DuckDB, the data can quickly be queried, making the resource easy to use.
  
 To return to our third research question:
 \begin{itemize}
-	\item[\textbf{RQ3:}] When does information retrieval research benefits from graph data?
+	\item[\textbf{RQ3:}] When does information retrieval research benefit from graph data?
 \end{itemize}   
 
-Entity links can be considered a bi-partite graph where entities and documents are nodes, that are connected when entities appear in documents. Using these entities for query and passage expansion, we showed experimentally a significant increase in recall effectiveness. Although in this chapter we used Anserini for our retrieval experiments, it is trivial to express the same problem using GeeseDB. When using reciprocal rank fusion, the effectiveness difference becomes even more prominent and new relevant passages are found. The question remains whether these passages can be ranked higher by new retrieval models. With MMEAD, we support information retrieval research that combines deep learning and entity graph information. 
+With MMEAD, we support information retrieval research that combines deep learning and entity graph information. Entity links can be considered a bi-partite graph where entities and documents are nodes, that are connected when entities appear in documents. Using these entities for query and passage expansion, we showed experimentally a significant increase in recall effectiveness. Although in this chapter we used Anserini for our retrieval experiments, it is trivial to express the same problem using GeeseDB. When using reciprocal rank fusion, the effectiveness difference becomes even more prominent and recall increases significantly with the new relevant passages found. The question remains open whether these passages previously missed, can be ranked higher by new retrieval models.
 
-We also demonstrated that our resource can enrich interactive search applications. In particular, we present an interactive demo where all entities related to geographical locations can be positioned on a map. Specifically we queried the data as a RDF triple graph.
+We also demonstrated that our resource can enrich interactive search applications. In particular, we present an demo where all entities related to geographical locations can be positioned on a map. Specifically we queried the data as a RDF triple graph.
 
 Using the MMEAD format, releasing entity links for collections beyond MS MARCO is also possible. We already showed that using entity links improves recall when using the linked entities for query expansion. What the effects are when training, e.g., DPR methods that include the entity links, is yet to be investigated -- an exciting research opportunity that lies ahead. 
