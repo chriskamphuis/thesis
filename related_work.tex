@@ -177,7 +177,7 @@ With the increase in compute power, learning-to-rank became a popular approach t
 
 The goal is to learn a model that, given a query, ranks documents relevant to that query higher than those not relevant to that query. In general, there are three ways to achieve this; for all these methods, relevance labels are assumed to be available from which the function can be learned. Learning-to-rank methods are usually categorized into the following three categories: 
 
-\paragraph{Pointwise.} Pointwise methods are most comparable to standard regression methods. The idea is to learn a function that directly predicts a document's relevance label. Consider that we have $n$ query-document pairs for which relevance labels are available, with $m$ independent variables per pair. The relevance labels for these pairs can then be expressed as a vector $\mathbf{y}$, and the independent variables as a matrix $\mathbf{X}$;
+\paragraph{Pointwise} Pointwise methods are most comparable to standard regression methods. The idea is to learn a function that directly predicts a document's relevance label. Consider that we have $n$ query-document pairs for which relevance labels are available, with $m$ independent variables per pair. The relevance labels for these pairs can then be expressed as a vector $\mathbf{y}$, and the independent variables as a matrix $\mathbf{X}$;
 \begin{multicols}{2}
 	\begin{equation}
 		\mathbf{y} = 
@@ -237,7 +237,7 @@ $\left[
 \right]$
 is smaller. 
 
-\paragraph{Pairwise.} Pairwise ranking tries to deal with this problem by not directly learning from the relevance labels but by looking at the relative preferences between pairs of documents. The idea behind this is that it does not matter what the actual ranking score value is, as long as it is higher for relevant documents than for non-relevant ones.  
+\paragraph{Pairwise} Pairwise ranking tries to deal with this problem by not directly learning from the relevance labels but by looking at the relative preferences between pairs of documents. The idea behind this is that it does not matter what the actual ranking score value is, as long as it is higher for relevant documents than for non-relevant ones.  
 
 Pairwise functions consider, given a query, two documents at a time. The function tries to determine which one of the two documents is more relevant than the other. If we consider the same set of relevance labels $\mathbf{y}$ and independent variables $\mathbf{X}$, then if we would take a pair of documents $x_k$ and $x_l$, with their corresponding relevance labels $y_k$ and $y_l$, assuming $y_k \neq y_l$, then we will learn the following function:
 \begin{equation}
@@ -251,7 +251,7 @@ Pairwise methods tend to be more expensive than pointwise methods, as the number
 
 A disadvantage of pairwise methods is that every pair is treated equally when training a model. There is no difference when comparing the two highest-ranked documents to comparing the two lowest-ranked documents, even though users typically care about the highest-ranked documents. 
 
-\paragraph{Listwise.} Instead of looking at pairs of documents only, the listwise approach considers the whole ranking. This way, the top of the ranking can affect the function's learning more than the bottom of the ranking.
+\paragraph{Listwise} Instead of looking at pairs of documents only, the listwise approach considers the whole ranking. This way, the top of the ranking can affect the function's learning more than the bottom of the ranking.
 Generally, when learning a listwise learning-to-rank method, the goal is to optimize some ranking metric quality directly. Examples of ranking metrics will be introduced in~\cref{sec:evaluation}.
 
 \paragraph{Multistage Ranking}
@@ -380,7 +380,7 @@ In the case of information retrieval, the physical and logical models are often 
 
 \citet{seperation-logical-physical} discusses how information retrieval might benefit from separating physical and logical models in the context of dense retrieval models. \Cref{from-tables-to-graphs} will discuss his proposal in more detail.
 
-\subsection{Columns vs Rows}
+\subsection{Columns vs. Rows}
 Earlier database management systems were row oriented. Row-oriented means that when we look at how data is physically stored on the computer, all data within a tuple is represented near each other in memory. This orientation is especially well suited when a database needs to process many transactions. In the past, some IR systems have been built on top of such databases. However, these were much less efficient than when inverted indexes were used. Later, column-oriented databases were developed. These databases are more suited for analytical queries, at the cost of more expensive transaction processing. As these databases are designed for efficient and scalable analytics, they are also more suited for information retrieval systems. This practice is used throughout this thesis. 
 
 \subsection{NoSQL and Graphs}

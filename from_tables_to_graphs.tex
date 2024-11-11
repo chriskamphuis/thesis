@@ -1,8 +1,8 @@
 \chapter{From Tables to Graphs}
 \label{from-tables-to-graphs}
-\epigraph{``The reader will have anticipated that I have no very convincing
-	arguments of a positive nature to support my views. If I had I should not
-	have taken such pains to point out the fallacies in contrary views.``}{Alan Turing - 1950}
+\epigraph{Day by day, however, the machines are gaining ground upon us; day by day we are becoming more subservient to them}{Samuel Butler - 1863}
+
+
 
 \begin{Abstract}
 	\begin{changemargin}{1cm}{1cm}
@@ -23,7 +23,7 @@ Secondly, we want to create a system where both first and second-stage retrieval
 So in this chapter, the prototype system GeeseDB is introduced; it tries to leverage the same techniques for search as relational databases do while also naturally being able to support graphs. This leads to the main research question for this chapter:
 
 \begin{itemize}
-	\item[\textbf{RQ2:}] Can we extend the benefits from using relational databases for information retrieval to using graph-databases while being able to express graph-related problems easier?
+	\item \emph{Research Question 2: Can we extend the benefits from using relational databases for information retrieval to using graph databases while being able to express graph-related problems easier?} 
 \end{itemize} 
 
 In order to answer this research question, we will use our own prototype system GeeseDB. Before introducing GeeseDB, we first look into work that uses systems that combine two systems for two-stage retrieval experiments, and systems built for processing graphs.
@@ -85,10 +85,9 @@ Anserini is included in Pyserini as a JAR file, so when using Pyserini for first
 \subsection{Proposed approaches}
 % Paper van Jimmy op DESIRES is belangrijk. 
 \subsubsection{Separation of the Logical and Physical Model}
-% todo different compontent systems?? ask Arjen what it says?
-As shown in the previous sections, dense and sparse retrieval methods are often implemented using different  systems, which  introduces the coupled architecture. \citet{seperation-logical-physical} recognizes that sparse retrieval models tend to be implemented using inverted indexes and dense retrieval methods with approximate nearest neighbor systems. Although these systems are different, the input and the output are the same: the input is a query, and the output is a ranked list of the top-$k$ documents the ranking methods deem the most relevant. 
+As shown in the previous sections, dense and sparse retrieval methods are often implemented using different systems, which  introduces the coupled architecture. \citet{seperation-logical-physical} recognizes that sparse retrieval models tend to be implemented using inverted indexes and dense retrieval methods with approximate nearest neighbor systems. Although these systems are different, the input and the output are the same: the input is a query, and the output is a ranked list of the top-$k$ documents the ranking methods deem the most relevant. 
 
-In order to be able to formalize these similarities and distinctions more clearly, \citeauthor{seperation-logical-physical} proposes a distinction between the logical and physical retrieval models. Logical models specify encoders that map documents and queries to a representation, and a comparison function that defines how a ranking score value can be computed from comparing these representations. Physical models define how to create a top-$k$ ranking from a large corpus given a query. The most straightforward physical approach would simply apply the logical model to every query-document pair, but through optimizations it might not necessary to compare all documents to the query. For example, dense retrieval methods often make use of the HNSW datastructure for nearest neighbor search~\citep{faiss} which prunes documents that have a low likelihood of being relevant. 
+In order to be able to formalize these similarities and distinctions more clearly, \citeauthor{seperation-logical-physical} proposes a distinction between the logical and physical retrieval models. Logical models specify encoders that map documents and queries to a representation, and a comparison function that defines how a ranking score value can be computed from comparing these representations. Physical models define how to create a top-$k$ ranking from a large corpus given a query. The most straightforward physical approach would simply apply the logical model to every query-document pair, but through optimizations it might not necessary to compare all documents to the query. For example, dense retrieval methods often make use of the HNSW datastructure for nearest neighbor search~\citep{faiss} which uses a greedy search method that might miss some relevant documents.
 
 \subsubsection{A Graph Query Language for IR}
 % Reproducible IR needs a graph query language ook belangrijk
