@@ -11,7 +11,7 @@
 \end{Abstract}
 
 \section{Introduction}
-In recent years there has been a lot of exciting new information retrieval research that uses non-text data to improve the efficacy of search applications. All these research directions have improved search systems' effectiveness by using more diverse data. Although more diverse data sources are considered, these systems are often implemented through a coupled architecture. In particular, first-stage retrieval is often carried out with different software than that used in later retrieval stages, where these novel reranking techniques tend to be used. In our view, researchers could benefit from a system where retrieval stages are more tightly coupled, which facilitates the exploration of how to use non-content data for ranking and serves the data in a format suitable for reranking with, e.g., transformers, tree-based methods or graph-based methods.
+In recent years there has been a lot of exciting new information retrieval research that uses non-text data to improve the efficacy of search applications. All these research directions have improved search systems' effectiveness by using more diverse data. Although more diverse data sources are considered, these systems are often implemented through a coupled architecture. In particular, first-stage retrieval is often carried out with different software than that used in later retrieval stages, where novel reranking techniques tend to be used. In our view, researchers could benefit from a system where retrieval stages are more tightly coupled, which facilitates the exploration of how to use non-content data for ranking and serves the data in a format suitable for reranking with, e.g., transformers, tree-based methods or graph-based methods.
 
 The previous chapter demonstrates how relational databases can be used for information retrieval problems. Integrating alternative data sources into search systems is easier when using a relational database instead of an inverted index. In the case of information retrieval, graph data can often be used to improve search effectiveness. One of the most famous examples where graphs help information retrieval is the PageRank algorithm~\citep{pagerank}. Although it might be possible to express ranking over graph data in relational databases, they are not designed with graph structures in mind. 
 
@@ -26,19 +26,19 @@ So in this chapter, the prototype system GeeseDB is introduced; it tries to leve
 	\item \emph{Research Question 2: Can we extend the benefits from using relational databases for information retrieval to using graph databases while being able to express graph-related problems easier?} 
 \end{itemize} 
 
-In order to answer this research question, we will use our own prototype system GeeseDB. Before introducing GeeseDB, we first look into work that uses systems that combine two systems for two-stage retrieval experiments, and systems built for processing graphs.
+In order to answer this research question, we will use our own prototype system GeeseDB. Before introducing GeeseDB, we first look into work that combine two systems for two-stage retrieval experiments.
 
 % rewrite and reflect on the previous chapter, and give context in which graph databases are helpful.
 
 \section{Related work }
 % Describe the related work which was presented in the GeeseDB paper, but also include more related work regarding approaches that use graph language-like approaches (different subsection). 
-In modern IR it is not uncommon to use coupled architectures. In many situations a ranking model is used that is efficient, but only reasonably effective. BM25 can be considered a model that can be calculated cheaply providing a good score for a more advanced (but less efficient) retrieval model that could achieve higher effectiveness. In such cases, BM25 can be used to calculate an initial top-$k$ ranking that contains (presumably) all relevant documents. Then, the more expensive model only has to calculate the final ranking scores over the top-$k$ documents.
+In modern IR it is not uncommon to use coupled architectures. In many situations a ranking model is used that is efficient, but only reasonably effective. BM25 can be considered a model that can be calculated cheaply providing a good score for a more advanced (but less efficient) retrieval model that could achieve higher effectiveness. In such cases, BM25 can be used to calculate an initial top-$k$ ranking that contains (presumably) all relevant documents. Then, a more expensive model only has to calculate the final ranking scores over the top-$k$ documents.
 
 In this section we start discussing methods that implement multi-stage approaches, then systems that implement them are highlighted. In particular there will be a focus on the coupled-architectures aspect of these systems. Finally, some proposed methods will be discussed to deal with cons arising from coupled architectures. 
 
 \subsection{Learning To Rank}
-In learning-to-rank (LTR), multi-stage retrieval approaches are widely used; LTR models are not efficient enough to compute a relevance score value for all documents in the collection.
-In these cases, a decision tree based ensemble like LambdaMART~\citep{lambdamart} tends to be trained. These models take input that is usually not stored in an inverted index. So, in order to use these models, the output from the inverted index needs to be combined with other data.
+In learning-to-rank (LTR), multi-stage retrieval approaches are widely used; LTR models are often not efficient enough to compute a relevance score value for all documents in the collection.
+In these cases, for example, a decision tree based ensemble like LambdaMART~\citep{lambdamart} is used to rerank only the top-$k$ documents retrieved by BM25. Also, these models take input that is usually not stored in an inverted index. So, in order to use these models, the output from the inverted index needs to be combined with other data.
 
 \Citet{ltr-1} showed that for the TREC Contextual Suggestion track~\citep{contextual-suggestion-track}, reranking using user-based features significantly improved retrieval effectiveness over a baseline language modeling approach. These features show that data not present in the document's text can help the retrieval effectiveness of systems; metadata helps to rank. 
 
@@ -100,7 +100,7 @@ So ideally we develop a system with the following two capabilities; the system s
 
 \section{GeeseDB}
 % Introduce GeeseDB, and the approach of what we are doing with GeeseDB
-GeeseDB\footnote{\url{https://github.com/informagi/geesedb}, last accessed January 22th 2024} is a prototype Python toolkit for information retrieval that leverages graphs as data structures, allowing metadata and graph-oriented data to be easily included in the ranking pipeline. The toolkit is designed to quickly set up first-stage retrieval and make it easy for researchers to explore new ranking models. 
+GeeseDB\footnote{\url{https://github.com/informagi/geesedb}, last accessed November 18th 2024} is a prototype Python toolkit for information retrieval that leverages graphs as data structures, allowing metadata and graph-oriented data to be easily included in the ranking pipeline. The toolkit is designed to quickly set up first-stage retrieval and make it easy for researchers to explore new ranking models. 
 
 In short, GeeseDB aims to provide the following functionalities:
 \begin{itemize}
@@ -115,7 +115,7 @@ In short, GeeseDB aims to provide the following functionalities:
 At the core of GeeseDB lies the full-text search design presented by~\citet{OldDog} as discussed already in~\cref{ir-using-relational-databases}. This work proposes a column-store database for IR prototyping, which uses the database schema described in~\cref{olddog_schema}, consisting of three database tables.
 \begin{figure}
 	\centering
-	\includegraphics[width=\linewidth]{./imgs/olddog-schema-2.pdf}
+	\includegraphics[width=\linewidth]{./imgs/olddog-schema-3.pdf}
 	\caption{Database schema by \citeauthor{OldDog} for full text search in relational databases}
 	\label{olddog_schema}
 \end{figure}
@@ -164,7 +164,7 @@ A small example of a graph represented by this schema is shown in~\cref{example-
 If one wants to, for example, also store position data, this graph can easily be extended to a graph where the edges store term positions. If a term appears multiple times in a document, the property graph model will allow multiple edges between two nodes. The graph schema that we described by~\cref{olddog-graph-schema} maps one-to-one to the relational database schema described by~\cref{olddog_schema}, when we represent nodes by standard relational tables that represent specific data units (terms, documents), while many-to-many join tables represent the edges. So, even though we think of the data as graphs, they are still represented as relational tables in the backend. When using GeeseDB for search, we at least expect the document-term graph to be present. New node types can be introduced to explore new search strategies. 
 
 \subsubsection{Backend}
-GeeseDB is built on top of DuckDB~\citep{duckdb}, an in-process SQL OLAP (analytics optimized) database management system. DuckDB is designed to support analytical query workloads. It aims explicitly to process complex, long-running queries where a significant portion of the data is accessed, conditions matching the case of IR research. DuckDB has a client Python API which can be installed using \texttt{pip}\footnote{\url{https://duckdb.org/docs/installation/?version=stable&environment=python}, last accessed March 2nd 2024}. Afterward, it can be used directly. DuckDB has a separate API built around NumPy\footnote{\url{https://numpy.org/}, last accessed March 2nd 2024} and Pandas\footnote{\url{https://pandas.pydata.org/}, last accessed March 2nd 2024}, providing NumPy/Pandas views over the same underlying data representation without incurring data transfer (usually referred to as ``zero-copy'' reading). Pandas DataFrames can be registered as virtual tables, allowing to query the data in Pandas DataFrames directly. GeeseDB inherits all these functionalities from DuckDB.
+GeeseDB is built on top of DuckDB~\citep{duckdb}, an in-process SQL OLAP (analytics optimized) database management system. DuckDB is designed to support analytical query workloads. It aims explicitly to process complex, long-running queries where a significant portion of the data is accessed, conditions matching the case of IR research. DuckDB has a client Python API which can be installed using \texttt{pip}\footnote{\url{https://duckdb.org/docs/installation/?version=stable&environment=python}, last accessed - November 14th 2024}. Afterward, it can be used directly. DuckDB has a separate API built around NumPy\footnote{\url{https://numpy.org/}, last accessed - November 14th 2024} and Pandas\footnote{\url{https://pandas.pydata.org/}, last accessed - November 14th 2024}, providing NumPy/Pandas views over the same underlying data representation without incurring data transfer (usually referred to as ``zero-copy'' reading). Pandas DataFrames can be registered as virtual tables, allowing to query the data in Pandas DataFrames directly. GeeseDB inherits all these functionalities from DuckDB. 
 
 As DuckDB is a database management system, we can execute analytical SQL queries on tables containing our data, including the BM25 rankings described by~\citet{OldDog}. By default, the BM25 implementation provided with GeeseDB implements the disjunctive variant of BM25 instead of the conjunctive variant they used. Although the conjunctive variant of BM25 can be calculated more quickly, the differences between effectiveness scores are noticeable on smaller collections. Also, disjunctive would mostly likely better match the mental model of our IR researchers as GeeseDB users. For now, we only support the original formulation of BM25 by~\citet{bm25-robertson}. However, supporting other versions of BM25 as described in the previous chapter is trivial.
 
@@ -214,7 +214,7 @@ GeeseDB comes as an easy-to-install Python package that can be installed using p
 	$ pip install geesedb
 \end{verbatim}
 After installing GeeseDB, we can immediately start using it. It is also possible to install the latest commit by installing the latest version directly from GitHub.
-As an example, we will show how to use GeeseDB for the background linking task of the TREC News Track~\citep{soboroff2018trec}. The goal of this task is: \textit{Given a news story, find other news articles that can provide meaningful context or background information.} These articles can then be recommended to the reader to help them understand the context in which these news articles occur. The collection used for this task is the Washington Post V3 collection\footnote{\url{https://trec.nist.gov/data/wapost/}, last accessed March 2nd 2024} released for the 2020 edition of TREC. It contains $671,945$ news articles published by the Washington Post between 2012 and 2020, and 50 topics with relevance assessments (topics correspond to collection identifiers of documents for which relevant data has to be found). The articles in this collection contain valuable metadata; in particular, we will investigate how to best use the article authorship information. We extracted $25,703$ unique article authors, where it is possible that multiple authors co-wrote a news article. We also annotate documents with entity information which was obtained by using the Radboud Entity Linker~\citep{rel}. In total $31,622,419$ references to $541,729$ unique entities were found. The links also contain mention and location information, as well as the entity type (\texttt{ner\_tag}) found by the linker's entity recognition module (The entity type is part of a link, as the entity linker can assign different tags to the same entity.) \Cref{fig:geesedb-graph} illustrates the data schema that we use for the background linking task. 
+As an example, we will show how to use GeeseDB for the background linking task of the TREC News Track~\citep{soboroff2018trec}. The goal of this task is: \textit{Given a news story, find other news articles that can provide meaningful context or background information.} These articles can then be recommended to the reader to help them understand the context in which these news articles occur. The collection used for this task is the Washington Post V3 collection\footnote{\url{https://trec.nist.gov/data/wapost/}, last accessed - November 14th 2024} released for the 2020 edition of TREC. It contains $671,945$ news articles published by the Washington Post between 2012 and 2020, and 50 topics with relevance assessments (topics correspond to collection identifiers of documents for which relevant data has to be found). The articles in this collection contain valuable metadata; in particular, we will investigate how to best use the article authorship information. We extracted $25,703$ unique article authors, where it is possible that multiple authors co-wrote a news article. We also annotate documents with entity information which was obtained by using the Radboud Entity Linker~\citep{rel}. In total $31,622,419$ references to $541,729$ unique entities were found. The links also contain mention and location information, as well as the entity type (\texttt{ner\_tag}) found by the linker's entity recognition module (the entity type is part of a link, as the entity linker can assign different tags to the same entity.) \Cref{fig:geesedb-graph} illustrates the data schema that we use for the background linking task. 
 
 \begin{figure}
 	\centering
@@ -275,9 +275,9 @@ searcher = Searcher(
     database='/path/to/database', 
     n=10
 )
-hits = searcher.search_topic('obama and trump')
+hits = searcher.search_topic('fast dogs')
 	\end{minted}
-	\caption{Example on how to create a BM25 ranking for the query ``obama and trump'' that returns the top 10 documents.}
+	\caption{Example on how to create a BM25 ranking for the query ``fast dogs'' that returns the top 10 documents.}
 	\label{fig:code_bm25_ranking}
 \end{figure}
 
@@ -340,7 +340,7 @@ for topic_no, collection_id in topics:
 	\label{fig:code_bm25_background_linking}
 \end{figure}
 
-\noindent Instead of ``just'' ranking with BM20, expressing strategies that would use metadata to adapt the ranking is straightforward. In the case of background linking, it makes sense to consider authorship information when recommending articles that might be suitable as background reading. As journalists often specialize in specific news topics (e.g., politics, foreign affairs, tech), the stories they write often share context. Also, when journalists collaborate on stories, they write together on topics they specialize in. As authorship information is represented in the data graph, we can use the information whether an article is written by the authors of the topic article or by someone they have collaborated with in the past. The graph query that finds the articles that this group of people has written is shown in~\cref{fig:author-cypher}.
+\noindent Instead of ``just'' ranking with BM25, expressing strategies that would use metadata to adapt the ranking is straightforward. In the case of background linking, it makes sense to consider authorship information when recommending articles that might be suitable as background reading. As journalists often specialize in specific news topics (e.g., politics, foreign affairs, tech), the stories they write often share context. Also, when journalists collaborate on stories, they write together on topics they specialize in. As authorship information is represented in the data graph, we can use the information whether an article is written by the authors of the topic article or by someone they have collaborated with in the past. The graph query that finds the articles that this group of people has written is shown in~\cref{fig:author-cypher}.
 
 \begin{figure}
 	\begin{minted}[linenos, breaklines, breakafter=-, escapeinside=||]{cypher}
@@ -380,7 +380,7 @@ for topic_no, collection_id in topics:
 	\label{fig:authors-code}
 \end{figure}
 
-For another example, expressiveness of the graph query language is also valuable when considering the occurrences of entities in news articles. Journalists write news articles that relate to events concerning, e.g., people, organizations, or countries. In other words, entities are often the subject of news. So, instead of using the most informative terms in a news article, it is worthwhile to consider the entities identified in the article instead. Important entities tend to be mentioned at the beginning of a news article~\citep{trec-2019}; \cref{fig:entity-cypher} shows the Cypher query to retrieve the text mentions of the first five mentioned entities.
+For another example, expressiveness of the graph query language is also valuable when considering the occurrences of entities in news articles. Journalists write news articles that relate to events concerning, e.g., people, organizations, or countries. In other words, entities are often the subject of news. So, instead of using the most informative terms in a news article, it is worthwhile to consider the entities identified in the article instead. Important entities tend to be mentioned at the beginning of a news article for this collection~\citep{trec-2019}; \cref{fig:entity-cypher} shows the Cypher query to retrieve the text mentions of the first five mentioned entities.
 
 \begin{figure}
 	\begin{minted}[linenos, breaklines, breakafter=-, escapeinside=||]{cypher}
@@ -392,7 +392,7 @@ LIMIT 5
 	\caption{Retrieve the first five entities mentioned in the topic article, and return the terms used to mention the entity.}
 	\label{fig:entity-cypher}
 \end{figure}
-\noindent Before it is possible to search using the text describing the first five entity mentions, the text needs to be processed by an entity linker. The term data loaded in GeeseDB was already processed, as it was data loaded from CSV files built from a CIFF file created from an Anserini~\citep{anserini} (Lucene) index. Pyserini~\citep{pyserini} can be used to tokenize the text in the same way the documents were tokenized. Figure~\ref{fig:entities-code} shows the Python code where we extract the mentions, process them such that they become a usable query for GeeseDB, and then BM25 ranking is created with this query.
+\noindent Before it is possible to search using the text describing the first five entity mentions, the text needs to be processed by an entity linker. The term data loaded in GeeseDB was already processed, as it was data loaded from CSV files built from a CIFF file created from an Anserini~\citep{anserini} (Lucene) index. Pyserini~\citep{pyserini} can be used to tokenize the text in the same way the documents were tokenized. Figure~\ref{fig:entities-code} shows the Python code where we extract the mentions, process them such that they become a usable query for GeeseDB, and then a BM25 ranking is created with this query.
 
 \begin{figure}
 	\begin{minted}[linenos, breaklines]{python}

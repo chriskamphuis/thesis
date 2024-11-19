@@ -13,7 +13,7 @@
 \end{Abstract}
 
 \section{Introduction} 
-The MS MARCO datasets~\citep{msmarco} have become the \emph{de facto} benchmark for evaluating deep learning methods for Information Retrieval (IR). The TREC deep learning track~\citep{trec-dl}, which has run since 2019, derives its datasets from the MS MARCO passage and document collections. The collections have been used in zero- and few-shot scenarios for diverse retrieval tasks and domains~\citep{thakur2021beir, thakur2022domain, xu2022laprador}. They also serve as primary resources for training deep learning models for downstream IR tasks such as conversational search~\citep{dalton2021cast} and search over knowledge graphs~\citep{Gerritse:2022:EMBERT} to achieve state-of-the-art results.
+The MS MARCO datasets~\citep{msmarco} have become the \emph{de facto} benchmark for evaluating deep learning methods for Information Retrieval (IR). The TREC deep learning track~\citep{trec-dl}, which has run since 2019, derives its datasets from the MS MARCO passage and document collections. The collections have been used in zero- and few-shot scenarios for diverse retrieval tasks and domains~\citep{thakur2021beir, thakur2022domain, xu2022laprador}. They also serve as primary resources for training deep learning models for downstream IR tasks such as conversational search~\citep{dalton2021cast} and search with knowledge graphs~\citep{Gerritse:2022:EMBERT} to achieve state-of-the-art results.
 
 Purely text-based neural IR models, trained using MS MARCO collections, can generally not reason over complex concepts in the social and physical world~\citep{bosselut2021dynamic, sciavolino:2021:simple}. In response, recently proposed neuro-symbolic methods aim to combine neural models and symbolic AI approaches, e.g., by using knowledge graphs, which map concepts to symbols and relations. An essential step in developing neuro-symbolic models is connecting text to entities that represent the world's concepts formally. This step is mainly done using \textit{Entity linking}, an intermediary between text and knowledge graphs, which detects entity mentions in the text and links them to the corresponding entries in a knowledge graph.
 
@@ -30,14 +30,14 @@ To return to our last research question;
 \begin{itemize}
 	\item \emph{Research Question 3: When does information retrieval research benefit from graph data?} 
 \end{itemize}   
-This chapter attempts to demonstrate that graph data, in this case a graph of entities, can help retrieval by including metadata that can be included through graph operations. Although we have not used GeeseDB, the work described in~\cref{from-tables-to-graphs}, it would be a natural application of GeeseDB to carry out the query expansion methods described.
+This chapter attempts to demonstrate that graph data, in this case a graph of entities, can help retrieval by considering metadata that is included through graph operations. Although we have not used GeeseDB, the work described in~\cref{from-tables-to-graphs}, it would be a natural application of GeeseDB to carry out the query expansion methods described.
 
 In summary, this chapter makes the following contributions:
  \begin{itemize}
 	\item We annotate the documents of the MS MARCO passage and document collections and share these annotations. By sharing these annotations, we ease future research in neuro-symbolic retrieval, which extensively uses entity information. We also provide useful metadata such as Wikipedia2Vec~\citep{wikipedia2vec} entity embeddings. 
 	\item We provide a Python library that makes our data easy to use. All data is stored in DuckDB tables, which can be loaded and queried quickly. The library is easy to install through PyPI, and the entity annotations are available with only a few lines of code.
 	\item We experimentally show that retrieval effectiveness measured by recall significantly increases when using MMEAD. The improvement is even greater for complex queries, where we observe low retrieval effectiveness using text-only IR models.
-	\item We demonstrate how the data can be used in geographical applications. For example, we can plot on a static map all entities found in the MS MARCO v2 passage collection for which geographical data is available. Additionally, through an interactive demo, one can retrieve all passages associated with a geographical location.  
+	\item We demonstrate how the data can be used in geographical applications. For example, we can plot on a static map all entities found in the MS MARCO v2 passage collection for which geographical data is available. Additionally, one can retrieve all passages associated with a geographical location.  
 \end{itemize}
 
 MMEAD is publicly available at \url{https://github.com/informagi/mmead}.
@@ -49,7 +49,7 @@ In this section, we describe systems that are used for creating entity annotatio
 REL (Radboud Entity Linker)~\citep{rel} is a state-of-the-art open-source entity linking tool designed for high throughput and precision. REL links entities to a knowledge graph (Wikipedia) using a three-stage approach: (1) mention detection, (2) candidate selection, and (3) entity disambiguation. We briefly explain these three steps:
 
 \begin{enumerate}
-	\item \emph{Mention Detection.} REL starts the entity linking process by first identifying all text spans that might refer to an entity. In this stage, it is essential that all possible entities in the text are identified, as only the output of this stage can be considered an entity by REL. These spans are identified using a named entity recognition (NER) model based on contextual word embeddings. For our experiments, we use the NER model based on Flair embeddings. 
+	\item \emph{Mention Detection.} REL starts the entity linking process by first identifying all text spans that might refer to an entity. In this stage, it is essential that all possible entities in the text are identified, as only the output of this stage can be considered an entity by REL. These spans are identified using a named entity recognition (NER) model based on contextual word embeddings. For our experiments, we use the NER model based on Flair~\citep{flair} embeddings. 
 	\item \emph{Candidate Selection.} Up to seven candidate entities are considered for every mention found by Flair. Part of these entities are selected according to the prior probability $P(e|m)$ of the mention $m$ being linked to the entity $e$. This probability is estimated from existing dictionaries YAGO~\citep{yago}, Wikipedia, and CrossWikis~\citep{crosswiki}. Precisely, the top-4 ranked entities are selected based on $P(e|m) = \min(1, P_{\mathit{Wiki}}(e|m) + P_{\mathit{YAGO}}(e|m))$, where $P_{\mathit{YAGO}}(e|m))$ is a uniform probability from the YAGO dictionary and $P_{\mathit{Wiki}}(e|m)$ is computed based on the summation of hyperlink counts in Wikipedia and the CrossWikis corpus.
 	%, and a uniform probability from the YAGO dictionary~\citep{yago}. These probabilities are precalculated for every mention: $P(e|m) = \min(1, P_{\mathit{Wiki}}(e|m) + P_{\mathit{YAGO}}(e|m))$.
 	The remaining three candidate entities are determined according to the similarity of an entity and the context of a mention. For the top-ranked candidates based on $P(e|m)$ probabilities, the context similarity is calculated by $\mathbf{e}^T \sum_{w\in c}\mathbf{w}$. Here $\mathbf{e}$ is the entity embedding for entity $e$, and $\mathbf{w}$ are the word embeddings in context $c$, with a maximum length of 200-word tokens. The entity and word embeddings are jointly learned using Wikipedia2Vec~\citep{wikipedia2vec}. 
@@ -240,7 +240,7 @@ Figure~\ref{fig:load_mappings} shows how entity identifiers can be matched to th
 
 As DuckDB is used as a database engine for MMEAD, it is possible to directly access the underlying tables and issue structured queries in an efficient manner. Figure~\ref{fig:sql_engine} shows an example, where a connection to the database is created, and the identifiers of passages containing the entity \emph{Nijmegen} are retrieved.
 
-All data can be downloaded directly as well, and links to the data are provided on our Github page.\footnote{\url{https://github.com/informagi/mmead}}
+All data can be downloaded directly as well, and links to the data are provided on our Github page.\footnote{\url{https://github.com/informagi/mmead}, last accessed November 18th 2024}
 
 \begin{figure}
 	\begin{minted}[linenos]{python}
@@ -324,32 +324,33 @@ This gives us four query sets on which we evaluate; (1) all queries that contain
 The experiments are evaluated using Mean Reciprocal Rank (MRR) at rank ten and Recall (R) at rank one thousand. MRR@10 is the official metric for the MS MARCO passage ranking task, while R@1000 gives an upper limit on how well re-ranking systems could perform. The Anserini~\citep{anserini} toolkit is used to generate our experiments. 
 
 \subsection{Results}
+
 \begin{sidewaystable}
-	\centering
-	\caption{Results on the MS MARCO v1 passage collection, using only the queries that have entity annotations. Bolded numbers are the highest achieved effectiveness. Scores with a dagger (\dag) are significantly better compared to BM25 with no expansion (run \emph{a}), following a paired t-test with Bonferroni correction. For MRR, we have not calculated significance scores due to its ordinal scale~\citep{fuhr-mrr}.}
-	\tabcolsep=0.11cm
-	\begin{tabular}{rll|llll|llll}
-		\toprule
-		\multirow{2}{*}{}
-		& & & \multicolumn{4}{c|}{R@1000} & \multicolumn{4}{c}{MRR@10} \\
-		& & & \multicolumn{1}{c}{dev} & \multicolumn{1}{c}{hard} & \multicolumn{1}{c}{harder} & \multicolumn{1}{c|}{hardest} & \multicolumn{1}{c}{dev} & \multicolumn{1}{c}{hard} & \multicolumn{1}{c}{harder} & \multicolumn{1}{c}{hardest} \\
-		\midrule
-		a. & BM25 & No Expansion                       & 0.9111 & 0.7855 & 0.7444 & 0.6677 & \textbf{0.2413} & 0.0373 & 0.0137 & 0.0000 \\
-		b. & BM25 & Entity Text                        & 0.9183 & 0.8240\dag & 0.7951\dag & 0.7298\dag & 0.2202 & 0.0385 & 0.0173 & \textbf{0.0057} \\
-		c. & BM25 & Entity Hash                        & 0.9105 & 0.7980 & 0.7576 & 0.6848 & 0.2199 & 0.0383 & \textbf{0.0175} & 0.0052 \\ \midrule
-		\multirow{2}{*}{}
-		d. & RRF & No Expansion          & \textbf{0.9338}\dag & \textbf{0.8436}\dag & \textbf{0.8124}\dag & \textbf{0.7500}\dag & 0.2372 & 0.0385 & 0.0163 & 0.0019 \\
-		& & + Entity Text &&&&&&&& \\
-		\multirow{2}{*}{}
-		e. & RRF &  No Expansion     & 0.9250\dag & 0.8260\dag & 0.7921\dag & 0.7205\dag & 0.2378 & 0.0367 & 0.0152 & 0.0034 \\
-		&&  + Entity Hash  &&&&&&&& \\
-		f. & RRF & Entity Text \& Hash                 & 0.9231 & 0.8260\dag & 0.7982\dag & 0.7314\dag & 0.2218 & 0.0375 & 0.0161 & 0.0053 \\
-		\multirow{2}{*}{}
-		g. & RRF & No Expansion   & 0.9313\dag & 0.8370\dag & 0.8043\dag & 0.7376\dag & 0.2358 & \textbf{0.0391} & 0.0156 & 0.0035 \\
-		&& + Entity Text \& Hash &&&&&&&& \\
-		\bottomrule 
-	\end{tabular}
-	\label{tab:results-table}
+		\centering
+		\caption{Results on the MS MARCO v1 passage collection, using only the queries that have entity annotations. Bolded numbers are the highest achieved effectiveness. Scores with a dagger (\dag) are significantly better compared to BM25 with no expansion (run \emph{a}), following a paired t-test with Bonferroni correction. For MRR, we have not calculated significance scores due to its ordinal scale~\citep{fuhr-mrr}.}
+		\tabcolsep=0.11cm
+		\begin{tabular}{rll|llll|llll}
+			\toprule
+			\multirow{2}{*}{}
+			& & & \multicolumn{4}{c|}{R@1000} & \multicolumn{4}{c}{MRR@10} \\
+			& & & \multicolumn{1}{c}{dev} & \multicolumn{1}{c}{hard} & \multicolumn{1}{c}{harder} & \multicolumn{1}{c|}{hardest} & \multicolumn{1}{c}{dev} & \multicolumn{1}{c}{hard} & \multicolumn{1}{c}{harder} & \multicolumn{1}{c}{hardest} \\
+			\midrule
+			a. & BM25 & No Expansion                       & 0.9111 & 0.7855 & 0.7444 & 0.6677 & \textbf{0.2413} & 0.0373 & 0.0137 & 0.0000 \\
+			b. & BM25 & Entity Text                        & 0.9183 & 0.8240\dag & 0.7951\dag & 0.7298\dag & 0.2202 & 0.0385 & 0.0173 & \textbf{0.0057} \\
+			c. & BM25 & Entity Hash                        & 0.9105 & 0.7980 & 0.7576 & 0.6848 & 0.2199 & 0.0383 & \textbf{0.0175} & 0.0052 \\ \midrule
+			\multirow{2}{*}{}
+			d. & RRF & No Expansion          & \textbf{0.9338}\dag & \textbf{0.8436}\dag & \textbf{0.8124}\dag & \textbf{0.7500}\dag & 0.2372 & 0.0385 & 0.0163 & 0.0019 \\
+			& & + Entity Text &&&&&&&& \\
+			\multirow{2}{*}{}
+			e. & RRF &  No Expansion     & 0.9250\dag & 0.8260\dag & 0.7921\dag & 0.7205\dag & 0.2378 & 0.0367 & 0.0152 & 0.0034 \\
+			&&  + Entity Hash  &&&&&&&& \\
+			f. & RRF & Entity Text \& Hash                 & 0.9231 & 0.8260\dag & 0.7982\dag & 0.7314\dag & 0.2218 & 0.0375 & 0.0161 & 0.0053 \\
+			\multirow{2}{*}{}
+			g. & RRF & No Expansion   & 0.9313\dag & 0.8370\dag & 0.8043\dag & 0.7376\dag & 0.2358 & \textbf{0.0391} & 0.0156 & 0.0035 \\
+			&& + Entity Text \& Hash &&&&&&&& \\
+			\bottomrule 
+		\end{tabular}
+		\label{tab:results-table}
 \end{sidewaystable}
 
 Table~\ref{tab:results-table} presents the results of our experiments. If we first look at lines \textbf{a-c} in the results table, we can examine the effects of our expansion methods compared to the baseline run. Looking at R@1000, we can see that more relevant passages are found using entity expansion for the \emph{dev} collection and its harder subsets. We do not find additional relevant documents/passages on the \emph{dev} set when we use the entity hashes, and entity text seems to be the better approach. There is, however, no increase in MRR@10 when using this expansion method. Entity expansions help when evaluating using R@1000, especially when the queries are more complex. The difference in recall effectiveness becomes larger the more complex the queries get. MRR@10 only improves when using entity text expansion.
@@ -380,7 +381,7 @@ For example, the user might ask ``Show me content about tourist sites in Paris''
 Simple reasoning based on geographic containment relationships on open-linked data resources would be sufficient for answering this query.
 While it is possible that pretrained transformers might implicitly contain this information, they can never offer the same degree of fine-grained control provided by explicit entity linking.
 
-As a simple demonstration, we have taken MMEAD, reformatted the entity links into RDF, and ingested the results into the QLever SPARQL engine~\citep{qlever}.\footnote{\url{https://github.com/ad-freiburg/qlever}, last accessed April 26th 2023}
+As a simple demonstration, we have taken MMEAD, reformatted the entity links into RDF, and ingested the results into the QLever SPARQL engine~\citep{qlever}.\footnote{\url{https://github.com/ad-freiburg/qlever}, last accessed November 19th 2024}
 By combining MMEAD with RDF data from Wikidata and OpenStreetMap, we can issue SPARQL queries such as ``Show me all passages in MS MARCO related to France''.
 
 \begin{figure}
@@ -469,7 +470,7 @@ To return to our third research question:
 	\item[\textbf{RQ3:}] When does information retrieval research benefit from graph data?
 \end{itemize}   
 
-With MMEAD, we support information retrieval research that combines deep learning and entity graph information. Entity links can be considered a bi-partite graph where entities and documents are nodes, that are connected when entities appear in documents. Using these entities for query and passage expansion, we showed experimentally a significant increase in recall effectiveness. Although in this chapter we used Anserini for our retrieval experiments, it is trivial to express the same problem using GeeseDB. When using reciprocal rank fusion, the effectiveness difference becomes even more prominent and recall increases significantly with the new relevant passages found. The question remains open whether these passages previously missed, can be ranked higher by new retrieval models.
+With MMEAD, we support information retrieval research that combines deep learning and entity graph information. Entity links can be considered a bi-partite graph where entities and documents are nodes, that are connected when entities appear in documents. Using these entities for query and passage expansion, we showed experimentally a significant increase in recall effectiveness. When using reciprocal rank fusion, the effectiveness difference becomes even more prominent and recall increases significantly with the new relevant passages found. The question remains open whether these passages previously missed, can be ranked higher by new retrieval models.
 
 We also demonstrated that our resource can enrich interactive search applications. In particular, we present an demo where all entities related to geographical locations can be positioned on a map. Specifically we queried the data as a RDF triple graph.
 
