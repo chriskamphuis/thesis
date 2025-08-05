@@ -51,7 +51,7 @@ To build a system that can support these requirements, the authors identify four
 \begin{enumerate}
 	\item \emph{On-top-of-SQL.} The IR functionalities are built on top of a SQL engine. The disadvantage of this approach is that it is challenging to customize efficient access for both IR and DB functionalities. 
 	\item \emph{Middleware.} In this approach, SQL and IR engines run simultaneously. The two disadvantages of using this approach are that the API needs to talk to two systems, which can have very different design philosophies, and the data needs to be shared between systems, incurring a large overhead and making it harder to combine both functionalities. 
-	\item \emph{IR-via-ADTs.} The third approach is building an IR system using abstract data types. The authors argue that this approach makes the system more customizable than the previous approaches. However, the authors also note that query optimization in the presence of UDFs is complicated. Also, when programmers need to work with such a system, it has the full complexity of SQL plus the complexity of working with ADTs. 
+	\item \emph{IR-via-ADTs.} The third approach is building an IR system using abstract data types. The authors argue that this approach makes the system more customizable than the previous approaches. However, the authors also note that query optimization in the presence of user defined functions is complicated. Also, when programmers need to work with such a system, it has the full complexity of SQL plus the complexity of working with ADTs. 
 	\item \emph{RISC.} The final approach is what the authors prefer; IR functionalities build on top of a relational \textit{storage} engine, as described in an earlier work by them~\citep{risc}. The DB+IR systems should then be built on top of this engine. 
 \end{enumerate}  
 Although the approaches described in this work are interesting, they do not provide prototypes to compare them. (The goal of this paper was to present a theoretical framework for tackling this problem.) Even though it is not the preferred option of \citeauthor{Chaudhuri2005IntegratingDA}, this PhD thesis research has focused on the \emph{On-top-of-SQL} approach, assuming that recent developments in database system engineering have overcome the shortcomings with respect to ranking efficiency.
@@ -137,7 +137,7 @@ Three tables are constructed. One table contains the data that represents the do
 \begin{table}
 	\centering
 	\caption{Example of tables representing the data in the OldDog system, the dict tables contains all term specific data, the terms table represents all the postings, and the docs table contains all document specific data.}
-	\begin{subtable}[t]{0.3\linewidth}
+	\begin{subtable}[t]{0.31\linewidth}
 		\centering
 		\caption{\textbf{dict}}
 		\(\begin{array}{ccc}
@@ -151,18 +151,18 @@ Three tables are constructed. One table contains the data that represents the do
 			\bottomrule
 		\end{array}\)
 	\end{subtable}
-	\begin{subtable}[t]{0.3\linewidth}
+	\begin{subtable}[t]{0.31\linewidth}
 		\centering
 		\caption{\textbf{docs}}
 		\(\begin{array}{ccc}
 			\toprule
-			\text{docid} & \text{term} & \text{df}  \\  
+			\text{docid} & \text{name} & \text{length}  \\  
 			\midrule
 			1 & \text{doc1} & 8 \\ 
 			\bottomrule
 		\end{array}\)
 	\end{subtable}
-	\begin{subtable}[t]{0.3\linewidth}
+	\begin{subtable}[t]{0.31\linewidth}
 		\centering
 		\caption{\textbf{terms}}
 		\(\begin{array}{ccc}
@@ -315,7 +315,7 @@ BM25+, as shown in \cref{bm25+}, encodes a general approach for dealing with the
 \end{equation}
 
 \subsubsection{BM25-adpt~\citep{bm25-adpt}}
-BM25-adpt is an approach that varies $k_1$ per term (i.e., uses term specific $k_1$ values). In the original formulation of BM25, $k_1$ can be considered a hyperparameter that regulates the increase of score for additional occurrences of a term; $k_1$ ensures that every additional occurrence gets discounted as it provides less information than its previous. However, \citeauthor{bm25-adpt} argued that this does not necessarily have to be the case. If there are much fewer documents with $t+1$ occurrences versus $t$, it should provide more information than when the number of documents is almost the same. In order to find the optimal term-specific $k_1$ value, the authors want to maximize the information gain for that particular query term. 
+BM25-adpt is an approach that varies $k_1$ per term (i.e., uses term specific $k_1$ values). In the original formulation of BM25, $k_1$ can be considered a hyperparameter that regulates the increase of score for additional occurrences of a term; $k_1$ ensures that every additional occurrence gets discounted as it provides less information than its previous. However, \citeauthor{bm25-adpt} argued that this does not necessarily have to be the case. If there are many fewer documents with $t+1$ occurrences versus $t$, it should provide more information than when the number of documents is almost the same. In order to find the optimal term-specific $k_1$ value, the authors want to maximize the information gain for that particular query term. 
 First, they identify the probability of selecting a document randomly from the collection that contains the term $q$ at least once as:
 
 \begin{equation}
