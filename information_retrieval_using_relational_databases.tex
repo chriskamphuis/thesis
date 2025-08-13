@@ -206,7 +206,7 @@ As we now have a system in which the BM25 formula is written directly in SQL, we
 The original formulation of BM25 consists of two parts. The first part is derived from the binary independence relevance model~\citep{bm25-beyond}, which results in an approximation of the classical inverse document frequency ($\mathit{idf}$) for a query term $t$:
 
 \begin{equation} 
-	w_i^{\text{IDF}} = \log\left(\frac{N-\mathit{df}_t+0.5}{\mathit{df}_t+0.5}\right)
+	w_t^{\text{IDF}} = \log\left(\frac{N-\mathit{df}_t+0.5}{\mathit{df}_t+0.5}\right)
 \end{equation}
 where $N$ is the collection size, and $df_t$ are the number of collection documents containing query term $t$.  
 
