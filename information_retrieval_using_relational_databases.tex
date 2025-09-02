@@ -9,7 +9,7 @@
 \end{Abstract}
 
 \section{Introduction}
-Where information retrieval researchers commonly use inverted indexes as data structures, there is also a rich history of researchers using relational databases to represent the data in information retrieval systems. Different approaches in the literature present varying degrees of succes. Given this context, we arrive at the first research question: 
+Where information retrieval researchers commonly use inverted indexes as data structures, there is also a rich history of researchers using relational databases to represent the data in information retrieval systems. Different approaches in the literature present varying degrees of success. Given this context, we arrive at the first research question: 
 \begin{itemize}  
 	\item \emph{Research Question 1: What are the benefits of using relational databases for information retrieval?} 
 \end{itemize}
@@ -64,7 +64,7 @@ A shortcoming in this approach is that the query plans were not generated from S
 The same research group~\citep{array-db} also ran experiments on the TREC TeraByte track using the array database SRAM (Sparse Relational Array Mapping). SRAM automatically translates BM25 queries to run them on a relational engine (specifically X100). However, SRAM is quite an esoteric query language, only used by the researchers themselves, and no publicly available (prototype) system offers support for this approach. 
 
 \subsection{Retrieval models only using SQL}
-In more recent work, \citet{OldDog} showed that the commonly used BM25 ranking function could be expressed easily using SQL. This is done similarly to \citet{PowerDB-IR}. In this work, the MonetDB~\citep{monet} and Vectorwise~\citep{vectorwise} systems were used, making the runtime much faster than~\citeauthor{PowerDB-IR}'s original results. \Citeauthor{OldDog} specifically focused on the retrieval efficiency of systems and compared the efficiency of inverted indexes with systems built on top of relational engines. They argued that instead of using a custom build IR system using an inverted index, researchers could store their data representations in a column-oriented relational database and formulate the ranking functions using SQL. They show that their implementation of BM25 in SQL is on par in efficiency and effectiveness compared to systems that use an inverted index.\footnote{This is especially the case for the Vectorwise system.}  
+In more recent work, \citet{OldDog} showed that the commonly used BM25 ranking function could be expressed easily using SQL. This was done similarly to \citet{PowerDB-IR}. In this work, the MonetDB~\citep{monet} and Vectorwise~\citep{vectorwise} systems were used, making the runtime much faster than~\citeauthor{PowerDB-IR}'s original results. \Citeauthor{OldDog} specifically focused on the retrieval efficiency of systems and compared the efficiency of inverted indexes with systems built on top of relational engines. They argued that instead of using a custom build IR system using an inverted index, researchers could store their data representations in a column-oriented relational database and formulate the ranking functions using SQL. They showed that their implementation of BM25 in SQL is on par in efficiency and effectiveness compared to systems that use an inverted index.\footnote{This was especially the case for the Vectorwise system.}  
 
 There was an interesting observation in the paper to highlight: All the systems evaluated in this paper implement a ranking function they refer to as BM25. However, there was a substantial difference between the effectiveness scores produced by these systems, as shown in \cref{olddog_results}. The only two systems that achieved the same effectiveness score were the two database systems (MonetDB and Vectorwise).\footnote{Although the same research group developed these two systems, they were completely separate projects.}
 
@@ -201,8 +201,10 @@ CREATE table dict AS SELECT * FROM odict WHERE df <= (
 Having ``OldDog'' set up, we can run retrieval experiments easily. As mentioned in the previous section, it is still unclear why the differences between implementations of BM25 of different systems were this big. Also, many different variants of BM25 have been proposed in the literature, that claim to be more effective than the original formulation. A study by \citet{trotman-bm25} compared several variants and found that improvements presented in the literature cannot be reproduced. 
 As we now have a system in which the BM25 formula is written directly in SQL, we can easily swap this version of BM25 with its proposed improvements. By using OldDog, we can ensure the data representation is the same when we compare these variants; the results will only reflect what the effects are of applying a different variant of BM25. This way, we can easily validate \citeauthor{trotman-bm25}'s findings.
 
+In the following section we will first describe the original formulation of BM25, and then variants of BM25 proposed in the literature. 
+
 \subsubsection{\Citet{bm25-robertson}} 
-The original formulation of BM25 consists of two parts. The first part is derived from the binary independence relevance model~\citep{bm25-beyond}, which results in an approximation of the classical inverse document frequency ($\mathit{idf}$) for a query term $t$:
+BM25 was developed within the probabilistic ranking framework~\ref{sec:probabilistic-relevance-models}. The original formulation consists of two parts. The first part is derived from the binary independence relevance model~\citep{bm25-beyond}, which results in an approximation of the classical inverse document frequency ($\mathit{idf}$) for a query term $t$:
 
 \begin{equation} 
 	w_t^{\text{IDF}} = \log\left(\frac{N-\mathit{df}_t+0.5}{\mathit{df}_t+0.5}\right)
@@ -258,7 +260,7 @@ The value of $b$ controls the degree of length normalization. Combining these pa
 Lucene is a widely used open source search engine software library\footnote{\url{https://lucene.apache.org/}}. 
 The variant of BM25 implemented in Lucene (as of version 8) introduces two main differences. As mentioned, the $\mathit{idf}$ component of \citet{bm25-robertson} is negative when $\mathit{df}_t > \frac{N}{2}$.
 To avoid negative values in all possible cases, Lucene adds a constant value of one before calculating the $log$ value. 
-Second, the document length used in the scoring function is compressed (in a lossy manner) to a one-byte value, denoted $L_{d\text{lossy}}$. With only 256 distinct document lengths, Lucene pre-computes for each possible length the value of:
+Second, the document length used in the scoring function is compressed (in a lossy manner) to a one-byte value, denoted $L_{d\text{lossy}}$\footnote{The lossy encoding is described in this ticket: \url{https://issues.apache.org/jira/browse/LUCENE-7730}}. With only 256 distinct document lengths, Lucene pre-computes for each possible length the value of:
 
 \begin{equation}
 	k_1 \cdot \left(1-b+b\cdot\left(\frac{L_{d\text{lossy}}}{L_{\mathit{avg}}}\right)\right)
@@ -298,6 +300,7 @@ with
 \begin{equation}
 	c_{\mathit{td}} = \frac{\mathit{tf}_{\mathit{td}}}{1 - b + b \cdot \left(\frac{L_d}{L_{\mathit{avg}}}\right)}  
 \end{equation}
+being a normalized $tf$ using pivoted length normalization~\citep{ctd}.
 The $c_{td}$ component is further modified by adding a constant $\delta$, boosting the score for longer documents. The authors report using $\delta = 0.5$ for the highest effectiveness. \Cref{bm25l} presents the final formulation of BM25L:
 
 \begin{equation}
@@ -306,7 +309,7 @@ The $c_{td}$ component is further modified by adding a constant $\delta$, boosti
 \end{equation}
 
 \subsubsection{BM25+~\citep{bm25+}}
-BM25+, as shown in \cref{bm25+}, encodes a general approach for dealing with the issue that ranking functions unfairly prefer shorter documents over longer ones. \Citeauthor{bm25+} propose adding a lower-bound bonus when a term appears at least once in a document. The difference with BM25L is a constant $\delta$ to the TF component. The $\mathit{idf}$ component is again changed to a variant that disallows negative values.
+BM25+, as shown in \cref{bm25+}, encodes a general approach for dealing with the issue that ranking functions unfairly prefer shorter documents over longer ones. \Citeauthor{bm25+} proposed adding a lower-bound bonus when a term appears at least once in a document. The difference with BM25L is a constant $\delta$ to the TF component. The $\mathit{idf}$ component is again changed to a variant that disallows negative values.
 
 \begin{equation}
 	\label{bm25+}
@@ -367,6 +370,8 @@ Essentially, this gives a value for $k_1$ that maximizes information gain for th
 We found that the optimal value of $k_1$ is not defined for about 90\% of the terms. A unique optimal value for $k_1$ only exists when $t > 1$ while calculating $G^t_q$. For many terms, especially those with a low $\mathit{df}$, $G^t_q > G^{t+1}_q$ occurs before $t > 1$. In these cases, picking different values for $k_1$ has virtually no effect on retrieval effectiveness. For undefined values, we set $k_1$ to $0.001$, the same as \citet{trotman-bm25}.
 
 \subsubsection{TF $l\circ\delta\circ p\times$IDF~\citep{tf-ldp-idf}}
+\Citeauthor{tf-ldp-idf} observed that in different variants of BM25, term frequency is normalized following several heuristics (i.e.\ non-linear gain, document length normalization, lower-bounding). When composing a ranking function, the order in which these heuristics are applied will change the ranking function. Testing different compositions of these heuristics, they found one composition that significantly outperformed traditional BM25:
+
 TF$l\circ\delta\circ p\times$IDF, as shown in equation \ref{tf-ldp-idf}, models the non-linear gain of a term occurring multiple times in a document as:
 \begin{equation}
 	1+\log\left(1+\log\left(\mathit{tf}_{\mathit{td}}\right)\right) 
@@ -415,7 +420,7 @@ All experiments were run on a Linux desktop (Fedora 30, Kernel 5.2.18, SELinux e
 		\bottomrule
 	\end{tabular}
 \end{table}
-The observed differences in effectiveness are small and can be entirely attributed to variations in the scoring function; our methodology fixes all other parts of the indexing pipeline (e.g., tag cleanup, tokenization, and stopwords). Both an ANOVA and Tukey’s HSD show no significant differences between any variant on all test collections. These results confirm the findings of~\citet{trotman-bm25}: effectiveness differences are unlikely an effect of the choice of the BM25 variant. Across the IR literature, we find differences due to more mundane settings (such as the choice of stopwords) tend to be larger than the differences we observe here. Although we find no significant improvements over the original~\citep{bm25-robertson} formulation, using a variant of BM25 that avoids negative ranking scores might still be worthwhile.
+The observed differences in effectiveness are small and can be entirely attributed to variations in the scoring function; our methodology fixes all other parts of the indexing pipeline (e.g., tag cleanup, tokenization, and stopwords). Both an ANOVA and Tukey’s HSD show no significant differences between any variant on all test collections. These results confirm the findings of~\citet{trotman-bm25}: effectiveness differences are unlikely an effect of the choice of the BM25 variant. Across the IR literature, we find differences due to more mundane settings (such as the choice of stopwords~\citep{stopwords}) tend to be larger than the differences we observe here. Although we find no significant improvements over the original~\citep{bm25-robertson} formulation, using a variant of BM25 that avoids negative ranking scores might still be worthwhile.
 
 You might have caught that the effectiveness scores of ATIRE and Lucene (accurate) are the same. This is not a mistake. As explained, the $k_1+1$ in ATIRE scales the scores linearly and does not affect the ranking. So the only difference that can change the effectiveness scores is the different $\mathit{idf}$ functions. However, these are practically the same, especially when a collection has a large number of documents ($N$):
 

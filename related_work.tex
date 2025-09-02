@@ -138,6 +138,7 @@ Now it is possible to calculate a similarity score between the query and every d
 Calculating this for the documents in the collection gives an estimated value of relevance for all of them. Ordering them based on this estimated value then produces a ranked list where the highest is presumed to be the most interesting for the user. As mentioned before, the weights represented in the document vector do not necessarily have to be binary. \Citeauthor{VectorSpaceModel}~showed that the product of the term frequency with a general measure of term importance is highly effective. The measure they used for term importance was the inverse document frequency proposed by \citet{idf} three years earlier.
 
 \subsubsection{Probabilistic Relevance Models}
+\label{sec:probabilistic-relevance-models}
 In 1976,~\citeauthor{RSJ} developed the probabilistic ranking framework. Within this framework, it is assumed that a document has a certain probability of being relevant given a query. Then, a search system that implements models within this framework ranks documents with the highest probability of being relevant the highest.
 
 Within this framework, making an assumption of binary independence, which is nicely explained by~\citet{bm25-beyond}, the so-called Robertson-Sp{\"a}rck Jones weight can be derived. When assuming that no relevance labels are available, this leads to an approximation of the classical inverse document frequency.
