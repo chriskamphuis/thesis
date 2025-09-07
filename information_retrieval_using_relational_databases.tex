@@ -18,7 +18,7 @@ In order to answer this question, first, we review the history of using database
 \section{Related work}
 
 \subsection{Boolean retrieval}
-Perhaps the earliest work on using relational databases for information retrieval is the work by~\citet{SchekPistor}. In their work, the authors recognize that the relational data model is widely accepted as an interface to query structured data. However, it is inconvenient to use unstructured data like text. They proposed extending the relational model by allowing Non-First Normal-Form ($\text{NF}^2$) relations. This extension allows for text queries to be more easily expressed. The systems that can be built in this language are still Boolean retrieval systems (as described in \cref{sec:boolean}). At the time, that worked well, but scoring was not a feature considered.  
+Perhaps the earliest work on using relational databases for information retrieval is the work by~\citet{SchekPistor}. In their work, the authors recognized that the relational data model is widely accepted as an interface to query structured data. However, it is inconvenient to use unstructured data like text. They proposed extending the relational model by allowing Non-First Normal-Form ($\text{NF}^2$) relations. This extension allows for text queries to be more easily expressed. The systems that can be built in this language are still Boolean retrieval systems (as described in \cref{sec:boolean}). At the time, that worked well, but scoring was not a feature considered.  
 Similarly, \citet{macleod} compared the inverted index approach to using the relational model. \Citeauthor{macleod} showed how queries of the IBM STAIRS system could be expressed using the relational model. These were, however, still Boolean queries, so scoring using uncertainty was not considered. 
 
 \subsection{Probabilistic Relational Algebra}
@@ -347,7 +347,7 @@ Here $\mathit{df}_t$ is not defined as a standard document frequency but based o
 	\end{cases}
 \end{equation}
 
-In this case $\mathit{df}(q)$ is the ``normal'' document frequency, and $c_{\mathit{td}}$ is the same as in BM25L (using the pivoted method for length normalization introduced by~\cite{ctd}):
+In this case $\mathit{df}(q)$ is the ``normal'' document frequency, and $c_{\mathit{td}}$ is the same as in BM25L (using the pivoted method for length normalization introduced by~\citet{ctd}):
 
 \begin{equation}
 	c_{\mathit{td}} = \frac{\mathit{tf}_{\mathit{td}}}{1-b+b\cdot\left(\frac{L_d}{L_{\mathit{avg}}}\right)}
@@ -461,4 +461,4 @@ Comparing Lucene (default) and Lucene (accurate), we find negligible differences
 
 \section{Conclusion}
 In summary, the previous sections describe a double reproducibility study. The study methodologically validated the usefulness of databases for IR prototyping and performed a large-scale study of BM25 to confirm the findings of \citet{trotman-bm25}. It does not seem to matter which of the multitude of BM25 variants is used.
-Furthermore, to return to our research question, we can conclude that using relational databases for information retrieval is beneficial. Because data processing and storage are separated in relational databases, comparing different ranking functions in a relational system is much easier compared to a system that uses an inverted index. The work by \cite{OldDog} also confirmed that relational databases could be as efficient as inverted indexes in retrieval tasks. In short, databases have use cases in which they are easier to work with, while it remains possible to obtain efficient retrieval systems.
+Furthermore, to return to our research question, we can conclude that using relational databases for information retrieval is beneficial. Because data processing and storage are separated in relational databases, comparing different ranking functions in a relational system is much easier compared to a system that uses an inverted index. The work by \citet{OldDog} also confirmed that relational databases could be as efficient as inverted indexes in retrieval tasks. In short, databases have use cases in which they are easier to work with, while it remains possible to obtain efficient retrieval systems.
