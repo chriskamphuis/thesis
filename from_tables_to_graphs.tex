@@ -56,7 +56,7 @@ Knowledge graphs have been used a lot as well in IR research. \Citet{entity-1} p
 
 For additional background related to entities in search, we refer to \Citet{entity-2}, an excellent book on entity-oriented search, that surveys many methods that use entities for search. 
 
-Basically, in order to include entities, a knowledge graph needs to be queried. This tends to be done by a different systems than the systems used for regular retrieval. If we could integrate IR in graph databases, a single system would solve the complete process.
+Basically, in order to include entities, a knowledge graph needs to be queried. This tends to be done by a different system than the system used for regular retrieval. If we could integrate IR in graph databases, a single system would solve the complete process.
 % maybe include a subsection about graphs including the work by mcdonald
 
 \subsection{Current approaches}
@@ -106,7 +106,7 @@ In short, GeeseDB aims to provide the following functionalities:
 	\item Easy data exploration is supported through querying data with SQL, but more interestingly, using a graph query language (based on the Cypher query language), making exploring new research avenues easier. This prototype supports a subset of the graph query language Cypher, similar to the property graph database model query language as described by~\citet{angles2018property}.
 \end{itemize}
 
-\section{Design}
+\subsection{Design}
 % Expand the Design part a lot, how did we solve certain technical problems. 
 At the core of GeeseDB lies the full-text search design presented by~\citet{OldDog} as discussed already in~\cref{ir-using-relational-databases}. This work proposes a column-store database for IR prototyping, which uses the database schema described in~\cref{olddog_schema}, consisting of three database tables.
 \begin{figure}
@@ -164,7 +164,7 @@ GeeseDB is built on top of DuckDB~\citep{duckdb}, an in-process SQL OLAP (analyt
 
 As DuckDB is a database management system, we can execute analytical SQL queries on tables containing our data, including the BM25 rankings described by~\citet{OldDog}. By default, the BM25 implementation provided with GeeseDB implements the disjunctive variant of BM25 instead of the conjunctive variant they used. Although the conjunctive variant of BM25 can be calculated more quickly, the differences between effectiveness scores are noticeable on smaller collections. Also, disjunctive would mostly likely better match the mental model of our IR researchers as GeeseDB users. For now, we only support the original formulation of BM25 by~\citet{bm25-robertson}. However, supporting other versions of BM25 as described in the previous chapter is trivial.
 
-\section{Graph Query Language}
+\subsection{Graph Query Language}
 GeeseDB distinguishes itself from alternatives, database-backed (OldDog)~\citep{olddog-docker}, or native systems (Anserini~\citep{anserini}, Terrier~\citep{terrier}) by offering a graph query language, based on Cypher~\citep{cypher}. 
 Where SQL queries start with what will be returned, a Cypher queries ends with it in the return clause. In Cypher  the Match pattern is used to find specific graph patterns in the data. This can, for example, be a specific node of a certain type, or a graph pattern that describes a subgraph. 
 For now, GeeseDB implements Cypher's basic graph pattern-matching queries for retrieving data. An example of a graph query supported by GeeseDB is presented in~\cref{fig:graph_query}.
@@ -204,7 +204,7 @@ RETURN d.len
 \end{figure}
 Everything that is not directly supported yet by our implementation can, of course, still be expressed in SQL, which is fully supported. \footnote{GeeseDB supports the graph queries by translating them to their corresponding SQL queries. After all, both nodes and edges are just tables in the backend.} In order to know how to join nodes to each other if no edge information has been provided, GeeseDB stores information on the graph schema. This way, GeeseDB knows how nodes relate to each other through which edges. 
 
-\section{Usage}
+\subsection{Usage}
 GeeseDB comes as an easy-to-install Python package that can be installed using pip, the standard package installer for Python:
 
 \begin{verbatim}
@@ -426,8 +426,7 @@ for topic_no, collection_id in topics:
 	\label{fig:entities-code}
 \end{figure}
 
-\section{Experiment}
-
+\section{Experiments}
 The previous sections give examples on how non textual content can be used for retrieval experiments. For example, authorship information can be used as a boost for finding related background reading articles. In the example the result set is filtered if sufficient articles are written by the same author, it might however be more interesting to use authorship information as a feature. Let us define a boosting value $p$ that represents the amount of boosts a document gets when it is written by the same author. Then we can score documents with, e.g., BM25 and adapt the score with $p$:
 
 \begin{equation}
