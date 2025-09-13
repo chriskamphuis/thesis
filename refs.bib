@@ -1913,7 +1913,7 @@ publisher = {NIST}
 }
 
 @inproceedings{multi-stage,
-	author = {{Broder, Andrei Z. and Carmel, David and Herscovici, Michael and Soffer, Aya and Zien, Jason}},
+	author = {Broder, Andrei Z. and Carmel, David and Herscovici, Michael and Soffer, Aya and Zien, Jason},
 	title = {{Efficient query evaluation using a two-level retrieval process}},
 	year = {2003},
 	isbn = {1581137230},
@@ -2033,7 +2033,7 @@ publisher = {NIST}
 
 @inproceedings{ltr-web,
 	author = {Agichtein, Eugene and Brill, Eric and Dumais, Susan},
-	title = {{Improving web search ranking by incorporating user behavior information}},
+	title = {{Improving Web Search Ranking by Incorporating User Behavior Information}},
 	year = {2006},
 	isbn = {1595933697},
 	publisher = {Association for Computing Machinery},
@@ -2049,6 +2049,50 @@ publisher = {NIST}
 	series = {SIGIR '06}
 }
 
+@inproceedings{ossym,
+	title={{Challenges of Index Exchange for Search Engine Interoperability}},
+	author={Hiemstra, Djoerd and Hendriksen, Gijs and Kamphuis, Chris and de Vries, Arjen P.},
+	year={2023},
+	publisher={Open Search Foundation}
+	year = {2023},
+	location = {CERN, Geneva, Switzerland and Online},
+	series = {OSSYM23},
+	booktitle = {Proceedings of the 5th International Open Search Sympositum}
+}
 
+@article{dgaps,
+	author = {Moffat, Alistair and Zobel, Justin},
+	title = {{Self-indexing inverted files for fast text retrieval}},
+	year = {1996},
+	issue_date = {Oct. 1996},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {14},
+	number = {4},
+	issn = {1046-8188},
+	url = {https://doi.org/10.1145/237496.237497},
+	doi = {10.1145/237496.237497},
+	abstract = {Query-processing costs on large text databases are dominated by the need to retrieve and scan the inverted list of each query term. Retrieval time for inverted lists can be greatly reduced by the use of compression, but this adds to the CPU time required. Here we show that the CPU component of query response time for conjunctive Boolean queries and for informal ranked queries can be similarly reduced, at little cost in terms of storage, by the inclusion of an internal index in each compressed inverted list. This method has been applied in a retrieval system for a collection of nearly two million short documents. Our experimental results show that the self-indexing strategy adds less than 20\% to the size of the compressed inverted file, which itself occupies less than 10\% of the  indexed text, yet can reduce processing time for Boolean queries of 5-10 terms to under one fifth of the previous cost. Similarly, ranked queries of 40-50 terms can be evaluated in as little as 25\% of the previous time, with little or no loss of retrieval effectiveness.},
+	journal = {ACM Trans. Inf. Syst.},
+	month = oct,
+	pages = {349–379},
+	numpages = {31}
+}
 
-
+@inproceedings{ltr-methods,
+	author = {Liu, Tie-Yan},
+	title = {{Learning to Rank for Information Retrieval}},
+	year = {2010},
+	isbn = {9781450301534},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/1835449.1835676},
+	doi = {10.1145/1835449.1835676},
+	abstract = {This tutorial is concerned with a comprehensive introduction to the research area of learning to rank for information retrieval. In the first part of the tutorial, we will introduce three major approaches to learning to rank, i.e., the pointwise, pairwise, and listwise approaches, analyze the relationship between the loss functions used in these approaches and the widely-used IR evaluation measures, evaluate the performance of these approaches on the LETOR benchmark datasets, and demonstrate how to use these approaches to solve real ranking applications. In the second part of the tutorial, we will discuss some advanced topics regarding learning to rank, such as relational ranking, diverse ranking, semi-supervised ranking, transfer ranking, query-dependent ranking, and training data preprocessing. In the third part, we will briefly mention the recent advances on statistical learning theory for ranking, which explain the generalization ability and statistical consistency of different ranking methods. In the last part, we will conclude the tutorial and show several future research directions.},
+	booktitle = {Proceedings of the 33rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
+	pages = {904},
+	numpages = {1},
+	keywords = {information retrieval, learning theory, learning to rank, ranking models},
+	location = {Geneva, Switzerland},
+	series = {SIGIR '10}
+}
