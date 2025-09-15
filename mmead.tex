@@ -52,7 +52,7 @@ REL (Radboud Entity Linker)~\citep{rel} is a state-of-the-art open-source entity
 	\item \emph{Mention Detection.} REL starts the entity linking process by first identifying all text spans that might refer to an entity. In this stage, it is essential that all possible entities in the text are identified, as only the output of this stage can be considered an entity by REL. These spans are identified using a named entity recognition (NER) model based on contextual word embeddings. For our experiments, we use the NER model based on Flair~\citep{flair} embeddings. 
 	\item \emph{Candidate Selection.} Up to seven candidate entities are considered for every mention found by Flair. Part of these entities are selected according to the prior probability $P(e|m)$ of the mention $m$ being linked to the entity $e$. This probability is estimated from existing dictionaries YAGO~\citep{yago}, Wikipedia, and CrossWikis~\citep{crosswiki}. Precisely, the top-4 ranked entities are selected based on $P(e|m) = \min(1, P_{\mathit{Wiki}}(e|m) + P_{\mathit{YAGO}}(e|m))$, where $P_{\mathit{YAGO}}(e|m))$ is a uniform probability from the YAGO dictionary and $P_{\mathit{Wiki}}(e|m)$ is computed based on the summation of hyperlink counts in Wikipedia and the CrossWikis corpus.
 	%, and a uniform probability from the YAGO dictionary~\citep{yago}. These probabilities are precalculated for every mention: $P(e|m) = \min(1, P_{\mathit{Wiki}}(e|m) + P_{\mathit{YAGO}}(e|m))$.
-	The remaining three candidate entities are determined according to the similarity of an entity and the context of a mention. For the top-ranked candidates based on $P(e|m)$ probabilities, the context similarity is calculated by $\mathbf{e}^T \sum_{w\in c}\mathbf{w}$. Here $\mathbf{e}$ is the entity embedding for entity $e$, and $\mathbf{w}$ are the word embeddings in context $c$, with a maximum length of 200-word tokens. The entity and word embeddings are jointly learned using Wikipedia2Vec~\citep{wikipedia2vec}. 
+	The remaining three candidate entities are determined according to the similarity of an entity and the context of a mention (entities provided in the previous step are not considered). For the top-ranked candidates based on $P(e|m)$ probabilities, the context similarity is calculated by $\mathbf{e}^T \sum_{w\in c}\mathbf{w}$. Here $\mathbf{e}$ is the entity embedding for entity $e$, and $\mathbf{w}$ are the word embeddings in context $c$, with a maximum length of 200-word tokens. The entity and word embeddings are jointly learned using Wikipedia2Vec~\citep{wikipedia2vec}. 
 	\item \emph{Entity Disambiguation.} The final stage tries to select the correct entity from the candidate entities and maps it to the corresponding entry in a knowledge graph (Wikipedia). For this, REL assumes a latent relation between entities in the text and utilizes the Ment-norm method proposed by~\citet{ED-paper}.
 \end{enumerate}
 
@@ -101,50 +101,46 @@ We chose to store this field for convenience and human readability. The \texttt{
 The identifier can also be used to find the corresponding entity in other knowledge graphs such as Wikidata.
 
 \subsection{An Example}
-A passage from the MS MARCO v1 passage ranking collection is shown below.\footnote{This is the second passage from the collection.}
+A passage from the MS MARCO v1 passage ranking collection is shown below.
 
-\smallskip
 \begin{center}
 	\fbox{
 		\begin{minipage}{0.9\textwidth}
-			\emph{The Manhattan Project and its atomic bomb helped bring an end to World War II. Its legacy of peaceful uses of atomic energy continues to have an impact on history and science.}
+			\emph{A: While Pablo Picasso may be best known as one of the pioneers, along with George Braques, of the Cubism style of art, the Spanish painter and sculptor also painted in many other styles. Before Cubism,...}
 		\end{minipage}
 	}    
 \end{center}
-\smallskip
 
-A few text spans in this text can be considered as entities: ``the Manhattan Project'', ``World War II'', and ``atomic energy.'' REL identifies two of these entities: the \emph{Manhattan Project} and \emph{World War II}. 
-The output of the system is converted to our JSON specification, which results in the JSON object presented in Figure~\ref{fig:json-example-passage-v1}. The value of the \texttt{md\_score} field shows that Flair is more certain about ``World War II'' being an entity than the ``Manhattan Project.'' 
+Several text spans in this text can be considered as entities. REL identifies three of these entities: the \emph{Pable Picasso}, \emph{Georges Braque}, and \emph{Spain}. It does however miss the concept ``Cubism'' as an entity.  
+The output of the system is converted to our JSON specification, which results in the JSON object presented in Figure~\ref{fig:json-example-passage-v1}.
 
 \begin{figure}
 	\begin{minted}[]{json}
 {
 	"passage": [
-	{
-		"entity_id": 19603, 
-		"start_pos": 4, 
-		"end_pos": 21,
-		"entity": "Manhattan Project",
-		"details": {
-			"tag": "ORG",
-			"md_score": 0.613243
+		{
+			"entity_id": 24176,
+			"start_pos": 9,
+			"end_pos": 22,
+			"entity": "Pablo Picasso"
+		},
+		{
+			"entity_id": 12317, 
+			"start_pos": 76, 
+			"end_pos": 90, 
+			"entity": "Georges Braque"
+		},
+		{
+			"entity_id": 26667,
+			"start_pos": 124,
+			"end_pos": 131,
+			"entity": "Spain"
 		}
-	}, 
-	{
-		"entity_id": 32927,
-		"start_pos": 65,
-		"end_pos": 77,
-		"entity": "World War II",
-		"details": {
-			"tag": "MISC",
-			"md_score": 0.991474
-		}
-	}
 	], 
-	"pid": 1
+	"pid": "3263"
 }
 	\end{minted}
-\caption{Example of MMEAD annotations for a MS MARCO passage in JSON format. The field \texttt{tag} depicts the type of the entity and \texttt{md\_score} shows the certainty of the mention detection component in identifying the text span as a mention.}
+\caption{Example of MMEAD annotations for a MS MARCO passage in JSON format.}
 \label{fig:json-example-passage-v1}
 \end{figure}
 
@@ -173,7 +169,7 @@ $ pip install mmead
 \end{verbatim}
 
 After installation of MMEAD, the entity links can be loaded into a DuckDB database~\citep{duckdb}, as shown in Figure~\ref{fig:load-links}, with only a couple of lines of code.
-%
+
 \begin{figure}
 \begin{minted}[linenos]{python}
 from mmead import get_links
@@ -182,7 +178,7 @@ links = get_links('v1', 'passage', linker='rel')
 \caption{Example of how to load MMEAD entity links for the MS MARCO v1 passage collection.}
 \label{fig:load-links}
 \end{figure}
-%
+
 When running this code for the first time, initialization will take some time, as all the data need to be downloaded and ingested into the DuckDB database. After loading the data for the first time, it is automatically stored on disk. Loading the persisted data for later usage will only take seconds.
 
 Once the data is loaded, it is ready to use. We provide a simple interface to access the data. The code shown in Figure~\ref{fig:load-links-for-document} loads the entity links available for a document in the MS MARCO v1 passage ranking collection. When using this function, the data is provided in JSON format, making it easy to access the annotations.
@@ -460,7 +456,7 @@ RETURN pid, content, entity, label, coord
 	\label{fig:code_geese}
 \end{figure}
 
-Although we have used SPARQL for this experiment, it would also be possible to express this query Cypher in GeeseDB. Depending on exact the schema, this would look like the query shown in~\cref{fig:code_geese}.
+Although we have used SPARQL for this experiment, it would also be possible to express this query using Cypher in GeeseDB. Depending on the exact schema, this would look like the query shown in~\cref{fig:code_geese}.
 
 \section{Conclusion and Future Work}
 This chapter introduces a new Information Retrieval resource called MMEAD, or MS MARCO Entity Annotations and Disambiguations. MMEAD contains entity annotations for the passages and documents in MS MARCO v1 and v2. These annotations simplify entity-oriented research on the MS MARCO collections. Links have been provided using the REL and BLINK entity linking systems. Using DuckDB, the data can quickly be queried, making the resource easy to use.

@@ -16,13 +16,12 @@
 
 @inproceedings{entity-cards,
 	author = {Hasibi, Faegheh and Balog, Krisztian and Bratsberg, Svein Erik},
-	title = {Dynamic Factual Summaries for Entity Cards},
+	title = {{Dynamic Factual Summaries for Entity Cards}},
 	year = {2017},
 	isbn = {9781450350228},
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/3077136.3080810},
-	doi = {10.1145/3077136.3080810},
 	abstract = {Entity cards are being used frequently in modern web search engines to offer a concise overview of an entity directly on the results page. These cards are composed of various elements, one of them being the entity summary: a selection of facts describing the entity from an underlying knowledge base. These summaries, while presenting a synopsis of the entity, can also directly address users' information needs. In this paper, we make the first effort towards generating and evaluating such factual summaries. We introduce and address the novel problem of dynamic entity summarization for entity cards, and break it down to two specific subtasks: fact ranking and summary generation. We perform an extensive evaluation of our method using crowdsourcing. Our results show the effectiveness of our fact ranking approach and validate that users prefer dynamic summaries over static ones.},
 	booktitle = {Proceedings of the 40th International ACM SIGIR Conference on Research and Development in Information Retrieval},
 	pages = {773–782},
@@ -258,25 +257,8 @@
 	numpages={7}
 }
 
-@inproceedings{entity-1,
-	author = {Hasibi, Faegheh and Balog, Krisztian and Bratsberg, Svein Erik},
-	title = {{Exploiting Entity Linking in Queries for Entity Retrieval}},
-	year = {2016},
-	isbn = {9781450344975},
-	publisher = {Association for Computing Machinery},
-	address = {New York, NY, USA},
-	doi = {10.1145/2970398.2970406},
-	abstract = {The premise of entity retrieval is to better answer search queries by returning specific entities instead of documents. Many queries mention particular entities; recognizing and linking them to the corresponding entry in a knowledge base is known as the task of entity linking in queries. In this paper we make a first attempt at bringing together these two, i.e., leveraging entity annotations of queries in the entity retrieval model. We introduce a new probabilistic component and show how it can be applied on top of any term-based entity retrieval model that can be emulated in the Markov Random Field framework, including language models, sequential dependence models, as well as their fielded variations. Using a standard entity retrieval test collection, we show that our extension brings consistent improvements over all baseline methods, including the current state-of-the-art. We further show that our extension is robust against parameter settings.},
-	booktitle = {Proceedings of the 2016 ACM International Conference on the Theory of Information Retrieval},
-	pages = {209–218},
-	numpages = {10},
-	keywords = {semistructured retrieval, entity linking, entity retrieval},
-	location = {Newark, Delaware, USA},
-	series = {ICTIR '16}
-}
-
 @book{entity-2,
-	title={{Entity-oriented search}},
+	title={{Entity-Oriented Search}},
 	author={Balog, Krisztian},
 	year={2018},
 	publisher={Springer Nature},
@@ -827,7 +809,7 @@
 }
 
 @article{burstiness_rule,
-	title={{Poisson mixtures}},
+	title={{Poisson Mixtures}},
 	volume={1},
 	DOI={10.1017/S1351324900000139},
 	number={2},
@@ -872,7 +854,7 @@
 
 @article{bm25-beyond,
 	author = {Robertson, Stephen E. and Zaragoza, Hugo},
-	title = {The Probabilistic Relevance Framework: BM25 and Beyond},
+	title = {{The Probabilistic Relevance Framework: BM25 and Beyond}},
 	year = {2009},
 	issue_date = {April 2009},
 	publisher = {Now Publishers Inc.},
@@ -1178,7 +1160,6 @@
 author = {Voorhees, Ellen M. and Tice, Dawn M.},
 title = {{The TREC-8 Question Answering Track Evaluation}},
 year = {2000},
-number = {3},
 booktitle="Text Retrieval Conference TREC-8",
 publisher = {NIST}
 }
@@ -1234,11 +1215,15 @@ publisher = {NIST}
 	numpages = {29}
 }
 
-@article{thakur2022domain,
-	title={{Domain adaptation for memory-efficient dense retrieval}},
+@inproceedings{thakur2022domain,
+	title={{Injecting Domain Adaptation with Learning-to-hash
+	for Effective and Efficient Zero-shot Dense Retrieval}},
 	author={Thakur, Nandan and Reimers, Nils and Lin, Jimmy},
-	journal={arXiv preprint arXiv:2205.11498},
-	year={2022}
+	booktitle = "Workshop on Reaching Efficiency in Neural Information Retrieval",
+	series = "ReNeuIR'23",
+	month = "July",
+	year = "2023",
+	location = "Taipei, Taiwan"
 }
 
 @inproceedings{sciavolino:2021:simple,
@@ -1628,7 +1613,6 @@ publisher = {NIST}
 	number = {11},
 	issn = {0001-0782},
 	url = {https://doi.org/10.1145/361219.361220},
-	doi = {10.1145/361219.361220},
 	abstract = {In a document retrieval, or other pattern matching environment where stored entities (documents) are compared with each other or with incoming patterns (search requests), it appears that the best indexing (property) space is one where each entity lies as far away from the others as possible; in these circumstances the value of an indexing system may be expressible as a function of the density of the object space; in particular, retrieval performance may correlate inversely with space density. An approach based on space density computations is used to choose an optimum indexing vocabulary for a collection of documents. Typical evaluation results are shown, demonstating the usefulness of the model.},
 	journal = {Communications of the ACM},
 	month = {nov},
@@ -1648,13 +1632,12 @@ publisher = {NIST}
 
 @inproceedings{croft_lm,
 	author = {Song, Fei and Croft, W. Bruce},
-	title = {A General Language Model for Information Retrieval},
+	title = {{A General Language Model for Information Retrieval}},
 	year = {1999},
 	isbn = {1581131461},
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/319950.320022},
-	doi = {10.1145/319950.320022},
 	abstract = {Statistical language modeling has been successfully used for speech recognition, part-of-speech tagging, and syntactic parsing. Recently, it has also been applied to information retrieval. According to this new paradigm, each document is viewed as a language sample, and a query as a generation process. The retrieved documents are ranked based on the probabilities of producing a query from the corresponding language models of these documents. In this paper, we will present a new language model for information retrieval, which is based on a range of data smoothing techniques, including the Good-Turning estimate, curve-fitting functions, and model combinations. Our model is conceptually simple and intuitive, and can be easily extended to incorporate probabilities of phrases such as word pairs and word triples. The experiments with the Wall Street Journal and TREC4 data sets showed that the performance of our model is comparable to that of INQUERY and better than that of another language model for information retrieval. In particular, word pairs are shown to be useful in improving the retrieval performance.},
 	booktitle = {Proceedings of the Eighth International Conference on Information and Knowledge Management},
 	pages = {316–321},
@@ -1666,7 +1649,7 @@ publisher = {NIST}
 
 @phdthesis{hiemstra_lm,
 	author = {Hiemstra, Djoerd},
-	title={{Using language models for information retrieval}},
+	title={{Using Language Models for Information Retrieval}},
 	type = {PhD thesis},
 	school = {Universiteit Twente},
 	year = {2001}
@@ -1680,7 +1663,6 @@ publisher = {NIST}
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/564376.564387},
-	doi = {10.1145/564376.564387},
 	abstract = {The optimal settings of retrieval parameters often depend on both the document collection and the query, and are usually found through empirical tuning. In this paper, we propose a family of two-stage language models for information retrieval that explicitly captures the different influences of the query and document collection on the optimal settings of retrieval parameters. As a special case, we present a two-stage smoothing method that allows us to estimate the smoothing parameters completely automatically. In the first stage, the document language model is smoothed using a Dirichlet prior with the collection language model as the reference model. In the second stage, the smoothed document language model is further interpolated with a query background language model. We propose a leave-one-out method for estimating the Dirichlet parameter of the first stage, and the use of document mixture models for estimating the interpolation parameter of the second stage. Evaluation on five different databases and four types of queries indicates that the two-stage smoothing method with the proposed parameter estimation methods consistently gives retrieval performance that is close to---or better than---the best results achieved using a single smoothing method and exhaustive parameter search on the test data.},
 	booktitle = {Proceedings of the 25th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval},
 	pages = {49–56},
@@ -1711,7 +1693,6 @@ publisher = {NIST}
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/1645953.1646031},
-	doi = {10.1145/1645953.1646031},
 	abstract = {The existence and use of standard test collections in information retrieval experimentation allows results to be compared between research groups and over time. Such comparisons, however, are rarely made. Most researchers only report results from their own experiments, a practice that allows lack of overall improvement to go unnoticed. In this paper, we analyze results achieved on the TREC Ad-Hoc, Web, Terabyte, and Robust collections as reported in SIGIR (1998--2008) and CIKM (2004--2008). Dozens of individual published experiments report effectiveness improvements, and often claim statistical significance. However, there is little evidence of improvement in ad-hoc retrieval technology over the past decade. Baselines are generally weak, often being below the median original TREC system. And in only a handful of experiments is the score of the best TREC automatic run exceeded. Given this finding, we question the value of achieving even a statistically significant result over a weak baseline. We propose that the community adopt a practice of regular longitudinal comparison to ensure measurable progress, or at least prevent the lack of it from going unnoticed. We describe an online database of retrieval runs that facilitates such a practice.},
 	booktitle = {Proceedings of the 18th ACM Conference on Information and Knowledge Management},
 	pages = {601–610},
@@ -1732,7 +1713,6 @@ publisher = {NIST}
 	number = {9},
 	issn = {0001-0782},
 	url = {https://doi.org/10.1145/3434642},
-	doi = {10.1145/3434642},
 	abstract = {Ensuring the success of big graph processing for the next decade and beyond.},
 	journal = {Commun. ACM},
 	month = {aug},
@@ -1748,7 +1728,6 @@ publisher = {NIST}
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/3477495.3536321},
-	doi = {10.1145/3477495.3536321},
 	abstract = {ClueWeb22, the newest iteration of the ClueWeb line of datasets, is the result of more than a year of collaboration between industry and academia. Its design is influenced by the research needs of the academic community and the real-world needs of large-scale industry systems. Compared with earlier ClueWeb datasets, the ClueWeb22 corpus is larger, more varied, and has higher-quality documents. Its core is raw HTML, but it includes clean text versions of documents to lower the barrier to entry. Several aspects of ClueWeb22 are available to the research community for the first time at this scale, for example, visual representations of rendered web pages, parsed structured information from the HTML document, and the alignment of document distributions (domains, languages, and topics) to commercial web search.This talk shares the design and construction of ClueWeb22, and discusses its new features. We believe this newer, larger, and richer ClueWeb corpus will enable and support a broad range of research in IR, NLP, and deep learning.},
 	booktitle = {Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},
 	pages = {3360–3362},
@@ -1788,7 +1767,6 @@ publisher = {NIST}
 	number = {1},
 	issn = {0163-5840},
 	url = {https://doi.org/10.1145/3451964.3451976},
-	doi = {10.1145/3451964.3451976},
 	abstract = {In the December 2017 issue of SIGIR Forum, Fuhr presented ten "Thou Shalt Not"s (i.e., warnings against bad practices) for IR experimenters. While his article provides a lot of good materials for discussion, the objective of the present article is to argue that not all of his recommendations should be considered as absolute truths: researchers should be aware that there are other views; conference programme chairs and journal editors should be very careful when providing a guideline for evaluation practices.},
 	journal = {SIGIR Forum},
 	month = feb,
@@ -1807,14 +1785,14 @@ publisher = {NIST}
 	keywords = {lecture retrieval vorlesung ir information intelligenz standard Information},
 	publisher = {Butterworths},
 	timestamp = {2006-09-13T16:20:28.000+0200},
-	title = {Information retrieval},
+	title = {{Information Retrieval}},
 	url = {http://www.dcs.gla.ac.uk/Keith/Preface.html},
 	year = 1979
 }
 
 @article{10.1145/971699.318923,
 	author = {Copeland, George P. and Khoshafian, Setrag N.},
-	title = {A decomposition storage model},
+	title = {{A Decomposition Storage Model}},
 	year = {1985},
 	issue_date = {May 1985},
 	publisher = {Association for Computing Machinery},
@@ -1823,7 +1801,6 @@ publisher = {NIST}
 	number = {4},
 	issn = {0163-5808},
 	url = {https://doi.org/10.1145/971699.318923},
-	doi = {10.1145/971699.318923},
 	journal = {SIGMOD Rec.},
 	month = may,
 	pages = {268–279},
@@ -1902,7 +1879,6 @@ publisher = {NIST}
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/1076034.1076063},
-	doi = {10.1145/1076034.1076063},
 	abstract = {This paper examines the reliability of implicit feedback generated from clickthrough data in WWW search. Analyzing the users' decision process using eyetracking and comparing implicit feedback against manual relevance judgments, we conclude that clicks are informative but biased. While this makes the interpretation of clicks as absolute relevance judgments difficult, we show that relative preferences derived from clicks are reasonably accurate on average.},
 	booktitle = {Proceedings of the 28th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval},
 	pages = {154–161},
@@ -1920,7 +1896,6 @@ publisher = {NIST}
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/956863.956944},
-	doi = {10.1145/956863.956944},
 	abstract = {We present an efficient query evaluation method based on a two level approach: at the first level, our method iterates in parallel over query term postings and identifies candidate documents using an approximate evaluation taking into account only partial information on term occurrences and no query independent factors; at the second level, promising candidates are fully evaluated and their exact scores are computed. The efficiency of the evaluation process can be improved significantly using dynamic pruning techniques with very little cost in effectiveness. The amount of pruning can be controlled by the user as a function of time allocated for query evaluation. Experimentally, using the TREC Web Track data, we have determined that our algorithm significantly reduces the total number of full evaluations by more than 90\%, almost without any loss in precision or recall. At the heart of our approach there is an efficient implementation of a new Boolean construct called WAND or Weak AND that might be of independent interest.},
 	booktitle = {Proceedings of the Twelfth International Conference on Information and Knowledge Management},
 	pages = {426–434},
@@ -1969,7 +1944,6 @@ publisher = {NIST}
 	number = {4},
 	issn = {0163-5808},
 	url = {https://doi.org/10.1145/1978915.1978919},
-	doi = {10.1145/1978915.1978919},
 	abstract = {In this paper, we examine a number of SQL and socalled "NoSQL" data stores designed to scale simple OLTP-style application loads over many servers. Originally motivated by Web 2.0 applications, these systems are designed to scale to thousands or millions of users doing updates as well as reads, in contrast to traditional DBMSs and data warehouses. We contrast the new systems on their data model, consistency mechanisms, storage mechanisms, durability guarantees, availability, query support, and other dimensions. These systems typically sacrifice some of these dimensions, e.g. database-wide transaction consistency, in order to achieve others, e.g. higher availability and scalability.},
 	journal = {SIGMOD Rec.},
 	month = may,
@@ -1979,13 +1953,12 @@ publisher = {NIST}
 
 @inproceedings{neo4j,
 	author = {Webber, Jim},
-	title = {{A programmatic introduction to Neo4j}},
+	title = {{A Programmatic Introduction to Neo4j}},
 	year = {2012},
 	isbn = {9781450315630},
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/2384716.2384777},
-	doi = {10.1145/2384716.2384777},
 	abstract = {In this workshop we provide a hands-on introduction to the popular open source graph database Neo4j [1] through fixing a series of increasingly sophisticated, but broken, test cases each of which highlights an important graph modeling or API affordance.},
 	booktitle = {Proceedings of the 3rd Annual Conference on Systems, Programming, and Applications: Software for Humanity},
 	pages = {217–218},
@@ -2003,7 +1976,6 @@ publisher = {NIST}
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/1807167.1807184},
-	doi = {10.1145/1807167.1807184},
 	abstract = {Many practical computing problems concern large graphs. Standard examples include the Web graph and various social networks. The scale of these graphs - in some cases billions of vertices, trillions of edges - poses challenges to their efficient processing. In this paper we present a computational model suitable for this task. Programs are expressed as a sequence of iterations, in each of which a vertex can receive messages sent in the previous iteration, send messages to other vertices, and modify its own state and that of its outgoing edges or mutate graph topology. This vertex-centric approach is flexible enough to express a broad set of algorithms. The model has been designed for efficient, scalable and fault-tolerant implementation on clusters of thousands of commodity computers, and its implied synchronicity makes reasoning about programs easier. Distribution-related details are hidden behind an abstract API. The result is a framework for processing large graphs that is expressive and easy to program.},
 	booktitle = {Proceedings of the 2010 ACM SIGMOD International Conference on Management of Data},
 	pages = {135–146},
@@ -2039,7 +2011,6 @@ publisher = {NIST}
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/1148170.1148177},
-	doi = {10.1145/1148170.1148177},
 	abstract = {We show that incorporating user behavior data can significantly improve ordering of top results in real web search setting. We examine alternatives for incorporating feedback into the ranking process and explore the contributions of user feedback compared to other common web search features. We report results of a large scale evaluation over 3,000 queries and 12 million user interactions with a popular web search engine. We show that incorporating implicit feedback can augment other features, improving the accuracy of a competitive web search ranking algorithms by as much as 31\% relative to the original performance.},
 	booktitle = {Proceedings of the 29th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval},
 	pages = {19–26},
@@ -2053,8 +2024,7 @@ publisher = {NIST}
 	title={{Challenges of Index Exchange for Search Engine Interoperability}},
 	author={Hiemstra, Djoerd and Hendriksen, Gijs and Kamphuis, Chris and de Vries, Arjen P.},
 	year={2023},
-	publisher={Open Search Foundation}
-	year = {2023},
+	publisher={Open Search Foundation},
 	location = {CERN, Geneva, Switzerland and Online},
 	series = {OSSYM23},
 	booktitle = {Proceedings of the 5th International Open Search Sympositum}
@@ -2062,7 +2032,7 @@ publisher = {NIST}
 
 @article{dgaps,
 	author = {Moffat, Alistair and Zobel, Justin},
-	title = {{Self-indexing inverted files for fast text retrieval}},
+	title = {{Self-Indexing Inverted Files for Fast Text Retrieval}},
 	year = {1996},
 	issue_date = {Oct. 1996},
 	publisher = {Association for Computing Machinery},
@@ -2071,7 +2041,6 @@ publisher = {NIST}
 	number = {4},
 	issn = {1046-8188},
 	url = {https://doi.org/10.1145/237496.237497},
-	doi = {10.1145/237496.237497},
 	abstract = {Query-processing costs on large text databases are dominated by the need to retrieve and scan the inverted list of each query term. Retrieval time for inverted lists can be greatly reduced by the use of compression, but this adds to the CPU time required. Here we show that the CPU component of query response time for conjunctive Boolean queries and for informal ranked queries can be similarly reduced, at little cost in terms of storage, by the inclusion of an internal index in each compressed inverted list. This method has been applied in a retrieval system for a collection of nearly two million short documents. Our experimental results show that the self-indexing strategy adds less than 20\% to the size of the compressed inverted file, which itself occupies less than 10\% of the  indexed text, yet can reduce processing time for Boolean queries of 5-10 terms to under one fifth of the previous cost. Similarly, ranked queries of 40-50 terms can be evaluated in as little as 25\% of the previous time, with little or no loss of retrieval effectiveness.},
 	journal = {ACM Trans. Inf. Syst.},
 	month = oct,
@@ -2087,7 +2056,6 @@ publisher = {NIST}
 	publisher = {Association for Computing Machinery},
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/1835449.1835676},
-	doi = {10.1145/1835449.1835676},
 	abstract = {This tutorial is concerned with a comprehensive introduction to the research area of learning to rank for information retrieval. In the first part of the tutorial, we will introduce three major approaches to learning to rank, i.e., the pointwise, pairwise, and listwise approaches, analyze the relationship between the loss functions used in these approaches and the widely-used IR evaluation measures, evaluate the performance of these approaches on the LETOR benchmark datasets, and demonstrate how to use these approaches to solve real ranking applications. In the second part of the tutorial, we will discuss some advanced topics regarding learning to rank, such as relational ranking, diverse ranking, semi-supervised ranking, transfer ranking, query-dependent ranking, and training data preprocessing. In the third part, we will briefly mention the recent advances on statistical learning theory for ranking, which explain the generalization ability and statistical consistency of different ranking methods. In the last part, we will conclude the tutorial and show several future research directions.},
 	booktitle = {Proceedings of the 33rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
 	pages = {904},
@@ -2096,3 +2064,19 @@ publisher = {NIST}
 	location = {Geneva, Switzerland},
 	series = {SIGIR '10}
 }
+
+@article{porter,
+	author = {Porter, Martin F.},
+	title = {{An algorithm for suffix stripping}},
+	journal = {Program: electronic library and information systems},
+	volume = {14},
+	number = {3},
+	pages = {130-137},
+	year = {1980},
+	month = {03},
+	abstract = {The automatic removal of suffixes from words in English is of particular interest in the field of information retrieval. An algorithm for suffix stripping is described, which has been implemented as a short, fast program in BCPL. Although simple, it performs slightly better than a much more elaborate system with which it has been compared. It effectively works by treating complex suffixes as compounds made up of simple suffixes, and removing the simple suffixes in a number of steps. In each step the removal of the suffix is made to depend upon the form of the remaining stem, which usually involves a measure of its syllable length.},
+	issn = {0033-0337},
+	url = {https://doi.org/10.1108/eb046814}
+}
+
+
