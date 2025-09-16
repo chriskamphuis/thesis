@@ -61,7 +61,7 @@ BLINK~\citep{blink} is a BERT-based~\citep{BERT} model for candidate selection a
 
 \begin{enumerate}
     \item \emph{Mention Detection.} The mention detection stage can be done using an NER model. Like REL, we use Flair~\citep{flair} for mention detection.
-	\item \emph{Candidate Selection.} BLINK considers ten candidates for each mention. The candidates are selected through a bi-encoder (similar to the bi-encoder described by~\citet{poly-encoders}) that embeds mention contexts and entity descriptions. The mention and the entity are encoded into two separate vectors using the \texttt{[CLS]} token of BERT. The similarity score is then calculated using the dot-product of the two vectors representing the mention context and the entity.  
+	\item \emph{Candidate Selection.} BLINK considers ten candidates for each mention. The candidates are selected through a bi-encoder (similar to the bi-encoder described by~\citet{poly-encoders}) that embeds mention contexts and entity descriptions. The mention and the entity are encoded into two separate vectors . The similarity score is then calculated using the dot-product of the two vectors representing the mention context and the entity.  
 	\item \emph{Entity Disambiguation.} For entity disambiguation, BLINK employs a cross-encoder to re-rank the top 10 candidates selected by the candidate selection stage. The cross-encoder usage is similar to cross encoder described by~\citet{poly-encoders}, which employs a cross-attention mechanism between the mention context and entity descriptions. The input is the concatenation of the mention text and the candidate entity description.    
 \end{enumerate}
 
@@ -111,7 +111,7 @@ A passage from the MS MARCO v1 passage ranking collection is shown below.
 	}    
 \end{center}
 
-Several text spans in this text can be considered as entities. REL identifies three of these entities: the \emph{Pable Picasso}, \emph{Georges Braque}, and \emph{Spain}. It does however miss the concept ``Cubism'' as an entity.  
+Several text spans in this text can be considered as entities. REL identifies three of these entities: \emph{Pable Picasso}, \emph{Georges Braque}, and \emph{Spain}. It does however miss the concept \emph{Cubism} as an entity.  
 The output of the system is converted to our JSON specification, which results in the JSON object presented in Figure~\ref{fig:json-example-passage-v1}.
 
 \begin{figure}
@@ -236,7 +236,7 @@ Figure~\ref{fig:load_mappings} shows how entity identifiers can be matched to th
 
 As DuckDB is used as a database engine for MMEAD, it is possible to directly access the underlying tables and issue structured queries in an efficient manner. Figure~\ref{fig:sql_engine} shows an example, where a connection to the database is created, and the identifiers of passages containing the entity \emph{Nijmegen} are retrieved.
 
-All data can be downloaded directly as well, and links to the data are provided on our Github page.\footnote{\url{https://github.com/informagi/mmead}, last accessed November 18th 2024}
+All data can be downloaded directly as well, and links to the data are provided on our Github page.~\footnote{\url{https://github.com/informagi/mmead}, last accessed September 2025}
 
 \begin{figure}
 	\begin{minted}[linenos]{python}
@@ -377,7 +377,7 @@ For example, the user might ask ``Show me content about tourist sites in Paris''
 Simple reasoning based on geographic containment relationships on open-linked data resources would be sufficient for answering this query.
 While it is possible that pretrained transformers might implicitly contain this information, they can never offer the same degree of fine-grained control provided by explicit entity linking.
 
-As a simple demonstration, we have taken MMEAD, reformatted the entity links into RDF, and ingested the results into the QLever SPARQL engine~\citep{qlever}.\footnote{\url{https://github.com/ad-freiburg/qlever}, last accessed November 19th 2024}
+As a simple demonstration, we have taken MMEAD, reformatted the entity links into RDF, and ingested the results into the QLever SPARQL engine~\citep{qlever}.\footnote{\url{https://github.com/ad-freiburg/qlever}, last accessed September 2025}
 By combining MMEAD with RDF data from Wikidata and OpenStreetMap, we can issue SPARQL queries such as ``Show me all passages in MS MARCO related to France''.
 
 \begin{figure}

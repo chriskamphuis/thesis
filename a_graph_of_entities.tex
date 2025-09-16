@@ -56,17 +56,17 @@ After all entities have been found, REL produces a JSON object that contains the
 \section{From REL to REBL}
 The MS MARCO v2 document collection contains 11,959,635 documents split into 60 compressed files, totaling roughly 33GB. Uncompressed, these files are in JSON line format (where every line represents a document, described by a JSON object). These JSON objects have five fields: \textit{url}, \textit{title}, \textit{headings}, \textit{body}, and \textit{docid}. We wanted to link the documents' titles, headings, and bodies for our experiments. We link to the 2019-07 Wikipedia dump, one of the two dumps also used in the initial development of REL. 
 
-In order to ease linking this size of data, we separated the GPU-heavy mention detection stage from the CPU-heavy candidate selection and entity disambiguation stages; the modified code can be found on GitHub.\footnote{\url{https://github.com/informagi/REBL}, last accessed November 18th 2024}
-For REBL, the input for mention detection are the compressed MS MARCO v2 document files, and its output consists of the mentions found and their location in the document, in Apache Parquet format.\footnote{\url{https://github.com/apache/parquet-format}, last accessed November 18th 2024}
+In order to ease linking this size of data, we separated the GPU-heavy mention detection stage from the CPU-heavy candidate selection and entity disambiguation stages; the modified code can be found on GitHub.\footnote{\url{https://github.com/informagi/REBL}, last accessed September 2025}
+For REBL, the input for mention detection are the compressed MS MARCO v2 document files, and its output consists of the mentions found and their location in the document, in Apache Parquet format.\footnote{\url{https://github.com/apache/parquet-format}, last accessed September 2025}
 These files and the source text are the input for the subsequent phases (candidate selection and entity disambiguation). The final output consists of Parquet files containing spans of text and their linked entities. 
 In the following section, we discuss what is changed for mention detection, candidate selection, and entity disambiguation steps to make REL more suited to annotate large collections with entity links, in a batch processing manner.  
 
 \subsection{Mention Detection}
 REL~\citep{rel} uses Flair~\citep{flair} as the default method for mention detection, a state-of-the-art named entity recognition system.
 In this section, we focus on inefficiencies that arise when interfacing between REL and flair. 
-Flair uses the \texttt{segtok}\footnote{\url{https://github.com/fnl/segtok}, last accessed November 18th 2024} package to segment an (Indo-European) document in sentences, internally represented as \texttt{Sentence} objects. These sentences are split into words/symbols represented as \texttt{Token} objects.
+Flair uses the \texttt{segtok}\footnote{\url{https://github.com/fnl/segtok}, last accessed September 2025} package to segment an (Indo-European) document in sentences, internally represented as \texttt{Sentence} objects. These sentences are split into words/symbols represented as \texttt{Token} objects.
 When creating these representations, however, it is not possible to recreate the source text properly, as 
-Flair adjusts the representations in its internal processing of text data. In order to have full control of these representations we decided to  construct the underlying data structures for REBL ourselves. To do this, we used the \texttt{syntok}\footnote{\url{https://github.com/fnl/syntok}, last accessed November 18th 2024} package, a follow-up version of \texttt{segtok}.
+Flair adjusts the representations in its internal processing of text data. In order to have full control of these representations we decided to  construct the underlying data structures for REBL ourselves. To do this, we used the \texttt{syntok}\footnote{\url{https://github.com/fnl/syntok}, last accessed September 2025} package, a follow-up version of \texttt{segtok}.
 Both packages were developed by the same author, who claims that the \texttt{syntok} package segments sentences better than \texttt{segtok}. 
 Using this new representation we fixed two problems: 
 \begin{enumerate}
